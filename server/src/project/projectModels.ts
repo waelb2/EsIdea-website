@@ -1,5 +1,6 @@
 import mongoose , {Document, Schema, mongo} from "mongoose";
 import { UserDocument } from "../user/userModels";
+import { IdeaDocument } from "../idea/ideaModels";
 
 
 
@@ -23,20 +24,41 @@ interface ProjectDocument extends Document {
     coordinator : UserDocument,
     title : string ,
     description? : string,
-    //template : TemplateDocument
+    template : TemplateDocument,
     //ideationMethod : ideaMethodDocument ,
     creationDate : Date,
     deadline? : Date,
     status: ProjectStatus,
     visibility : ProjectVisibility,
     collaboratorsCount : number,
+    collaborators : [UserDocument],
+    ideas : [IdeaDocument]
     //club
    // module
     //event
+    thumbnailUrl : string,
 }
 
-const projectSchema = new Schema   ({
-    coodinator : {
+interface TopicDocument extends Document {
+    topicName : string,
+    parentTopic? : TopicDocument,
+}
+
+// Topic schema 
+
+const topicSchema = new Schema <TopicDocument>({
+    topicName : {
+        type : String , 
+        required : [true, "Topic name is required"]
+    },
+    parentTopic : {type : mongoose.Types.ObjectId,
+    ref: 'Topic'}, 
+
+})
+
+// project schema 
+const projectSchema = new Schema<ProjectDocument>({
+    coordinator : {
         type:mongoose.Types.ObjectId ,
         ref : 'User' ,
         required :[true , "Project coordinator (creator) is required"]
@@ -73,13 +95,17 @@ const projectSchema = new Schema   ({
         ref : 'User',
 
     }],
-    //idea
+    ideas :[ {
+        type : mongoose.Types.ObjectId,
+        ref : 'Idea',
+    }],
     //topic 
     //club, event. ..
    thumbnailUrl : String
    })
 
 
+   const Topic  = mongoose.model<TopicDocument>('Topic', topicSchema);
    const Project = mongoose.model<ProjectDocument>('Project', projectSchema)
-
-   export {Project, ProjectStatus, ProjectVisibility}
+   
+   export {Project,Topic ,TopicDocument,ProjectDocument, ProjectStatus, ProjectVisibility}
