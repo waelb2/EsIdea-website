@@ -1,6 +1,6 @@
-import mongoose , {Document, Schema, mongo} from "mongoose";
-import { UserDocument } from "../user/userModels";
-import { IdeaDocument } from "../idea/ideaModels";
+import mongoose , { Schema, mongo, } from "mongoose";
+import { TopicInterface } from "./topicInterface";
+import { ProjectInterface } from "./projectInterface";
 
 
 
@@ -20,33 +20,10 @@ enum ProjectVisibility {
     PRIVATE = 'private',
 }
 
-interface ProjectDocument extends Document {
-    coordinator : UserDocument,
-    title : string ,
-    description? : string,
-    template : TemplateDocument,
-    //ideationMethod : ideaMethodDocument ,
-    creationDate : Date,
-    deadline? : Date,
-    status: ProjectStatus,
-    visibility : ProjectVisibility,
-    collaboratorsCount : number,
-    collaborators : [UserDocument],
-    ideas : [IdeaDocument]
-    //club
-   // module
-    //event
-    thumbnailUrl : string,
-}
-
-interface TopicDocument extends Document {
-    topicName : string,
-    parentTopic? : TopicDocument,
-}
 
 // Topic schema 
 
-const topicSchema = new Schema <TopicDocument>({
+const topicSchema = new Schema <TopicInterface>({
     topicName : {
         type : String , 
         required : [true, "Topic name is required"]
@@ -57,7 +34,7 @@ const topicSchema = new Schema <TopicDocument>({
 })
 
 // project schema 
-const projectSchema = new Schema<ProjectDocument>({
+const projectSchema = new Schema<ProjectInterface>({
     coordinator : {
         type:mongoose.Types.ObjectId ,
         ref : 'User' ,
@@ -70,11 +47,17 @@ const projectSchema = new Schema<ProjectDocument>({
     description :{
         type : String ,
     },
-    template : {
-        type : mongoose.Types.ObjectId,
-        ref:'Template' ,
-        required :[true, "Project template is required"]
+   template : {
+       type : mongoose.Types.ObjectId,
+       ref:'Template' ,
+       required :[true, "Project template is required"]
     },
+    ideationMethod : {
+        type : mongoose.Types.ObjectId,
+        ref:'IdeationMethod',
+        required : [true, "Ideation method is required"]
+    }
+    ,
     status :{
         type : String,
         required : [true, "Project status is required"],
@@ -99,13 +82,21 @@ const projectSchema = new Schema<ProjectDocument>({
         type : mongoose.Types.ObjectId,
         ref : 'Idea',
     }],
-    //topic 
+    mainTopic : {
+        type : mongoose.Types.ObjectId , 
+        ref : 'Topic', 
+        required : [true, "Main topic is required"]
+    },
+    subTopics : [{
+        type : mongoose.Types.ObjectId,
+        ref : 'Topic',
+    }],
     //club, event. ..
    thumbnailUrl : String
    })
 
 
-   const Topic  = mongoose.model<TopicDocument>('Topic', topicSchema);
-   const Project = mongoose.model<ProjectDocument>('Project', projectSchema)
+   const Topic  = mongoose.model<TopicInterface>('Topic', topicSchema);
+   const Project = mongoose.model<ProjectInterface>('Project', projectSchema)
    
-   export {Project,Topic ,TopicDocument,ProjectDocument, ProjectStatus, ProjectVisibility}
+   export {Project,Topic , ProjectStatus, ProjectVisibility}

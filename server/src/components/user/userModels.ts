@@ -1,18 +1,7 @@
 import mongoose , {Schema, Document, mongo} from "mongoose";
 import isEmail from "validator/es/lib/isEmail"
+import { UserInterface } from "./userInterface";
 
-interface UserDocument extends Document {
-    firstName :string, 
-    lastName : string ,
-    email : string,
-    password? : string, 
-    profilePicUrl?: string,
-    role : string,
-    joinDate : Date,
-   // notifications
-   //projects 
-   //invitations 
-}
 
 
 enum UserRole{
@@ -20,7 +9,7 @@ enum UserRole{
     USER = "user"
 }
 
-const userSchema = new Schema<UserDocument>({
+const userSchema = new Schema<UserInterface>({
     firstName : {
         type:String , 
         required:[true, "First name is required"]
@@ -56,7 +45,7 @@ const userSchema = new Schema<UserDocument>({
 })
 
 
-const User = mongoose.model<UserDocument>('User', userSchema);
+const User = mongoose.model<UserInterface>('User', userSchema);
 
 
-export {User, UserDocument,UserRole}
+export {User,UserRole}
