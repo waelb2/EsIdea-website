@@ -74,10 +74,13 @@ const projectSchema = new Schema<ProjectInterface>({
         type : Number, 
     },
     collaborators :[ {
+        member : {
         type : mongoose.Types.ObjectId,
         ref : 'User',
 
-    }],
+    },
+    joinedAt : Date 
+}],
     ideas :[ {
         type : mongoose.Types.ObjectId,
         ref : 'Idea',
@@ -91,12 +94,22 @@ const projectSchema = new Schema<ProjectInterface>({
         type : mongoose.Types.ObjectId,
         ref : 'Topic',
     }],
-    //club, event. ..
+    club : {
+    type : mongoose.Types.ObjectId,
+    ref : 'Club',
+   }, 
+    module : {
+    type : mongoose.Types.ObjectId,
+    ref : 'Module',
+   },
+    event  : {
+    type : mongoose.Types.ObjectId,
+    ref : 'Event',
+   },
    thumbnailUrl : String
    })
 
 
-   const Topic  = mongoose.model<TopicInterface>('Topic', topicSchema);
    const Project = mongoose.model<ProjectInterface>('Project', projectSchema)
    
-   export {Project,Topic , ProjectStatus, ProjectVisibility}
+   export {Project , ProjectStatus, ProjectVisibility}

@@ -1,5 +1,4 @@
 import mongoose , {Schema, Document, mongo} from "mongoose";
-import isEmail from "validator/es/lib/isEmail"
 import { UserInterface } from "./userInterface";
 
 
@@ -21,7 +20,6 @@ const userSchema = new Schema<UserInterface>({
     email:{
         type : String ,
         required:[true, "Email is required"],
-        validate : [isEmail,"Enter a valid email"]
     },
     password :{
         type : String,
@@ -38,9 +36,18 @@ const userSchema = new Schema<UserInterface>({
         type :Date ,
         required : [true , "User joining date is required"]
     },
+    projects :[ {
+        project  : {
+            type : mongoose.Types.ObjectId,
+            ref : 'Project',
+        },
+        joinedAt : Date,
+    }],
+    projectInvitations : [{
+        type : mongoose.Types.ObjectId,
+        ref : 'Invitation'
+    }]
     //notifications: [{ type: Schema.Types.ObjectId, ref: 'Notification' }],
-   // projects : [{ type: Schema.Types.ObjectId, ref: 'Project' }], 
-    // invitations :    // projects : [{ type: Schema.Types.ObjectId, ref: 'Invitation' }], 
 
 })
 

@@ -1,5 +1,6 @@
 import express ,{Express ,Request , Response } from "express";
 import dotenv from "dotenv"
+import bodyParser from "body-parser"
 import { connectDB } from "./src/config/db";
 
 dotenv.config()
@@ -8,11 +9,15 @@ dotenv.config()
 const HOST   = process.env.HOST
 const PORT   = process.env.PORT || 3000
 
+
+const app : Express= express();
+app.use(bodyParser.json())
+app.use(bodyParser.urlencoded({extended:true}))
+
 // routes 
 import routes from "./routes"
 
-const app : Express= express();
-app.use(routes )
+app.use(routes)
 const start = async()=>{
 
 try {

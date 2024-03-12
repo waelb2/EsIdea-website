@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.ProjectVisibility = exports.ProjectStatus = exports.Topic = exports.Project = void 0;
+exports.ProjectVisibility = exports.ProjectStatus = exports.Project = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 var ProjectStatus;
 (function (ProjectStatus) {
@@ -90,8 +90,11 @@ const projectSchema = new mongoose_1.Schema({
         type: Number,
     },
     collaborators: [{
-            type: mongoose_1.default.Types.ObjectId,
-            ref: 'User',
+            member: {
+                type: mongoose_1.default.Types.ObjectId,
+                ref: 'User',
+            },
+            joinedAt: Date
         }],
     ideas: [{
             type: mongoose_1.default.Types.ObjectId,
@@ -106,10 +109,19 @@ const projectSchema = new mongoose_1.Schema({
             type: mongoose_1.default.Types.ObjectId,
             ref: 'Topic',
         }],
-    //club, event. ..
+    club: {
+        type: mongoose_1.default.Types.ObjectId,
+        ref: 'Club',
+    },
+    module: {
+        type: mongoose_1.default.Types.ObjectId,
+        ref: 'Module',
+    },
+    event: {
+        type: mongoose_1.default.Types.ObjectId,
+        ref: 'Event',
+    },
     thumbnailUrl: String
 });
-const Topic = mongoose_1.default.model('Topic', topicSchema);
-exports.Topic = Topic;
 const Project = mongoose_1.default.model('Project', projectSchema);
 exports.Project = Project;

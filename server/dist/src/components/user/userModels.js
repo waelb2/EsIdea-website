@@ -22,13 +22,9 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
-var __importDefault = (this && this.__importDefault) || function (mod) {
-    return (mod && mod.__esModule) ? mod : { "default": mod };
-};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserRole = exports.User = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-const isEmail_1 = __importDefault(require("validator/es/lib/isEmail"));
 var UserRole;
 (function (UserRole) {
     UserRole["ADMIN"] = "admin";
@@ -46,7 +42,6 @@ const userSchema = new mongoose_1.Schema({
     email: {
         type: String,
         required: [true, "Email is required"],
-        validate: [isEmail_1.default, "Enter a valid email"]
     },
     password: {
         type: String,
@@ -63,9 +58,18 @@ const userSchema = new mongoose_1.Schema({
         type: Date,
         required: [true, "User joining date is required"]
     },
+    projects: [{
+            project: {
+                type: mongoose_1.default.Types.ObjectId,
+                ref: 'Project',
+            },
+            joinedAt: Date,
+        }],
+    projectInvitations: [{
+            type: mongoose_1.default.Types.ObjectId,
+            ref: 'Invitation'
+        }]
     //notifications: [{ type: Schema.Types.ObjectId, ref: 'Notification' }],
-    // projects : [{ type: Schema.Types.ObjectId, ref: 'Project' }], 
-    // invitations :    // projects : [{ type: Schema.Types.ObjectId, ref: 'Invitation' }], 
 });
 const User = mongoose_1.default.model('User', userSchema);
 exports.User = User;

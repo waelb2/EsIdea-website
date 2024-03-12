@@ -1,4 +1,6 @@
 import { Document } from "mongoose";
+import { ProjectInterface } from "../project/projectInterface";
+import { InvitationInterface } from "../invitation/invitationInterface";
 
 export interface UserInterface extends Document {
     firstName :string, 
@@ -8,7 +10,10 @@ export interface UserInterface extends Document {
     profilePicUrl?: string,
     role : string,
     joinDate : Date,
+    projects : [{
+     project: ProjectInterface,
+     joinedAt : Date ,   
+    }],
+    projectInvitations : [InvitationInterface]
    // notifications
-   //projects 
-   //invitations 
 }

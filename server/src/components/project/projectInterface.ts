@@ -5,6 +5,9 @@ import { ProjectStatus , ProjectVisibility} from "./projectModels"
 import { TemplateInterface } from "../template/templateInterface";
 import { IdeationMethodInterface } from "../idea/ideationMethodInterface";
 import { TopicInterface } from "./topicInterface";
+import { ClubInterface } from "../club/clubInterface";
+import { ModuleInterface } from "../module/moduleInterface";
+import { EventInterface } from "../event/eventInterface";
 
 
 export interface ProjectInterface extends Document {
@@ -18,12 +21,15 @@ export interface ProjectInterface extends Document {
     status: ProjectStatus,
     visibility : ProjectVisibility,
     collaboratorsCount : number,
-    collaborators : [UserInterface],
+    collaborators : [{
+        member : UserInterface,
+        joinedAt : Date ,
+    }],
     ideas : [IdeaInterface],
     mainTopic : TopicInterface,
     subTopics? : [TopicInterface],
-    //club
-   // module
-    //event
+    club  : ClubInterface,
+    module : ModuleInterface,
+    event : EventInterface,
     thumbnailUrl : string,
 }
