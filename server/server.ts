@@ -1,16 +1,32 @@
-import express ,{Express ,Request , Response } from "express";
+import express,{Express} from "express";
 import dotenv from "dotenv"
+import passport from 'passport';
+import "./src/config/passport-setup";
+import {connectDB} from "./src/config/db";
+import session from 'express-session';
 import bodyParser from "body-parser"
-import { connectDB } from "./src/config/db";
 
+const app :Express= express();
 dotenv.config()
 
 // Configuring the host 
 const HOST   = process.env.HOST
 const PORT   = process.env.PORT || 3000
+const DB_URI = process.env.DATABASE_URI
 
+/////////////////////////////////////// o auth ///////////////////////////////
+app.use(session({
+    secret: 'secret_key',
+    resave: false,
+    saveUninitialized: false
+}));
+  
+  app.use(passport.initialize());
+  app.use(passport.session());
+  
+  /////////////////////////////////////// o auth ///////////////////////////////
+  
 
-const app : Express= express();
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:true}))
 
@@ -22,10 +38,10 @@ const start = async()=>{
 
 try {
     
-    await connectDB(String(process.env.DATABASE_URI))
+    await connectDB(String(DB_URI))
     console.log("DATABASE CONNECTED")
 
-    app.listen(3000,()=>{
+    app.listen(PORT,()=>{
          console.log(`Server starting at http://localhost:${PORT}`)
     })
 
