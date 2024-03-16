@@ -1,0 +1,136 @@
+[
+     {
+          "clubName": "Google Developer Groups",
+          "description": {
+               "imageUrl": "https://www.esi.dz/wp-content/uploads/2021/05/GDG-1-150x150.png",
+               "creationDate": "Septembre 2011",
+               "field": "Développement des produits technologiques",
+               "numberOfEvents": "51",
+               "majorEvents": [
+                    "DevFest"
+               ]
+          }
+     },
+     {
+          "clubName": "Sourire à l'innocence",
+          "description": {
+               "imageUrl": "https://www.esi.dz/wp-content/uploads/2021/05/SourireESI-300x121.png",
+               "creationDate": "2008",
+               "field": "Charité",
+               "numberOfEvents": "32",
+               "majorEvents": [
+                    "ArtDay ",
+                    " Qoufat Ramadhan ",
+                    " Collecte de vêtements"
+               ]
+          }
+     },
+     {
+          "clubName": "Women Techmakers Algiers",
+          "description": {
+               "imageUrl": "https://www.esi.dz/wp-content/uploads/2021/04/WTM-1-150x150.png",
+               "creationDate": "Septembre 2017",
+               "field": "Femme développeuse",
+               "numberOfEvents": "24",
+               "majorEvents": [
+                    "Code Quiz ",
+                    " Tech ",
+                    " Maths day ",
+                    " Women’s Day"
+               ]
+          }
+     },
+     {
+          "clubName": "Club vert de l’ESI",
+          "description": {
+               "imageUrl": "https://www.esi.dz/wp-content/uploads/2021/04/CVE-1-150x150.jpg",
+               "creationDate": "2012",
+               "field": "Environnement / Entreprenariat vert /Technologie verte",
+               "numberOfEvents": "41",
+               "majorEvents": [
+                    "Flash talk ",
+                    " Sahra it"
+               ]
+          }
+     },
+     {
+          "clubName": "Club Etudiants En TIC",
+          "description": {
+               "imageUrl": "https://www.esi.dz/wp-content/uploads/2021/05/ETIC-1-300x211.png",
+               "creationDate": "10 Novembre 2009",
+               "field": "Entrepreneuriat",
+               "numberOfEvents": "59",
+               "majorEvents": [
+                    "Salon de l’emploi ",
+                    " Training Camp ",
+                    " Before S2EE"
+               ]
+          }
+     },
+     {
+          "clubName": "Club scientifique de l'ESI",
+          "description": {
+               "imageUrl": "https://www.esi.dz/wp-content/uploads/2021/04/cse-1-150x150.jpg",
+               "creationDate": "28 Avril 2008",
+               "field": "Scientifique / Technologique",
+               "numberOfEvents": "97",
+               "majorEvents": [
+                    "Hack IT ",
+                    " Leapfrog ",
+                    " Design Fest ",
+                    " Algeria Web Awards"
+               ]
+          }
+     },
+     {
+          "clubName": "School of AI",
+          "description": {
+               "imageUrl": "https://www.esi.dz/wp-content/uploads/2021/04/School-AI-1-150x150.jpg",
+               "creationDate": "2019",
+               "field": "Intelligence artificielle",
+               "numberOfEvents": "4",
+               "majorEvents": [
+                    "AI2E ",
+                    " HAIck Algieria"
+               ]
+          }
+     },
+     {
+          "clubName": "SHELLMATES",
+          "description": {
+               "imageUrl": "https://www.esi.dz/wp-content/uploads/2021/04/Shellmate-150x150.png",
+               "creationDate": "19/12/2011",
+               "field": "Sécurité informatique",
+               "numberOfEvents": "51",
+               "majorEvents": [
+                    "HackINI ",
+                    " BSides Algiers ",
+                    " Hack Till S'hour"
+               ]
+          }
+     },
+     {
+          "clubName": "CLUB ARTISTIQUE ET CULTUREL DE L’ESI",
+          "description": {
+               "imageUrl": "https://www.esi.dz/wp-content/uploads/2021/04/Cace-1-150x150.png",
+               "creationDate": "01 Décembre 2016",
+               "field": "Culturel",
+               "numberOfEvents": "54",
+               "majorEvents": [
+                    "Movie Time Sing it"
+               ]
+          }
+     },
+     {
+          "clubName": "Code and share",
+          "description": {
+               "imageUrl": "https://www.esi.dz/wp-content/uploads/2021/04/Codeshare-1-150x150.png",
+               "creationDate": "22 Février 2018",
+               "field": "Programmation",
+               "numberOfEvents": "9",
+               "majorEvents": [
+                    "KidsCanCode"
+               ]
+          }
+     }
+]

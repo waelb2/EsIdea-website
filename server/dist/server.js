@@ -29,7 +29,6 @@ app.use(routes_1.default);
 const start = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield (0, db_1.connectDB)(String(process.env.DATABASE_URI));
-        console.log("DATABASE CONNECTED");
         app.listen(3000, () => {
             console.log(`Server starting at http://localhost:${PORT}`);
         });

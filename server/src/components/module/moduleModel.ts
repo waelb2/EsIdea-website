@@ -8,14 +8,14 @@ const moduleSchema = new Schema<ModuleInterface>({
         required : [true, "Module name is required"]
     }, 
     description  : {
-        Title : String,
+        title : String,
         field : String,
         credit : Number, 
         coef : Number,
         edition: String ,
-        courseHours : Number,
-        tdHours : Number,
-        tpHours : Number || undefined 
+        courseHours : String,
+        tdHours : String,
+        tpHours : String 
     }
 })
 

@@ -7,7 +7,7 @@ export interface ClubInterface extends Document {
         imageUrl : string , 
         creationDate : string, 
         field : string,
-        eventsNumber : number, 
-        bestEvent: string,
+        numberOfEvents : number, 
+        majorEvents: [string],
     }
 }

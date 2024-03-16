@@ -23,8 +23,6 @@ const start = async()=>{
 try {
     
     await connectDB(String(process.env.DATABASE_URI))
-    console.log("DATABASE CONNECTED")
-
     app.listen(3000,()=>{
          console.log(`Server starting at http://localhost:${PORT}`)
     })
