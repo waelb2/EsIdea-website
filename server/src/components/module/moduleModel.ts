@@ -10,8 +10,8 @@ const moduleSchema = new Schema<ModuleInterface>({
     description  : {
         title : String,
         field : String,
-        credit : Number, 
-        coef : Number,
+        credit : mongoose.Schema.Types.BigInt, 
+        coef : mongoose.Schema.Types.BigInt,
         edition: String ,
         courseHours : String,
         tdHours : String,
