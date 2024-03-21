@@ -35,9 +35,9 @@ passport.use(new GoogleStrategy({
     scope: ['email profile']
 },
     (request, accessToken, refreshToken, profile, done) => {
-        //checking if the user already created an accound and perform some tasks
+        //to check if the email ends with @esi.dz
         if (profile.emails && profile.emails.length > 0 && profile.emails[0].value.endsWith('@esi.dz')) {
-            // User's email matches the required domain, proceed with authentication
+            
             User.findOne({ 'googleId': profile.id }).then((user) => {
                 if (user) {
                     console.log(
