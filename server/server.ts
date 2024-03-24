@@ -18,6 +18,7 @@ const DB_URI = process.env.DATABASE_URI
 app.use(session({
     secret: 'secret_key',
     resave: false,
+    cookie :{secure:false,maxAge:30*24*60*60*1000},
     saveUninitialized: false
 }));
   

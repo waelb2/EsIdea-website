@@ -15,9 +15,7 @@ const authenticate = passport.authenticate('google', { scope: ['email profile'],
 
 const authenticateCallback = passport.authenticate('google');
 
-const isLoggedIn = (req: Request, res: Response, next: NextFunction) => {
-    req.user ? next() : res.send("Please authenticate");
-}
+
 
 const logout = (req: Request, res: Response) => {
     req.logout(() => { });
@@ -28,7 +26,11 @@ const logout = (req: Request, res: Response) => {
 const login_get = (req: Request, res: Response) => {
     res.send("login_get");
 }
-
+const createToken = (id:any) => {
+    return jwt.sign({ id }, 'net ninja secret', {
+      expiresIn: 30*24*60*60,
+    });
+  };
 const login_post = async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
@@ -37,10 +39,13 @@ const login_post = async (req: Request, res: Response) => {
         if (!user) {
             return res.status(200).json({ message:"No user found with that email!" });
         }
-        const passwordMatch = await bcrypt.compare(password, String(user!.password));
+        const passwordMatch = await bcrypt.compare(String(password), String(user!.password));
         if (!passwordMatch){
             return res.status(404).json({ message: "Wrong Password, try again!" });
         }
+        const token = createToken(user._id);
+        res.cookie('jwt',token,{httpOnly:true,maxAge:30*24*60*60*1000});
+
         return res.status(200).json({ user });
        
 
@@ -80,7 +85,7 @@ const updatePassword = async (req: Request, res: Response) => {
     try {
         const user = await User.findOne({ email: email},); // no validation !
         if (!user) {
-            return res.status(200).json({ message:"No user found with that email!" });
+            return res.status(400).json({ message:"No user found with that email!" });
         }
         const passwordMatch = await bcrypt.compare(currentPassword, String(user!.password));
         
@@ -117,4 +122,4 @@ const handleError = (err: any) => {
     return errors;
 }
 
-export { login_get, login_post, auth, authenticate, authenticateCallback, isLoggedIn, logout, addPassword,updatePassword };
+export { login_get, login_post, auth, authenticate, authenticateCallback, logout, addPassword,updatePassword };

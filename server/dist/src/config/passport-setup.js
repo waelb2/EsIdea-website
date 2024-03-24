@@ -43,7 +43,7 @@ passport_1.default.use(new passport_google_oauth20_1.Strategy({
                     lastName: lastName,
                     googleId: profile.id,
                     email: email,
-                    joinDate: joinDate,
+                    joinDate: Date.now(),
                 }).save().then((savedUser) => {
                     console.log("The user is saved successfully:" + savedUser);
                     done(null, savedUser);

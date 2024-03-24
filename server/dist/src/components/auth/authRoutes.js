@@ -9,7 +9,7 @@ const router = express_1.default.Router();
 router.get('/google', authController_1.authenticate);
 router.get('/logout', authController_1.logout);
 router.get('/google/callback', authController_1.authenticateCallback, (req, res) => {
-    res.redirect('/dashboard/profile');
+    res.redirect('/dashboard');
 });
 //////////////////////////////// oauth /////////////////////////////////
 //////////////////////////////// login ///////////////////////////////

@@ -10,7 +10,7 @@ const router: Router = express.Router();
 router.get('/google', authenticate);
 router.get('/logout', logout);
 router.get('/google/callback', authenticateCallback, (req, res) => {
-    res.redirect('/dashboard/profile');
+    res.redirect('/dashboard');
 });
 
 //////////////////////////////// oauth /////////////////////////////////

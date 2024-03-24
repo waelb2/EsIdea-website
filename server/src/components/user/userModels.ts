@@ -57,12 +57,12 @@ const userSchema = new Schema<UserInterface>({
 })
 
 
-userSchema.pre('save', async function (next) { // this is only used before adding the doc to db, since we r using google sign up, it wont be fired
+// userSchema.pre('save', async function (next) { // this is only used before adding the doc to db, since we r using google sign up, it wont be fired
 
-    const salt = await bcrypt.genSalt();
-    this.password = await bcrypt.hash(String(this.password), salt);
-    next();
-  });
+//     const salt = await bcrypt.genSalt();
+//     this.password = await bcrypt.hash(String(this.password), salt);
+//     next();
+//   });
 const User = mongoose.model<UserInterface>('User', userSchema);
 
 

@@ -56,7 +56,7 @@ passport.use(new GoogleStrategy({
                         lastName: lastName,
                         googleId: profile.id,
                         email :email,
-                        joinDate: joinDate,
+                        joinDate: Date.now(),
                     }).save().then((savedUser) => {
                         console.log("The user is saved successfully:" + savedUser);
                         done(null, savedUser);
