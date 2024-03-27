@@ -16,6 +16,7 @@ const express_1 = __importDefault(require("express"));
 const dotenv_1 = __importDefault(require("dotenv"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const db_1 = require("./src/config/db");
+const routes_1 = __importDefault(require("./routes"));
 dotenv_1.default.config();
 // Configuring the host 
 const HOST = process.env.HOST;
@@ -24,7 +25,6 @@ const app = (0, express_1.default)();
 app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
 // routes 
-const routes_1 = __importDefault(require("./routes"));
 app.use(routes_1.default);
 const start = () => __awaiter(void 0, void 0, void 0, function* () {
     try {

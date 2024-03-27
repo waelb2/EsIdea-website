@@ -1,7 +1,8 @@
-import express ,{Express ,Request , Response } from "express";
+import express, { Express, Request, Response } from "express";
 import dotenv from "dotenv"
 import bodyParser from "body-parser"
 import { connectDB } from "./src/config/db";
+import routes from "./routes";
 
 dotenv.config()
 
@@ -15,22 +16,19 @@ app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:true}))
 
 // routes 
-import routes from "./routes"
 
-app.use(routes)
-const start = async()=>{
+app.use(routes);
 
-try {
-    
-    await connectDB(String(process.env.DATABASE_URI))
-    app.listen(3000,()=>{
-         console.log(`Server starting at http://localhost:${PORT}`)
-    })
+const start = async() => {
+    try {
+        await connectDB(String(process.env.DATABASE_URI));
+        app.listen(3000, () => {
+            console.log(`Server starting at http://localhost:${PORT}`)
+        });
 
-} catch (error) {
-    console.log(error) 
-}
+    } catch (error) {
+        console.log(error);
+    }
 }
 
-
-start()
+start();

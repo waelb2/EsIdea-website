@@ -13,12 +13,25 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const userModels_1 = require("./userModels");
+const userModels_1 = require("../user/userModels");
+const adminMiddlewares_1 = require("../../utils/middlewares/adminMiddlewares");
 const router = express_1.default.Router();
-router.get("/users", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+router.get("/admin/stats", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    let stats = { nbUsers: 0, nbProjects: [], nbVisite24h: 0 };
     try {
-        const users = yield userModels_1.User.find({});
-        return res.status(200).send(users);
+        //Nombre d'utilisateurs
+        stats.nbUsers = yield userModels_1.User.countDocuments();
+        //Nombre de projets par methode
+        yield (0, adminMiddlewares_1.nbProjetsMethodes)()
+            .then((nbproj) => {
+            stats.nbProjects = nbproj;
+        });
+        //Nombre de visites du site (par une periode de 24h)
+        yield (0, adminMiddlewares_1.nbVisites24h)()
+            .then((nb) => {
+            stats.nbVisite24h = nb;
+        });
+        return res.status(200).send(stats);
     }
     catch (error) {
         console.log(error);
