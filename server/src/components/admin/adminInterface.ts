@@ -1,5 +1,6 @@
 export interface Statistiques {
     nbUsers : number,
-    nbProjects : Array<number>,
+    nbProjets : Array<number>,
     nbVisite24h: number,
+    nbProjets24h: number,
 }
