@@ -1,13 +1,12 @@
-const jwt = require('jsonwebtoken');
 import { Request, Response, NextFunction } from 'express';
+import jwt from 'jsonwebtoken';
 
-
-export const requireAuth = (req: Request, res: Response, next: NextFunction) => {
-  const token = req.cookies.jwt;
+export const isAuthenticated = (req: Request, res: Response, next: NextFunction): void => {
+  const token: string | undefined = req.cookies.jwt;
 
   // check json web token exists & is verified
   if (token) {
-    jwt.verify(token, 'esideaisthegoat', (err: Error, decodedToken: any) => {
+    jwt.verify(token, process.env.JWT_SECRET as string, (err: Error | null, decodedToken: any) => {
       if (err) {
         console.log(err.message);
         res.redirect('/auth');
@@ -18,15 +17,18 @@ export const requireAuth = (req: Request, res: Response, next: NextFunction) => 
     });
   } else {
     res.redirect('/auth');
-  }
+  } 
+};
+
+export const role = (req: Request, res: Response, next: NextFunction)=>{
+
 }
 
-export const isLoggedIn = (req: Request, res: Response, next: NextFunction) => {
+export const isLoggedIn = (req: Request, res: Response, next: NextFunction): void => {
   if (!req.user) {
     res.redirect('/auth');
   } else {
     next();
   }
-}
+};
 
-module.exports = { requireAuth, isLoggedIn };

@@ -36,8 +36,8 @@ const login_get = (req, res) => {
     res.send("login_get");
 };
 exports.login_get = login_get;
-const createToken = (id) => {
-    return jsonwebtoken_1.default.sign({ id }, 'net ninja secret', {
+const createToken = (user) => {
+    return jsonwebtoken_1.default.sign({ user }, 'esideasecret', {
         expiresIn: 30 * 24 * 60 * 60,
     });
 };
@@ -46,14 +46,14 @@ const login_post = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     try {
         const user = yield userModels_1.User.findOne({ email: email }); // no validation !
         if (!user) {
-            return res.status(200).json({ message: "No user found with that email!" });
+            return res.status(404).json({ message: "No user found with that email!" });
         }
         const passwordMatch = yield bcrypt_1.default.compare(String(password), String(user.password));
         if (!passwordMatch) {
             return res.status(404).json({ message: "Wrong Password, try again!" });
         }
-        const token = createToken(user._id);
-        res.cookie('jwt', token, { httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000 });
+        const token = createToken(user);
+        res.cookie('token', token, { httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000 });
         return res.status(200).json({ user });
     }
     catch (err) {
@@ -76,7 +76,7 @@ const addPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
     catch (e) {
         const errors = handleError(e);
-        return res.status(404).json({ errors });
+        return res.status(400).json({ errors });
     }
 });
 exports.addPassword = addPassword;
@@ -86,7 +86,7 @@ const updatePassword = (req, res) => __awaiter(void 0, void 0, void 0, function*
     try {
         const user = yield userModels_1.User.findOne({ email: email }); // no validation !
         if (!user) {
-            return res.status(400).json({ message: "No user found with that email!" });
+            return res.status(404).json({ message: "No user found with that email!" });
         }
         const passwordMatch = yield bcrypt_1.default.compare(currentPassword, String(user.password));
         if (!passwordMatch) {
@@ -102,7 +102,7 @@ const updatePassword = (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
     catch (e) {
         const errors = handleError(e);
-        return res.status(404).json({ errors });
+        return res.status(400).json({ errors });
     }
 });
 exports.updatePassword = updatePassword;

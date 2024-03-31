@@ -6,8 +6,10 @@ import '../components/user/userModels';
 
 import { Strategy as GoogleStrategy } from 'passport-google-oauth20';
 
-import {User} from '../components/user/userModels';
+import { User } from '../components/user/userModels';
 import { get } from 'http';
+import jwt from 'jsonwebtoken';
+import { response } from 'express';
 
 dotenv.config()
 
@@ -17,7 +19,7 @@ const SECRET_ID = process.env.SECRET_ID
 const callbackURL = "http://localhost:3000/auth/google/callback"
 
 
-passport.serializeUser((user :any,done) => {
+passport.serializeUser((user: any, done) => {
     done(null, user.id);
 });
 
@@ -28,8 +30,8 @@ passport.deserializeUser((id, done) => {
 });
 
 passport.use(new GoogleStrategy({
-    clientID:String(CLIENT_ID),
-    clientSecret:String(SECRET_ID),
+    clientID: String(CLIENT_ID),
+    clientSecret: String(SECRET_ID),
     callbackURL: String(callbackURL),
     passReqToCallback: true,
     scope: ['email profile']
@@ -37,28 +39,25 @@ passport.use(new GoogleStrategy({
     (request, accessToken, refreshToken, profile, done) => {
         //to check if the email ends with @esi.dz
         if (profile.emails && profile.emails.length > 0 && profile.emails[0].value.endsWith('@esi.dz')) {
-            
+
             User.findOne({ 'googleId': profile.id }).then((user) => {
                 if (user) {
-                    console.log(
-                        "The user is already in db:" + user
-                    );
                     done(null, user);
                 } else {
                     const email = profile.emails!.length > 0 ? profile.emails![0].value : '';
 
-                    const {firstName,lastName} = getSurnameAndName(profile.displayName);
-                    
-                    const joinDate= getDate();
+                    const { firstName, lastName } = getSurnameAndName(profile.displayName);
+
+                    const joinDate = getDate();
 
                     const newUser = new User({
-                        firstName:firstName,
+                        firstName: firstName,
                         lastName: lastName,
                         googleId: profile.id,
-                        email :email,
+                        email: email,
                         joinDate: Date.now(),
-                    }).save().then((savedUser) => {
-                        console.log("The user is saved successfully:" + savedUser);
+                    }).save().then((savedUser,) => {
+        
                         done(null, savedUser);
                     }).catch(error => {
                         console.error('Error saving user:', error);
@@ -73,11 +72,11 @@ passport.use(new GoogleStrategy({
     }
 ));
 
-function getSurnameAndName(fullName: string): { firstName: string,lastName: string } {
+function getSurnameAndName(fullName: string): { firstName: string, lastName: string } {
     const lastIndex = fullName.lastIndexOf(' ');
     const lastName = fullName.substring(0, lastIndex);
     const firstName = fullName.substring(lastIndex + 1);
-    return {  firstName,lastName };
+    return { firstName, lastName };
 }
 function getDate() {
     var today = new Date();

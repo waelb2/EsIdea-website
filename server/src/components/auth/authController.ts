@@ -26,30 +26,29 @@ const logout = (req: Request, res: Response) => {
 const login_get = (req: Request, res: Response) => {
     res.send("login_get");
 }
-const createToken = (id:any) => {
-    return jwt.sign({ id }, 'net ninja secret', {
-      expiresIn: 30*24*60*60,
+const createToken = (user: any) => {
+    return jwt.sign({ user }, 'esideasecret', {
+        expiresIn: 30 * 24 * 60 * 60,
     });
-  };
+};
 const login_post = async (req: Request, res: Response) => {
     const { email, password } = req.body;
 
     try {
-        const user = await User.findOne({ email: email},); // no validation !
+        const user = await User.findOne({ email: email },); // no validation !
         if (!user) {
-            return res.status(200).json({ message:"No user found with that email!" });
+            return res.status(404).json({ message: "No user found with that email!" });
         }
         const passwordMatch = await bcrypt.compare(String(password), String(user!.password));
-        if (!passwordMatch){
+        if (!passwordMatch) {
             return res.status(404).json({ message: "Wrong Password, try again!" });
         }
-        const token = createToken(user._id);
-        res.cookie('jwt',token,{httpOnly:true,maxAge:30*24*60*60*1000});
+        const token = createToken(user);
+        res.cookie('token', token, { httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000 });
 
         return res.status(200).json({ user });
-       
 
-    } catch (err) { 
+    } catch (err) {
         const errors = handleError(err);
         res.status(400).json({ errors });
     }
@@ -58,7 +57,7 @@ const login_post = async (req: Request, res: Response) => {
 //////////////////////////////////////////////////////////////////////////
 const addPassword = async (req: Request, res: Response) => {
     const { email, newPassword } = req.body;
-    
+
     const salt = await bcrypt.genSalt();
     const hashedPassword = await bcrypt.hash(String(newPassword), salt);
     try {
@@ -73,7 +72,7 @@ const addPassword = async (req: Request, res: Response) => {
         return res.status(200).json({ message: "Password Added Successfully" });
     } catch (e) {
         const errors = handleError(e);
-        return res.status(404).json({ errors });
+        return res.status(400).json({ errors });
     }
 }
 
@@ -81,15 +80,15 @@ const addPassword = async (req: Request, res: Response) => {
 
 const updatePassword = async (req: Request, res: Response) => {
     const { email, currentPassword, newPassword } = req.body;
-    
+
     try {
-        const user = await User.findOne({ email: email},); // no validation !
+        const user = await User.findOne({ email: email },); // no validation !
         if (!user) {
-            return res.status(400).json({ message:"No user found with that email!" });
+            return res.status(404).json({ message: "No user found with that email!" });
         }
         const passwordMatch = await bcrypt.compare(currentPassword, String(user!.password));
-        
-        if (!passwordMatch){
+
+        if (!passwordMatch) {
             return res.status(404).json({ message: "Wrong Password, try again!" });
         }
         const salt = await bcrypt.genSalt();
@@ -106,7 +105,7 @@ const updatePassword = async (req: Request, res: Response) => {
         return res.status(200).json({ message: "Password Added Successfully" });
     } catch (e) {
         const errors = handleError(e);
-        return res.status(404).json({ errors });
+        return res.status(400).json({ errors });
     }
 }
 
@@ -122,4 +121,4 @@ const handleError = (err: any) => {
     return errors;
 }
 
-export { login_get, login_post, auth, authenticate, authenticateCallback, logout, addPassword,updatePassword };
+export { login_get, login_post, auth, authenticate, authenticateCallback, logout, addPassword, updatePassword };

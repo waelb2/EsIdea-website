@@ -6,6 +6,10 @@ import {connectDB} from "./src/config/db";
 import session from 'express-session';
 import bodyParser from "body-parser"
 
+
+
+
+
 const app :Express= express();
 dotenv.config()
 
@@ -30,6 +34,7 @@ app.use(session({
 
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({extended:true}))
+
 
 // routes 
 import routes from "./routes"

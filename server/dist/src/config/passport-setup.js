@@ -31,7 +31,6 @@ passport_1.default.use(new passport_google_oauth20_1.Strategy({
     if (profile.emails && profile.emails.length > 0 && profile.emails[0].value.endsWith('@esi.dz')) {
         userModels_1.User.findOne({ 'googleId': profile.id }).then((user) => {
             if (user) {
-                console.log("The user is already in db:" + user);
                 done(null, user);
             }
             else {
@@ -45,7 +44,6 @@ passport_1.default.use(new passport_google_oauth20_1.Strategy({
                     email: email,
                     joinDate: Date.now(),
                 }).save().then((savedUser) => {
-                    console.log("The user is saved successfully:" + savedUser);
                     done(null, savedUser);
                 }).catch(error => {
                     console.error('Error saving user:', error);

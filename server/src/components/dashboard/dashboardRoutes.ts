@@ -1,6 +1,6 @@
 import express, { Router } from "express";
 import { dashboard } from "./dashboardControllers";
-import {isLoggedIn,requireAuth} from "../auth/authMiddleware"; 
+import {isLoggedIn,isAuthenticated} from "../auth/authMiddleware"; 
 
 const router: Router = express.Router();
 
