@@ -34,7 +34,6 @@ const logout = (req, res) => {
     res.redirect('/auth');
 };
 exports.logout = logout;
-//////////////////////////////// google auth //////////////////////////////////////
 const login_get = (req, res) => {
     res.send('login_get');
 };
@@ -49,11 +48,11 @@ const login_post = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     try {
         const user = yield userModels_1.User.findOne({ email: email }); // no validation !
         if (!user) {
-            return res.status(200).json({ message: 'No user found with that email!' });
+            return res.status(404).json({ message: 'User not found' });
         }
         const passwordMatch = yield bcrypt_1.default.compare(String(password), String(user.password));
         if (!passwordMatch) {
-            return res.status(404).json({ message: 'Wrong Password, try again!' });
+            return res.status(401).json({ message: 'Wrong Password, try again!' });
         }
         const token = createToken(user._id);
         res.cookie('jwt', token, {
@@ -63,12 +62,12 @@ const login_post = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         return res.status(200).json({ user });
     }
     catch (err) {
+        console.log(err);
         const errors = handleError(err);
         res.status(400).json({ errors });
     }
 });
 exports.login_post = login_post;
-//////////////////////////////////////////////////////////////////////////
 const addPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, newPassword } = req.body;
     const salt = yield bcrypt_1.default.genSalt();
@@ -86,7 +85,6 @@ const addPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.addPassword = addPassword;
-//////////////////////////////////////////////////////////////////////////
 const updatePassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { email, currentPassword, newPassword } = req.body;
     try {
@@ -112,7 +110,6 @@ const updatePassword = (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.updatePassword = updatePassword;
-//////////////////////////////////////////////////////////////////////////
 const handleError = (err) => {
     let errors = {};
     if (err.name === 'ValidationError') {

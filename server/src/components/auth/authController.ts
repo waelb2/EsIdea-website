@@ -22,11 +22,11 @@ const logout = (req: Request, res: Response) => {
   req.logout(() => {})
   res.redirect('/auth')
 }
-//////////////////////////////// google auth //////////////////////////////////////
 
 const login_get = (req: Request, res: Response) => {
   res.send('login_get')
 }
+
 const createToken = (id: any) => {
   return jwt.sign({ id }, 'net ninja secret', {
     expiresIn: 30 * 24 * 60 * 60
@@ -38,14 +38,15 @@ const login_post = async (req: Request, res: Response) => {
   try {
     const user = await User.findOne({ email: email }) // no validation !
     if (!user) {
-      return res.status(200).json({ message: 'No user found with that email!' })
+      return res.status(404).json({ message: 'User not found' })
     }
+
     const passwordMatch = await bcrypt.compare(
       String(password),
       String(user!.password)
     )
     if (!passwordMatch) {
-      return res.status(404).json({ message: 'Wrong Password, try again!' })
+      return res.status(401).json({ message: 'Wrong Password, try again!' })
     }
     const token = createToken(user._id)
     res.cookie('jwt', token, {
@@ -55,12 +56,12 @@ const login_post = async (req: Request, res: Response) => {
 
     return res.status(200).json({ user })
   } catch (err) {
+    console.log(err)
     const errors = handleError(err)
     res.status(400).json({ errors })
   }
 }
 
-//////////////////////////////////////////////////////////////////////////
 const addPassword = async (req: Request, res: Response) => {
   const { email, newPassword } = req.body
 
@@ -81,8 +82,6 @@ const addPassword = async (req: Request, res: Response) => {
     return res.status(404).json({ errors })
   }
 }
-
-//////////////////////////////////////////////////////////////////////////
 
 const updatePassword = async (req: Request, res: Response) => {
   const { email, currentPassword, newPassword } = req.body
@@ -117,8 +116,6 @@ const updatePassword = async (req: Request, res: Response) => {
     return res.status(404).json({ errors })
   }
 }
-
-//////////////////////////////////////////////////////////////////////////
 
 const handleError = (err: any) => {
   let errors: any = {}
