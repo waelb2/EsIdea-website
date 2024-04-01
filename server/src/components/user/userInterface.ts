@@ -1,4 +1,4 @@
-import { Document } from "mongoose";
+import { Document, Model } from "mongoose";
 import { ProjectInterface } from "../project/projectInterface";
 import { InvitationInterface } from "../invitation/invitationInterface";
 
@@ -14,6 +14,6 @@ export interface UserInterface extends Document {
      project: ProjectInterface,
      joinedAt : Date ,   
     }],
-    projectInvitations : [InvitationInterface]
-   // notifications
+    googleId: string,
+    projectInvitations : [InvitationInterface],
 }
