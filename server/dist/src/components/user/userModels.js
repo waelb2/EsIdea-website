@@ -80,7 +80,11 @@ const userSchema = new mongoose_1.Schema({
             type: mongoose_1.default.Types.ObjectId,
             ref: 'Invitation'
         }]
-    //notifications: [{ type: Schema.Types.ObjectId, ref: 'Notification' }],
 });
+// userSchema.pre('save', async function (next) { // this is only used before adding the doc to db, since we r using google sign up, it wont be fired
+//     const salt = await bcrypt.genSalt();
+//     this.password = await bcrypt.hash(String(this.password), salt);
+//     next();
+//   });
 const User = mongoose_1.default.model('User', userSchema);
 exports.User = User;

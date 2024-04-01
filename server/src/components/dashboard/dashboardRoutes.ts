@@ -1,8 +1,9 @@
 import express, { Router } from "express";
-import { profile, isLoggedIn } from "./dashboardControllers";
+import { dashboard } from "./dashboardControllers";
+import {isLoggedIn,requireAuth} from "../auth/authMiddleware"; 
 
 const router: Router = express.Router();
 
-router.get('/profile',isLoggedIn,profile);
+router.get('/',isLoggedIn,dashboard);
 
 export = router;

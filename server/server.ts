@@ -16,6 +16,7 @@ const PORT = process.env.PORT || 3000;
 app.use(session({
     secret: 'secret_key',
     resave: false,
+    cookie :{secure:false,maxAge:30*24*60*60*1000},
     saveUninitialized: false
 }));
 

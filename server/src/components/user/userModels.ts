@@ -1,7 +1,7 @@
 import mongoose , {Schema} from "mongoose";
 import { UserInterface } from "./userInterface";
 import validator from 'validator';
-
+import bcrypt from 'bcrypt';
 
 enum UserRole{
     ADMIN = "admin",
@@ -54,11 +54,15 @@ const userSchema = new Schema<UserInterface>({
         type : mongoose.Types.ObjectId,
         ref : 'Invitation'
     }]
-    //notifications: [{ type: Schema.Types.ObjectId, ref: 'Notification' }],
-
 })
 
 
+// userSchema.pre('save', async function (next) { // this is only used before adding the doc to db, since we r using google sign up, it wont be fired
+
+//     const salt = await bcrypt.genSalt();
+//     this.password = await bcrypt.hash(String(this.password), salt);
+//     next();
+//   });
 const User = mongoose.model<UserInterface>('User', userSchema);
 
 

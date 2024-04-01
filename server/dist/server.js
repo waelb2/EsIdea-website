@@ -28,6 +28,7 @@ const DB_URI = process.env.DATABASE_URI;
 app.use((0, express_session_1.default)({
     secret: 'secret_key',
     resave: false,
+    cookie: { secure: false, maxAge: 30 * 24 * 60 * 60 * 1000 },
     saveUninitialized: false
 }));
 app.use(passport_1.default.initialize());
