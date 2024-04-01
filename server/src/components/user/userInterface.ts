@@ -14,6 +14,7 @@ export interface UserInterface extends Document {
      project: ProjectInterface,
      joinedAt : Date ,   
     }],
+    googleId: string,
     projectInvitations : [InvitationInterface]
    // notifications
 }

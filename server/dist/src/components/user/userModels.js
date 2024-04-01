@@ -22,9 +22,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
     __setModuleDefault(result, mod);
     return result;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserRole = exports.User = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
+const validator_1 = __importDefault(require("validator"));
 var UserRole;
 (function (UserRole) {
     UserRole["ADMIN"] = "admin";
@@ -42,9 +46,16 @@ const userSchema = new mongoose_1.Schema({
     email: {
         type: String,
         required: [true, "Email is required"],
+        unique: true,
+        lowercase: true,
+        validate: {
+            validator: (value) => validator_1.default.isEmail(value),
+            message: 'Invalid email format.',
+        }
     },
     password: {
         type: String,
+        minlength: [6, 'Password must be at least 6 characters long.'],
     },
     profilePicUrl: {
         type: String,
