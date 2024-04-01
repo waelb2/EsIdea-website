@@ -1,7 +1,6 @@
-import { Document } from "mongoose";
+import { Document } from 'mongoose'
 
-
-export interface IdeationMethodInterface {
-    methodName : string, 
-    description:string,
+export interface IdeationMethodInterface extends Document {
+  methodName: string
+  description: string
 }

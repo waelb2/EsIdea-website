@@ -12,30 +12,26 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const express_1 = __importDefault(require("express"));
+const nodemailer_1 = __importDefault(require("../config/nodemailer"));
 const dotenv_1 = __importDefault(require("dotenv"));
-const body_parser_1 = __importDefault(require("body-parser"));
-const db_1 = require("./src/config/db");
 dotenv_1.default.config();
-// Configuring the host
-const HOST = process.env.HOST;
-const PORT = process.env.PORT || 3000;
-const app = (0, express_1.default)();
-app.use(body_parser_1.default.json());
-app.use(body_parser_1.default.urlencoded({ extended: true }));
-// routes
-const routes_1 = __importDefault(require("./routes"));
-app.use(routes_1.default);
-const start = () => __awaiter(void 0, void 0, void 0, function* () {
+const sendInvitationEMail = (coordinator, userId, email, projectName) => __awaiter(void 0, void 0, void 0, function* () {
+    const invitationLink = 'http://localhost/invitation';
+    const message = {
+        from: process.env.AUTH_EMAIL,
+        to: email,
+        subject: `You are invited to join this project <<${projectName}>>`,
+        html: `<p> ${coordinator} has shared the project ${projectName} with you:</p>
+        <form action="${invitationLink}" method="post">
+            <button type="submit">Accept Invitation</button>
+        </form>`
+    };
     try {
-        yield (0, db_1.connectDB)(String(process.env.DATABASE_URI));
-        console.log('DATABASE CONNECTED');
-        app.listen(PORT, () => {
-            console.log(`Server starting at http://localhost:${PORT}`);
-        });
+        yield nodemailer_1.default.sendMail(message);
     }
-    catch (error) {
-        console.log(error);
+    catch (err) {
+        console.log(err);
+        throw err;
     }
 });
-start();
+exports.default = sendInvitationEMail;
