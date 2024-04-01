@@ -1,0 +1,1615 @@
+[
+     
+     {
+          "moduleName": "AL",
+          "description": {
+               "title": "Architectures logicielles",
+               "field": "Ingénierie du Logiciel",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "ALG1",
+          "description": {
+               "title": "Algèbre 1",
+               "field": "Mathématique pour l'Ingénieur",
+               "credit": "3",
+               "coef": "3",
+               "edition": "2012",
+               "courseHours": "15.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "ALG2",
+          "description": {
+               "title": "Algèbre 2",
+               "field": "Mathématique pour l'Ingénieur",
+               "credit": "4",
+               "coef": "3",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "ALG3",
+          "description": {
+               "title": "Algèbre 3",
+               "field": "Mathématique pour l'Ingénieur",
+               "credit": "3",
+               "coef": "3",
+               "edition": "2012",
+               "courseHours": "15.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "ALSDD",
+          "description": {
+               "title": "Algorithmique et Structure de données dynamique",
+               "field": "Ingénierie du Logiciel",
+               "credit": "6",
+               "coef": "5",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "60.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "ALSDS",
+          "description": {
+               "title": "Algorithmique et Structures de Données Statiques",
+               "field": "Ingénierie du Logiciel",
+               "credit": "6",
+               "coef": "5",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "60.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "ANAD",
+          "description": {
+               "title": "Analyse et fouille de données",
+               "field": "Data Science et Intelligence Artificielle",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "ANAL1",
+          "description": {
+               "title": "Analyse mathématique 1",
+               "field": "Mathématique pour l'Ingénieur",
+               "credit": "6",
+               "coef": "5",
+               "edition": "2012",
+               "courseHours": "45.00",
+               "tdHours": "45.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "ANAL2",
+          "description": {
+               "title": "Analyse 2",
+               "field": "Mathématique pour l'Ingénieur",
+               "credit": "6",
+               "coef": "5",
+               "edition": "2012",
+               "courseHours": "45.00",
+               "tdHours": "45.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "ANAL3",
+          "description": {
+               "title": "Analyse 3",
+               "field": "Mathématique pour l'Ingénieur",
+               "credit": "6",
+               "coef": "5",
+               "edition": "2012",
+               "courseHours": "45.00",
+               "tdHours": "45.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "ANAL4",
+          "description": {
+               "title": "Analyse 4",
+               "field": "Mathématique pour l'Ingénieur",
+               "credit": "6",
+               "coef": "5",
+               "edition": "2012",
+               "courseHours": "45.00",
+               "tdHours": "45.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "ANG1",
+          "description": {
+               "title": "Anglais 1",
+               "field": "SHSE (Sciences Humaines, Sociales et Entrepreunariat)",
+               "credit": "2",
+               "coef": "2",
+               "edition": "2012",
+               "courseHours": "0.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "ANG2",
+          "description": {
+               "title": "Anglais 2",
+               "field": "SHSE (Sciences Humaines, Sociales et Entrepreunariat)",
+               "credit": "2",
+               "coef": "2",
+               "edition": "2012",
+               "courseHours": "0.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "ANG3",
+          "description": {
+               "title": "Anglais 3",
+               "field": "SHSE (Sciences Humaines, Sociales et Entrepreunariat)",
+               "credit": "2",
+               "coef": "2",
+               "edition": "2012",
+               "courseHours": "—",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "ANUM",
+          "description": {
+               "title": "Analyse Numérique",
+               "field": "Mathématique pour l'Ingénieur",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "AQUA",
+          "description": {
+               "title": "Assurance qualité",
+               "field": "Ingénierie des Systèmes d'Information",
+               "credit": "1",
+               "coef": "1",
+               "edition": "2012",
+               "courseHours": "15.00",
+               "tdHours": "0.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "ARCH",
+          "description": {
+               "title": "Architecture",
+               "field": "Infrastructure et Réseaux",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "ARCH1",
+          "description": {
+               "title": "Architectures des ordinateurs 1",
+               "field": "Infrastructure et Réseaux",
+               "credit": "5",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "45.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "ARCH2",
+          "description": {
+               "title": "Architecture des ordinateurs 2",
+               "field": "Infrastructure et Réseaux",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "ASI",
+          "description": {
+               "title": "Analyse des Systèmes d'Information",
+               "field": "Ingénierie des Systèmes d'Information",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "AUSI",
+          "description": {
+               "title": "Audit de systèmes d'information",
+               "field": "Ingénierie des Systèmes d'Information",
+               "credit": "2",
+               "coef": "2",
+               "edition": "2012",
+               "courseHours": "15.00",
+               "tdHours": "15.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "BDA",
+          "description": {
+               "title": "Bases de données avancées",
+               "field": "Ingénierie des Systèmes d'Information",
+               "credit": "3",
+               "coef": "3",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "BDD",
+          "description": {
+               "title": "Bases de données",
+               "field": "Ingénierie des Systèmes d'Information",
+               "credit": "5",
+               "coef": "5",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "45.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "BDDA",
+          "description": {
+               "title": "SGBD et Bases de Données Avancées",
+               "field": "Ingénierie des Systèmes d'Information",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "BDDA",
+          "description": {
+               "title": "SGBD et Bases de Données avancées",
+               "field": "Ingénierie des Systèmes d'Information",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "BDDA",
+          "description": {
+               "title": "SGBD et Bases de Données Avancées",
+               "field": "Ingénierie des Systèmes d'Information",
+               "credit": "3",
+               "coef": "3",
+               "edition": "2021",
+               "courseHours": "30.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "BDM",
+          "description": {
+               "title": "Big data mining",
+               "field": "Data Science et Intelligence Artificielle",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "22.50",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "BI",
+          "description": {
+               "title": "Business Intelligence",
+               "field": "Ingénierie des Systèmes d'Information",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "22.50",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "BI",
+          "description": {
+               "title": "Business Intelligence",
+               "field": "Ingénierie des Systèmes d'Information",
+               "credit": "3",
+               "coef": "3",
+               "edition": "2021",
+               "courseHours": "22.50",
+               "tdHours": "22.50",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "BW",
+          "description": {
+               "title": "Bureautique et Web",
+               "field": "SHSE (Sciences Humaines, Sociales et Entrepreunariat)",
+               "credit": "1",
+               "coef": "1",
+               "edition": "2012",
+               "courseHours": "15.00",
+               "tdHours": "15.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "COFI",
+          "description": {
+               "title": "Comptabilité et Finances",
+               "field": "SHSE (Sciences Humaines, Sociales et Entrepreunariat)",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "COM",
+          "description": {
+               "title": "Compilation",
+               "field": "Ingénierie du Logiciel",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "COMM",
+          "description": {
+               "title": "Communication",
+               "field": "SHSE (Sciences Humaines, Sociales et Entrepreunariat)",
+               "credit": "2",
+               "coef": "2",
+               "edition": "2012",
+               "courseHours": "0.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "CPROJ",
+          "description": {
+               "title": "Conduite de projets",
+               "field": "SHSE (Sciences Humaines, Sociales et Entrepreunariat)",
+               "credit": "3",
+               "coef": "3",
+               "edition": "2012",
+               "courseHours": "15.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "CRM",
+          "description": {
+               "title": "Gestion de la Relation Client",
+               "field": "Ingénierie des Systèmes d'Information",
+               "credit": "2",
+               "coef": "2",
+               "edition": "2022",
+               "courseHours": "15.00",
+               "tdHours": "15.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "CRP",
+          "description": {
+               "title": "Complexité et Résolution de Problème",
+               "field": "Data Science et Intelligence Artificielle",
+               "credit": "3",
+               "coef": "3",
+               "edition": "2021",
+               "courseHours": "22.50",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "ECON",
+          "description": {
+               "title": "Economie",
+               "field": "SHSE (Sciences Humaines, Sociales et Entrepreunariat)",
+               "credit": "3",
+               "coef": "2",
+               "edition": "2012",
+               "courseHours": "45.00",
+               "tdHours": "—",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "ELECT",
+          "description": {
+               "title": "Eléctricité",
+               "field": "Mathématique pour l'Ingénieur",
+               "credit": "4",
+               "coef": "3",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "ELEF1",
+          "description": {
+               "title": "Electronique fondamentale 1",
+               "field": "Mathématique pour l'Ingénieur",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "ELEF2",
+          "description": {
+               "title": "Electronique fondamentale 2",
+               "field": "Mathématique pour l'Ingénieur",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "EMM",
+          "description": {
+               "title": "Elaboration du mémoire de Master",
+               "field": "SHSE (Sciences Humaines, Sociales et Entrepreunariat)",
+               "credit": "8",
+               "coef": "8",
+               "edition": "2012",
+               "courseHours": "120.00",
+               "tdHours": "80.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "ENTP",
+          "description": {
+               "title": "Entreprenariat et création d’entreprise",
+               "field": "SHSE (Sciences Humaines, Sociales et Entrepreunariat)",
+               "credit": "2",
+               "coef": "2",
+               "edition": "2012",
+               "courseHours": "0.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "FAS",
+          "description": {
+               "title": "File d'attente et Simulation",
+               "field": "Mathématique pour l'Ingénieur",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "22.50",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "FASI",
+          "description": {
+               "title": "Files d'attente et simulations",
+               "field": "Mathématique pour l'Ingénieur",
+               "credit": "3",
+               "coef": "3",
+               "edition": "2012",
+               "courseHours": "22.50",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "GPS",
+          "description": {
+               "title": "Gestion de projets scientifiques",
+               "field": "SHSE (Sciences Humaines, Sociales et Entrepreunariat)",
+               "credit": "2",
+               "coef": "2",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "20.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "HPC",
+          "description": {
+               "title": "Calcul Intensif",
+               "field": "Infrastructure et Réseaux",
+               "credit": "3",
+               "coef": "3",
+               "edition": "2021",
+               "courseHours": "22.50",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "HPC",
+          "description": {
+               "title": "Calcul Intensif",
+               "field": "Infrastructure et Réseaux",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "22.50",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "IGL",
+          "description": {
+               "title": "Introduction au génie logiciel",
+               "field": "Ingénierie du Logiciel",
+               "credit": "5",
+               "coef": "5",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "45.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "IHM",
+          "description": {
+               "title": "Interaction Homme Machine",
+               "field": "Ingénierie du Logiciel",
+               "credit": "2",
+               "coef": "2",
+               "edition": "2012",
+               "courseHours": "15.00",
+               "tdHours": "15.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "IMN",
+          "description": {
+               "title": "Images Numériques",
+               "field": "Data Science et Intelligence Artificielle",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "IMR",
+          "description": {
+               "title": "Initiation à la méthodologie de recherche",
+               "field": "SHSE (Sciences Humaines, Sociales et Entrepreunariat)",
+               "credit": "2",
+               "coef": "2",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "20.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "INFOVIS",
+          "description": {
+               "title": "Visualisation de l’information",
+               "field": "Data Science et Intelligence Artificielle",
+               "credit": "2",
+               "coef": "2",
+               "edition": "2021",
+               "courseHours": "15.00",
+               "tdHours": "15.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "IPLS",
+          "description": {
+               "title": "Ingénierie des protocoles et logiciels sécurisés",
+               "field": "Infrastructure et Réseaux",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "22.50",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "IRIAD",
+          "description": {
+               "title": "Informatique Répartie et Intelligence Artificielle distribuée",
+               "field": "Ingénierie du Logiciel",
+               "credit": "3",
+               "coef": "3",
+               "edition": "2021",
+               "courseHours": "22.50",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "IVR",
+          "description": {
+               "title": "Innovation et valorisation de la recherche",
+               "field": "SHSE (Sciences Humaines, Sociales et Entrepreunariat)",
+               "credit": "2",
+               "coef": "2",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "20.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "LANG1",
+          "description": {
+               "title": "Langue anglaise 1",
+               "field": "SHSE (Sciences Humaines, Sociales et Entrepreunariat)",
+               "credit": "2",
+               "coef": "2",
+               "edition": "2012",
+               "courseHours": "0.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "LANG2",
+          "description": {
+               "title": "Langue anglaise 2",
+               "field": "SHSE (Sciences Humaines, Sociales et Entrepreunariat)",
+               "credit": "2",
+               "coef": "2",
+               "edition": "2012",
+               "courseHours": "0.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "LOGM",
+          "description": {
+               "title": "Logique Mathématique",
+               "field": "Mathématique pour l'Ingénieur",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "MA",
+          "description": {
+               "title": "Méthodes Agiles",
+               "field": "Ingénierie du Logiciel",
+               "credit": "1",
+               "coef": "1",
+               "edition": "2012",
+               "courseHours": "15.00",
+               "tdHours": "0.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "MASD",
+          "description": {
+               "title": "Mathématiques avancées pour la science de données",
+               "field": "Data Science et Intelligence Artificielle",
+               "credit": "3",
+               "coef": "3",
+               "edition": "2021",
+               "courseHours": "15.00",
+               "tdHours": "22.50",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "MCSI",
+          "description": {
+               "title": "Méthodologies d'analyse et conception de systèmes d'information",
+               "field": "Ingénierie des Systèmes d'Information",
+               "credit": "5",
+               "coef": "5",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "MECA",
+          "description": {
+               "title": "Mécanique du point",
+               "field": "Mathématique pour l'Ingénieur",
+               "credit": "3",
+               "coef": "3",
+               "edition": "2012",
+               "courseHours": "15.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "ML",
+          "description": {
+               "title": "Machine learning",
+               "field": "Data Science et Intelligence Artificielle",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "22.50",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "MLA",
+          "description": {
+               "title": "Machine learning avancé",
+               "field": "Data Science et Intelligence Artificielle",
+               "credit": "2",
+               "coef": "2",
+               "edition": "—",
+               "courseHours": "30.00",
+               "tdHours": "20.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "MPSI",
+          "description": {
+               "title": "Management du changement dans les projets de systèmes d'information",
+               "field": "Ingénierie des Systèmes d'Information",
+               "credit": "2",
+               "coef": "2",
+               "edition": "2012",
+               "courseHours": "15.00",
+               "tdHours": "15.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "MSS",
+          "description": {
+               "title": "Modèles Stochastiques et Simulation",
+               "field": "Data Science et Intelligence Artificielle",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "22.50",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "MSSI",
+          "description": {
+               "title": "Ingénierie et management de la sécurité des systèmes d'information",
+               "field": "Ingénierie des Systèmes d'Information",
+               "credit": "2",
+               "coef": "2",
+               "edition": "2012",
+               "courseHours": "15.00",
+               "tdHours": "15.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "OGL",
+          "description": {
+               "title": "Outils de Génie Logiciel",
+               "field": "Ingénierie du Logiciel",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "15.00",
+               "tdHours": "45.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "OOE",
+          "description": {
+               "title": "Optique et Ondes éléctromagnétiques",
+               "field": "Mathématique pour l'Ingénieur",
+               "credit": "3",
+               "coef": "3",
+               "edition": "2012",
+               "courseHours": "15.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "OPT",
+          "description": {
+               "title": "Optimisation Combinatoire",
+               "field": "Data Science et Intelligence Artificielle",
+               "credit": "3",
+               "coef": "3",
+               "edition": "2012",
+               "courseHours": "22.50",
+               "tdHours": "22.50",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "ORG",
+          "description": {
+               "title": "Analyse des organisations",
+               "field": "SHSE (Sciences Humaines, Sociales et Entrepreunariat)",
+               "credit": "3",
+               "coef": "3",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "15.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "PDC",
+          "description": {
+               "title": "Patrons de conception",
+               "field": "Ingénierie du Logiciel",
+               "credit": "3",
+               "coef": "3",
+               "edition": "2012",
+               "courseHours": "15.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "PDJ",
+          "description": {
+               "title": "Python et Développement Web Full Stack avec Django",
+               "field": "Ingénierie du Logiciel",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "22.50",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "PFE",
+          "description": {
+               "title": "Elaboration du Mémoire d'Ingénieur",
+               "field": "SHSE (Sciences Humaines, Sociales et Entrepreunariat)",
+               "credit": "60",
+               "coef": "60",
+               "edition": "2012",
+               "courseHours": "—",
+               "tdHours": "900.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "PGI",
+          "description": {
+               "title": "Progiciels de gestion intégrée",
+               "field": "Ingénierie du Logiciel",
+               "credit": "3",
+               "coef": "3",
+               "edition": "2012",
+               "courseHours": "15.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "PMSS",
+          "description": {
+               "title": "Processus, Modèles et Simulation Stochastiques",
+               "field": "Data Science et Intelligence Artificielle",
+               "credit": "3",
+               "coef": "3",
+               "edition": "2021",
+               "courseHours": "30.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "POO",
+          "description": {
+               "title": "Programmation Orientée Objet",
+               "field": "Ingénierie du Logiciel",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "PRJP",
+          "description": {
+               "title": "Projet Pluridisciplinaire",
+               "field": "SHSE (Sciences Humaines, Sociales et Entrepreunariat)",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "—",
+               "tdHours": "60.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "PRJS",
+          "description": {
+               "title": "Projet de Spécialité",
+               "field": "SHSE (Sciences Humaines, Sociales et Entrepreunariat)",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2021",
+               "courseHours": "—",
+               "tdHours": "60.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "PRJS",
+          "description": {
+               "title": "Projet de spécialité",
+               "field": "SHSE (Sciences Humaines, Sociales et Entrepreunariat)",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "—",
+               "tdHours": "60.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "PRJS",
+          "description": {
+               "title": "Projet de spécialité",
+               "field": "SHSE (Sciences Humaines, Sociales et Entrepreunariat)",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "0.00",
+               "tdHours": "60.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "PROJ",
+          "description": {
+               "title": "Projet",
+               "field": "SHSE (Sciences Humaines, Sociales et Entrepreunariat)",
+               "credit": "3",
+               "coef": "3",
+               "edition": "2012",
+               "courseHours": "0.00",
+               "tdHours": "45.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "PRST1",
+          "description": {
+               "title": "Probabilités et statistiques",
+               "field": "Mathématique pour l'Ingénieur",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "PRST2",
+          "description": {
+               "title": "Probabilités et Statistiques 2",
+               "field": "Mathématique pour l'Ingénieur",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "PYT",
+          "description": {
+               "title": "Langage de programmation Python",
+               "field": "Ingénierie du Logiciel",
+               "credit": "2",
+               "coef": "2",
+               "edition": "2012",
+               "courseHours": "15.00",
+               "tdHours": "15.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "QL",
+          "description": {
+               "title": "Qualité Logicielle",
+               "field": "Ingénierie du Logiciel",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "RCR",
+          "description": {
+               "title": "Représentation des Connaissances et Raisonnement",
+               "field": "Data Science et Intelligence Artificielle",
+               "credit": "3",
+               "coef": "3",
+               "edition": "2021",
+               "courseHours": "22.50",
+               "tdHours": "22.50",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "RDCR",
+          "description": {
+               "title": "Recherche documentaire et communication de recherche",
+               "field": "SHSE (Sciences Humaines, Sociales et Entrepreunariat)",
+               "credit": "2",
+               "coef": "2",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "20.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "RES1",
+          "description": {
+               "title": "Réseaux 1",
+               "field": "Infrastructure et Réseaux",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "RES2",
+          "description": {
+               "title": "Réseaux 2",
+               "field": "Infrastructure et Réseaux",
+               "credit": "3",
+               "coef": "3",
+               "edition": "2012",
+               "courseHours": "20.00",
+               "tdHours": "25.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "RESA",
+          "description": {
+               "title": "Réseaux Avancés",
+               "field": "Infrastructure et Réseaux",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "RO",
+          "description": {
+               "title": "Recherche Opérationnelle: graphes et algorithmes",
+               "field": "Mathématique pour l'Ingénieur",
+               "credit": "3",
+               "coef": "3",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "15.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "RV",
+          "description": {
+               "title": "Réalité Virtuelle",
+               "field": "Ingénierie du Logiciel",
+               "credit": "4",
+               "coef": "4",
+               "edition": "30",
+               "courseHours": "22.50",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "SCI",
+          "description": {
+               "title": "Systèmes Communicants et Intelligents",
+               "field": "Infrastructure et Réseaux",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2021",
+               "courseHours": "22.50",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "SEC",
+          "description": {
+               "title": "Introduction à la sécurité informatique",
+               "field": "Infrastructure et Réseaux",
+               "credit": "1",
+               "coef": "1",
+               "edition": "2012",
+               "courseHours": "10.00",
+               "tdHours": "10.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "SFSD",
+          "description": {
+               "title": "Structure Fichiers et Structures de Données",
+               "field": "Ingénierie du Logiciel",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "SGOV",
+          "description": {
+               "title": "Smart Government",
+               "field": "Ingénierie des Systèmes d'Information",
+               "credit": "2",
+               "coef": "2",
+               "edition": "2021",
+               "courseHours": "15.00",
+               "tdHours": "15.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "SIAD",
+          "description": {
+               "title": "Système d'information d'aide à la décision: méthodes et outils",
+               "field": "Ingénierie des Systèmes d'Information",
+               "credit": "3",
+               "coef": "3",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "15.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "SIC",
+          "description": {
+               "title": "Systèmes d'information coopératifs",
+               "field": "Ingénierie des Systèmes d'Information",
+               "credit": "2",
+               "coef": "2",
+               "edition": "2012",
+               "courseHours": "15.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "SIG",
+          "description": {
+               "title": "Systèmes d'Information Géographiques",
+               "field": "Ingénierie des Systèmes d'Information",
+               "credit": "2",
+               "coef": "2",
+               "edition": "2012",
+               "courseHours": "15.00",
+               "tdHours": "15.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "SIGA",
+          "description": {
+               "title": "Systèmes d'Information Géographiques Avancés",
+               "field": "Ingénierie des Systèmes d'Information",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "22.50",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "SINF",
+          "description": {
+               "title": "Introduction aux systèmes d'information",
+               "field": "Ingénierie des Systèmes d'Information",
+               "credit": "3",
+               "coef": "3",
+               "edition": "2012",
+               "courseHours": "15.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "SPE",
+          "description": {
+               "title": "Stage Pratique en Entreprise",
+               "field": "SHSE (Sciences Humaines, Sociales et Entrepreunariat)",
+               "credit": "2",
+               "coef": "2",
+               "edition": "2012",
+               "courseHours": "—",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "SSR",
+          "description": {
+               "title": "Sécurité Systèmes et Réseaux",
+               "field": "Infrastructure et Réseaux",
+               "credit": "3",
+               "coef": "3",
+               "edition": "2012",
+               "courseHours": "22.50",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "SYS1",
+          "description": {
+               "title": "Systèmes d'exploitation 1",
+               "field": "Infrastructure et Réseaux",
+               "credit": "5",
+               "coef": "5",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "SYS2",
+          "description": {
+               "title": "Système d'exploitation 2",
+               "field": "Infrastructure et Réseaux",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "SYSE",
+          "description": {
+               "title": "Systèmes Embarqués",
+               "field": "Infrastructure et Réseaux",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "22.50",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "SYSR",
+          "description": {
+               "title": "Systèmes Répartis",
+               "field": "Infrastructure et Réseaux",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "SYST1",
+          "description": {
+               "title": "Instroduction au Système d'exploitation 1",
+               "field": "Infrastructure et Réseaux",
+               "credit": "3",
+               "coef": "3",
+               "edition": "2012",
+               "courseHours": "0.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "SYST2",
+          "description": {
+               "title": "Introduction aux systèmes d'exploitation 2",
+               "field": "Infrastructure et Réseaux",
+               "credit": "3",
+               "coef": "3",
+               "edition": "2012",
+               "courseHours": "15.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "TALN",
+          "description": {
+               "title": "Traitement automatique du langage naturel",
+               "field": "Data Science et Intelligence Artificielle",
+               "credit": "3",
+               "coef": "3",
+               "edition": "2021",
+               "courseHours": "22.50",
+               "tdHours": "22.50",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "TDM",
+          "description": {
+               "title": "Techniques de Développement Mobile",
+               "field": "Ingénierie du Logiciel",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "22.50",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "TDM1",
+          "description": {
+               "title": "Technologies de Développement Mobile 1",
+               "field": "Ingénierie du Logiciel",
+               "credit": "2",
+               "coef": "2",
+               "edition": "2012",
+               "courseHours": "15.00",
+               "tdHours": "15.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "TDM2",
+          "description": {
+               "title": "Technologies de Développement Mobile 2",
+               "field": "Ingénierie du Logiciel",
+               "credit": "2",
+               "coef": "2",
+               "edition": "2012",
+               "courseHours": "15.00",
+               "tdHours": "15.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "TDW",
+          "description": {
+               "title": "Techniques de Développement Web",
+               "field": "Ingénierie du Logiciel",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "15.00",
+               "tdHours": "45.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "TEE",
+          "description": {
+               "title": "Technique d'expression écrite",
+               "field": "SHSE (Sciences Humaines, Sociales et Entrepreunariat)",
+               "credit": "2",
+               "coef": "2",
+               "edition": "2012",
+               "courseHours": "15.00",
+               "tdHours": "15.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "TEO",
+          "description": {
+               "title": "Techniques d'expression orale",
+               "field": "SHSE (Sciences Humaines, Sociales et Entrepreunariat)",
+               "credit": "2",
+               "coef": "2",
+               "edition": "2012",
+               "courseHours": "15.00",
+               "tdHours": "15.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "THP",
+          "description": {
+               "title": "Théorie des langages de programmation et applications",
+               "field": "Ingénierie du Logiciel",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "TICO",
+          "description": {
+               "title": "Technologies de l'information et de la communication en organisation",
+               "field": "Ingénierie des Systèmes d'Information",
+               "credit": "3",
+               "coef": "3",
+               "edition": "2012",
+               "courseHours": "22.50",
+               "tdHours": "22.50",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "TOIA",
+          "description": {
+               "title": "Techniques d’optimisation et Intelligence Artificielle",
+               "field": "Data Science et Intelligence Artificielle",
+               "credit": "3",
+               "coef": "3",
+               "edition": "2021",
+               "courseHours": "22.50",
+               "tdHours": "22.50",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "TPRO",
+          "description": {
+               "title": "Théorie de la Programmation",
+               "field": "Ingénierie du Logiciel",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "TSG",
+          "description": {
+               "title": "Traitement de Signal",
+               "field": "Mathématique pour l'Ingénieur",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "30.00",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "URSI",
+          "description": {
+               "title": "Urbanisation des systèmes d'information",
+               "field": "Ingénierie des Systèmes d'Information",
+               "credit": "2",
+               "coef": "2",
+               "edition": "2012",
+               "courseHours": "15.00",
+               "tdHours": "15.00",
+               "tpHours": "—"
+          }
+     },
+     {
+          "moduleName": "VCL",
+          "description": {
+               "title": "Virtualisation et Cloud",
+               "field": "Infrastructure et Réseaux",
+               "credit": "4",
+               "coef": "4",
+               "edition": "2012",
+               "courseHours": "22.50",
+               "tdHours": "30.00",
+               "tpHours": "—"
+          }
+     }
+]

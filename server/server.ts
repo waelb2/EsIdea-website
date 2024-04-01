@@ -1,54 +1,43 @@
-import express,{Express} from "express";
-import dotenv from "dotenv"
+import express, { Express } from "express";
+import dotenv from "dotenv";
 import passport from 'passport';
 import "./src/config/passport-setup";
-import {connectDB} from "./src/config/db";
+import { connectDB } from "./src/config/db";
 import session from 'express-session';
-import bodyParser from "body-parser"
+import bodyParser from "body-parser";
+import routes from "./routes";
 
-const app :Express= express();
-dotenv.config()
+const app: Express = express();
+dotenv.config();
 
-// Configuring the host 
-const HOST   = process.env.HOST
-const PORT   = process.env.PORT || 3000
-const DB_URI = process.env.DATABASE_URI
+// Configuring the host
+const PORT = process.env.PORT || 3000;
 
-/////////////////////////////////////// o auth ///////////////////////////////
 app.use(session({
     secret: 'secret_key',
     resave: false,
     saveUninitialized: false
 }));
-  
-  app.use(passport.initialize());
-  app.use(passport.session());
-  
-  /////////////////////////////////////// o auth ///////////////////////////////
-  
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({extended:true}))
+app.use(passport.initialize());
+app.use(passport.session());
 
-// routes 
-import routes from "./routes"
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(routes)
-const start = async()=>{
+app.use(routes);
 
-try {
-    
-    await connectDB(String(DB_URI))
-    console.log("DATABASE CONNECTED")
+const start = async () => {
+    try {
+        await connectDB(String(process.env.DATABASE_URI));
+        console.log("DATABASE CONNECTED");
+        
+        app.listen(PORT, () => {
+            console.log(`Server starting at http://localhost:${PORT}`);
+        });
+    } catch (error) {
+        console.log(error);
+    }
+};
 
-    app.listen(PORT,()=>{
-         console.log(`Server starting at http://localhost:${PORT}`)
-    })
-
-} catch (error) {
-    console.log(error) 
-}
-}
-
-
-start()
+start();
