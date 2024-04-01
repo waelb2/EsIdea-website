@@ -1,8 +1,6 @@
-import mongoose , { Schema, mongo, } from "mongoose";
-import { TopicInterface } from "./topicInterface";
-import { ProjectInterface } from "./projectInterface";
-
-
+import mongoose, { Schema } from 'mongoose'
+import { TopicInterface } from './topicInterface'
+import { ProjectInterface } from './projectInterface'
 
 enum ProjectStatus {
   Draft = 'draft',
@@ -12,104 +10,122 @@ enum ProjectStatus {
   Cancelled = 'cancelled',
   UnderReview = 'under_review',
   Approved = 'approved',
-  Rejected = 'rejected',
+  Rejected = 'rejected'
 }
 
 enum ProjectVisibility {
-    PUBLIC = 'public',
-    PRIVATE = 'private',
+  PUBLIC = 'public',
+  PRIVATE = 'private'
 }
 
+enum projectAssociation {
+  MODULE = 'module',
+  CLUB = 'club',
+  EVENT = 'event'
+}
 
-// Topic schema 
-
-const topicSchema = new Schema <TopicInterface>({
-    topicName : {
-        type : String , 
-        required : [true, "Topic name is required"]
-    },
-    parentTopic : {type : mongoose.Types.ObjectId,
-    ref: 'Topic'}, 
-
+// project schema
+const projectSchema = new Schema<ProjectInterface>({
+  coordinator: {
+    type: mongoose.Types.ObjectId,
+    ref: 'User',
+    required: [true, 'Project coordinator (creator) is required']
+  },
+  title: {
+    type: String,
+    required: [true, 'Project title is required']
+  },
+  description: {
+    type: String
+  },
+  template: {
+    type: mongoose.Types.ObjectId,
+    ref: 'Template',
+    required: [true, 'Project template is required']
+  },
+  ideationMethod: {
+    type: mongoose.Types.ObjectId,
+    ref: 'IdeationMethod',
+    required: [true, 'Ideation method is required']
+  },
+  status: {
+    type: String,
+    required: [true, 'Project status is required'],
+    enum: Object.values(ProjectStatus),
+    default: ProjectStatus.Draft
+  },
+  visibility: {
+    type: String,
+    required: [true, 'Project visibility is required'],
+    enum: Object.values(ProjectVisibility),
+    default: ProjectVisibility.PRIVATE
+  },
+  collaboratorsCount: {
+    type: Number,
+    default: 0
+  },
+  collaborators: [
+    {
+      member: {
+        type: mongoose.Types.ObjectId,
+        ref: 'User'
+      },
+      joinedAt: Date
+    }
+  ],
+  ideas: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: 'Idea'
+    }
+  ],
+  mainTopic: {
+    type: mongoose.Types.ObjectId,
+    ref: 'Topic',
+    required: [true, 'Main topic is required']
+  },
+  subTopics: [
+    {
+      type: mongoose.Types.ObjectId,
+      ref: 'Topic'
+    }
+  ],
+  club: {
+    type: mongoose.Types.ObjectId,
+    ref: 'Club'
+  },
+  module: {
+    type: mongoose.Types.ObjectId,
+    ref: 'Module'
+  },
+  event: {
+    type: mongoose.Types.ObjectId,
+    ref: 'Event'
+  },
+  thumbnailUrl: String
 })
 
-// project schema 
-const projectSchema = new Schema<ProjectInterface>({
-    coordinator : {
-        type:mongoose.Types.ObjectId ,
-        ref : 'User' ,
-        required :[true , "Project coordinator (creator) is required"]
-    },
-    title : {
-        type : String , 
-        required: [true, "Project title is required"]
-    },
-    description :{
-        type : String ,
-    },
-   template : {
-       type : mongoose.Types.ObjectId,
-       ref:'Template' ,
-       required :[true, "Project template is required"]
-    },
-    ideationMethod : {
-        type : mongoose.Types.ObjectId,
-        ref:'IdeationMethod',
-        required : [true, "Ideation method is required"]
-    }
-    ,
-    status :{
-        type : String,
-        required : [true, "Project status is required"],
-        enum : Object.values(ProjectStatus), 
-        default:ProjectStatus.Draft,
-    },
-    visibility : {
-        type : String ,
-        required:[true, "Project visibility is required"],
-        enum : Object.values(ProjectVisibility),
-        default: ProjectVisibility.PRIVATE,
-    },
-    collaboratorsCount : {
-        type : Number, 
-    },
-    collaborators :[ {
-        member : {
-        type : mongoose.Types.ObjectId,
-        ref : 'User',
+projectSchema.pre('save', function (next) {
+  if (!this.club && !this.module && !this.event) {
+    const error = new Error(
+      'At least one of module, club or event must be provided'
+    )
+    return next(error)
+  }
+  next()
+})
 
-    },
-    joinedAt : Date 
-}],
-    ideas :[ {
-        type : mongoose.Types.ObjectId,
-        ref : 'Idea',
-    }],
-    mainTopic : {
-        type : mongoose.Types.ObjectId , 
-        ref : 'Topic', 
-        required : [true, "Main topic is required"]
-    },
-    subTopics : [{
-        type : mongoose.Types.ObjectId,
-        ref : 'Topic',
-    }],
-    club : {
-    type : mongoose.Types.ObjectId,
-    ref : 'Club',
-   }, 
-    module : {
-    type : mongoose.Types.ObjectId,
-    ref : 'Module',
-   },
-    event  : {
-    type : mongoose.Types.ObjectId,
-    ref : 'Event',
-   },
-   thumbnailUrl : String
-   })
+projectSchema.pre('save', function (next) {
+  if (!Object.values(ProjectVisibility).includes(this.visibility)) {
+    const error = new Error(
+      `Project visibility must be either one of these values : ${
+        (ProjectVisibility.PRIVATE, ProjectVisibility.PUBLIC)
+      }`
+    )
+    return next(error)
+  }
+  next()
+})
+const Project = mongoose.model<ProjectInterface>('Project', projectSchema)
 
-
-   const Project = mongoose.model<ProjectInterface>('Project', projectSchema)
-   
-   export {Project , ProjectStatus, ProjectVisibility}
+export { Project, ProjectStatus, ProjectVisibility, projectAssociation }
