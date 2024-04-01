@@ -22,7 +22,10 @@ const auth = (req, res) => {
 };
 exports.auth = auth;
 //////////////////////////////// google auth //////////////////////////////////////
-const authenticate = passport_1.default.authenticate('google', { scope: ['email profile'], prompt: 'select_account' });
+const authenticate = passport_1.default.authenticate('google', {
+    scope: ['email profile'],
+    prompt: 'select_account'
+});
 exports.authenticate = authenticate;
 const authenticateCallback = passport_1.default.authenticate('google');
 exports.authenticateCallback = authenticateCallback;
@@ -33,12 +36,12 @@ const logout = (req, res) => {
 exports.logout = logout;
 //////////////////////////////// google auth //////////////////////////////////////
 const login_get = (req, res) => {
-    res.send("login_get");
+    res.send('login_get');
 };
 exports.login_get = login_get;
 const createToken = (id) => {
     return jsonwebtoken_1.default.sign({ id }, 'net ninja secret', {
-        expiresIn: 30 * 24 * 60 * 60,
+        expiresIn: 30 * 24 * 60 * 60
     });
 };
 const login_post = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
@@ -46,14 +49,17 @@ const login_post = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     try {
         const user = yield userModels_1.User.findOne({ email: email }); // no validation !
         if (!user) {
-            return res.status(200).json({ message: "No user found with that email!" });
+            return res.status(200).json({ message: 'No user found with that email!' });
         }
         const passwordMatch = yield bcrypt_1.default.compare(String(password), String(user.password));
         if (!passwordMatch) {
-            return res.status(404).json({ message: "Wrong Password, try again!" });
+            return res.status(404).json({ message: 'Wrong Password, try again!' });
         }
         const token = createToken(user._id);
-        res.cookie('jwt', token, { httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000 });
+        res.cookie('jwt', token, {
+            httpOnly: true,
+            maxAge: 30 * 24 * 60 * 60 * 1000
+        });
         return res.status(200).json({ user });
     }
     catch (err) {
@@ -70,9 +76,9 @@ const addPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     try {
         const updateResult = yield userModels_1.User.findOneAndUpdate({ email: email }, { $set: { password: hashedPassword } }, { runValidators: true, new: true });
         if (!updateResult) {
-            return res.status(404).json({ message: "User not found" });
+            return res.status(404).json({ message: 'User not found' });
         }
-        return res.status(200).json({ message: "Password Added Successfully" });
+        return res.status(200).json({ message: 'Password Added Successfully' });
     }
     catch (e) {
         const errors = handleError(e);
@@ -86,19 +92,19 @@ const updatePassword = (req, res) => __awaiter(void 0, void 0, void 0, function*
     try {
         const user = yield userModels_1.User.findOne({ email: email }); // no validation !
         if (!user) {
-            return res.status(400).json({ message: "No user found with that email!" });
+            return res.status(400).json({ message: 'No user found with that email!' });
         }
         const passwordMatch = yield bcrypt_1.default.compare(currentPassword, String(user.password));
         if (!passwordMatch) {
-            return res.status(404).json({ message: "Wrong Password, try again!" });
+            return res.status(404).json({ message: 'Wrong Password, try again!' });
         }
         const salt = yield bcrypt_1.default.genSalt();
         const hashedPassword = yield bcrypt_1.default.hash(String(newPassword), salt);
         const updateResult = yield userModels_1.User.findOneAndUpdate({ email: email }, { $set: { password: hashedPassword } }, { runValidators: true, new: true });
         if (!updateResult) {
-            return res.status(404).json({ message: "User not found" });
+            return res.status(404).json({ message: 'User not found' });
         }
-        return res.status(200).json({ message: "Password Added Successfully" });
+        return res.status(200).json({ message: 'Password Added Successfully' });
     }
     catch (e) {
         const errors = handleError(e);

@@ -19,12 +19,12 @@ require("./src/config/passport-setup");
 const db_1 = require("./src/config/db");
 const express_session_1 = __importDefault(require("express-session"));
 const body_parser_1 = __importDefault(require("body-parser"));
-const app = (0, express_1.default)();
 dotenv_1.default.config();
 // Configuring the host
 const HOST = process.env.HOST;
 const PORT = process.env.PORT || 3000;
-const DB_URI = process.env.DATABASE_URI;
+const app = (0, express_1.default)();
+// app config
 app.use((0, express_session_1.default)({
     secret: 'secret_key',
     resave: false,
@@ -40,15 +40,10 @@ const routes_1 = __importDefault(require("./routes"));
 app.use(routes_1.default);
 const start = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
-<<<<<<< HEAD
         yield (0, db_1.connectDB)(String(process.env.DATABASE_URI));
-=======
-         yield (0, db_1.connectDB)(String(process.env.DATABASE_URI));
->>>>>>> 95d72a3a662ffa28d3e5d64044a290121de16b23
         console.log('DATABASE CONNECTED');
         app.listen(PORT, () => {
             console.log(`Server starting at http://localhost:${PORT}`);
-             });
         });
     }
     catch (error) {
