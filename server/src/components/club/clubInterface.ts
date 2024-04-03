@@ -1,13 +1,12 @@
-import { Document } from "mongoose";
-
+import { Document } from 'mongoose'
 
 export interface ClubInterface extends Document {
-    clubName : string, 
-    description : {
-        imageUrl : string , 
-        creationDate : string, 
-        field : string,
-        eventsNumber : number, 
-        bestEvent: string,
-    }
+  clubName: string
+  description: {
+    imageUrl: string
+    creationDate: string
+    field: string
+    numberOfEvents: number
+    majorEvents: string[]
+  }
 }

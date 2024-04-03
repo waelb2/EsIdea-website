@@ -23,22 +23,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Module = void 0;
+exports.Topic = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-const moduleSchema = new mongoose_1.Schema({
-    moduleName: {
+const topicSchema = new mongoose_1.Schema({
+    topicName: {
         type: String,
-        required: [true, "Module name is required"]
+        required: [true, 'Topic name is required']
     },
-    description: {
-        title: String,
-        field: String,
-        credit: mongoose_1.default.Schema.Types.BigInt,
-        coef: mongoose_1.default.Schema.Types.BigInt,
-        edition: String,
-        courseHours: String,
-        tdHours: String,
-        tpHours: String
-    }
+    parentTopic: { type: mongoose_1.default.Types.ObjectId, ref: 'Topic' }
 });
-exports.Module = mongoose_1.default.model('Module', moduleSchema);
+exports.Topic = mongoose_1.default.model('Topic', topicSchema);

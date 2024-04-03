@@ -28,7 +28,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UserRole = exports.User = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-const isEmail_1 = __importDefault(require("validator/es/lib/isEmail"));
+const validator_1 = __importDefault(require("validator"));
 var UserRole;
 (function (UserRole) {
     UserRole["ADMIN"] = "admin";
@@ -46,10 +46,16 @@ const userSchema = new mongoose_1.Schema({
     email: {
         type: String,
         required: [true, "Email is required"],
-        validate: [isEmail_1.default, "Enter a valid email"]
+        unique: true,
+        lowercase: true,
+        validate: {
+            validator: (value) => validator_1.default.isEmail(value),
+            message: 'Invalid email format.',
+        }
     },
     password: {
         type: String,
+        minlength: [6, 'Password must be at least 6 characters long.'],
     },
     profilePicUrl: {
         type: String,
@@ -63,9 +69,22 @@ const userSchema = new mongoose_1.Schema({
         type: Date,
         required: [true, "User joining date is required"]
     },
-    //notifications: [{ type: Schema.Types.ObjectId, ref: 'Notification' }],
-    // projects : [{ type: Schema.Types.ObjectId, ref: 'Project' }], 
-    // invitations :    // projects : [{ type: Schema.Types.ObjectId, ref: 'Invitation' }], 
+    projects: [{
+            project: {
+                type: mongoose_1.default.Types.ObjectId,
+                ref: 'Project',
+            },
+            joinedAt: Date,
+        }],
+    projectInvitations: [{
+            type: mongoose_1.default.Types.ObjectId,
+            ref: 'Invitation'
+        }]
 });
+// userSchema.pre('save', async function (next) { // this is only used before adding the doc to db, since we r using google sign up, it wont be fired
+//     const salt = await bcrypt.genSalt();
+//     this.password = await bcrypt.hash(String(this.password), salt);
+//     next();
+//   });
 const User = mongoose_1.default.model('User', userSchema);
 exports.User = User;

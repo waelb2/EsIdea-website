@@ -11,8 +11,8 @@ const clubSchema = new Schema<ClubInterface>({
         imageUrl : String,
         creationDate : String,
         field: String,
-        eventsNumber : Number,
-        bestEvent : String
+        numberOfEvents : Number,
+        majorEvents : [String]
     }
 })
 

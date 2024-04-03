@@ -1,8 +1,7 @@
-import mongoose , {Schema, Document, mongo} from "mongoose";
-import isEmail from "validator/es/lib/isEmail"
+import mongoose , {Schema} from "mongoose";
 import { UserInterface } from "./userInterface";
-
-
+import validator from 'validator';
+import bcrypt from 'bcrypt';
 
 enum UserRole{
     ADMIN = "admin",
@@ -21,10 +20,16 @@ const userSchema = new Schema<UserInterface>({
     email:{
         type : String ,
         required:[true, "Email is required"],
-        validate : [isEmail,"Enter a valid email"]
+        unique: true,
+        lowercase: true,
+        validate: {
+            validator: (value: string) => validator.isEmail(value),
+            message: 'Invalid email format.',
+        }
     },
     password :{
         type : String,
+        minlength: [6, 'Password must be at least 6 characters long.'],
     }, 
     profilePicUrl: {
         type : String,
@@ -38,13 +43,26 @@ const userSchema = new Schema<UserInterface>({
         type :Date ,
         required : [true , "User joining date is required"]
     },
-    //notifications: [{ type: Schema.Types.ObjectId, ref: 'Notification' }],
-   // projects : [{ type: Schema.Types.ObjectId, ref: 'Project' }], 
-    // invitations :    // projects : [{ type: Schema.Types.ObjectId, ref: 'Invitation' }], 
-
+    projects :[ {
+        project  : {
+            type : mongoose.Types.ObjectId,
+            ref : 'Project',
+        },
+        joinedAt : Date,
+    }],
+    projectInvitations : [{
+        type : mongoose.Types.ObjectId,
+        ref : 'Invitation'
+    }]
 })
 
 
+// userSchema.pre('save', async function (next) { // this is only used before adding the doc to db, since we r using google sign up, it wont be fired
+
+//     const salt = await bcrypt.genSalt();
+//     this.password = await bcrypt.hash(String(this.password), salt);
+//     next();
+//   });
 const User = mongoose.model<UserInterface>('User', userSchema);
 
 

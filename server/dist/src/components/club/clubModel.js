@@ -34,8 +34,8 @@ const clubSchema = new mongoose_1.Schema({
         imageUrl: String,
         creationDate: String,
         field: String,
-        eventsNumber: Number,
-        bestEvent: String
+        numberOfEvents: Number,
+        majorEvents: [String]
     }
 });
 const Club = mongoose_1.default.model('Club', clubSchema);
