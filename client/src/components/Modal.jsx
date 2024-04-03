@@ -1,15 +1,18 @@
 import React from 'react'; // Importing React library
 import Close from '../assets/close.png'; // Importing the close image
 
+
+
 // Defining a functional component named Modal, which takes props as input
-const Modal = (props) => {
+const Modal = ({ setShowPopup , ...props}) => {
+
   return (
     // Outer container for the modal, using flexbox to center vertically and horizontally
-    <div className='flex justify-center items-center h-screen'>
+    <div className='flex fixed inset-0 z-50 justify-center items-center h-screen bg-gray-900 bg-opacity-50'>
       {/* Inner container for modal content */}
-      <div className='relative w-2/5 rounded-3xl p-4 border border-black'>
+      <div className='relative w-2/5 rounded-3xl p-4 border border-black bg-white'>
         {/* Close button */}
-        <a className='absolute right-5' href="#"><img src={Close} alt="Close"/></a>
+<button className='absolute right-5' href="#" onClick={() => {setShowPopup(false)}}><img src={Close} alt="Close"/></button>
         {/* Title */}
         <p className='text-center text-3xl font-bold p-4'>Sign up</p>
         {/* Notification message */}
@@ -20,7 +23,7 @@ const Modal = (props) => {
         <div className='flex justify-end items-center'>
           {/* Cancel button */}
           <button>
-            <a className='font-medium' href="#">Cancel</a>
+            <a className='font-medium' href="#" onClick={() => {setShowPopup(false)}}>Cancel</a>
           </button>
           {/* Retry button */}
           <button>

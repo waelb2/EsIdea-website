@@ -1,8 +1,10 @@
-import React from 'react'; // Importing React library
-import Logo from '../assets/logo.png'; // Importing the logo image
+import React , {useState} from 'react'; // Importing React library
+import Logo from '../assets/Asset_2.svg'; // Importing the logo image
+import Modal from './Modal';
+
 
 // Defining a functional component named Navbar
-const Navbar = () => {
+const Navbar = ({setShowPopup}) => {
   return (
     // Navbar container
     <nav className='w-full px-7 pt-3 items-center flex justify-between align-middle'>
@@ -19,7 +21,7 @@ const Navbar = () => {
         </li>
         {/* Sign up link */}
         <li>
-          <a className='bg-[#59AEF8] ml-5 px-8 py-2 text-white font-semibold rounded-full'  href="#">Sign up</a>
+          <a className='bg-[#59AEF8] ml-5 px-8 py-2 text-white font-semibold rounded-full'  href="#" onClick={() => setShowPopup(true)}>Sign up</a>
         </li>
       </ul>
     </nav>
