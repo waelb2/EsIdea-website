@@ -18,4 +18,6 @@ router.get('/login', authController_1.login_get);
 router.post('/login', authController_1.login_post);
 router.post('/addPassword', authController_1.addPassword);
 router.post('/updatePassword', authController_1.updatePassword);
+router.patch('/resetPassword/:token', authController_1.resetPassword);
+router.post('/forgetPassword', authController_1.forgetPassword);
 module.exports = router;

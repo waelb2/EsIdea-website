@@ -12,11 +12,13 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.updatePassword = exports.addPassword = exports.logout = exports.authenticateCallback = exports.authenticate = exports.auth = exports.login_post = exports.login_get = void 0;
+exports.resetPassword = exports.forgetPassword = exports.updatePassword = exports.addPassword = exports.logout = exports.authenticateCallback = exports.authenticate = exports.auth = exports.login_post = exports.login_get = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const passport_1 = __importDefault(require("passport"));
 const userModels_1 = require("../user/userModels");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
+const nodeMailer_1 = require("../../config/nodeMailer");
+const crypto_1 = __importDefault(require("crypto"));
 const auth = (req, res) => {
     res.send('<a href="/auth/google">Authenticate with Google</a>');
 };
@@ -106,6 +108,62 @@ const updatePassword = (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.updatePassword = updatePassword;
+//////////////////////////////////////////////////////////////////////////
+const forgetPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
+    const email = req.body.email;
+    const user = yield userModels_1.User.findOne({ email: email });
+    if (!user) {
+        return res.status(404).json({ message: "User not found" });
+    }
+    const resetToken = user.createResetPasswordToken();
+    yield user.save();
+    const resetUrl = `${req.protocol}://${req.get("host")}/auth/resetPassword/${resetToken}`;
+    const message = `Please use the link below to reset your password \n ${resetUrl}\n this link is valid only for 10 minutes`;
+    try {
+        yield (0, nodeMailer_1.sendEmail)({
+            email: user.email,
+            subject: 'Password change request received',
+            message: message
+        });
+        return res.status(200).json({ message: "Password reset email was sent to you" });
+    }
+    catch (error) {
+        console.log(error);
+        user.passwordResetToken = undefined;
+        user.passwordResetTokenExpires = undefined;
+        user.save();
+        return res.status(500).json({ message: "There was an error sending passord reset email. Try again later!" });
+    }
+});
+exports.forgetPassword = forgetPassword;
+///////////////////////////////////////////////////////////////////////////
+const resetPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { newPassword, confirmNewPassword } = req.body;
+    const token = crypto_1.default.createHash('sha256').update(req.params.token).digest('hex');
+    const user = yield userModels_1.User.findOne({ passwordResetToken: token, passwordResetTokenExpires: { $gt: Date.now() } });
+    if (!user) {
+        return res.status(400).json({ message: "Token is invalid or has expired!" });
+    }
+    console.log("done1");
+    if (!newPassword == confirmNewPassword) {
+        return res.status(400).json({ message: "Error, try again!" });
+    }
+    console.log("done2");
+    const salt = yield bcrypt_1.default.genSalt();
+    const hashedPassword = yield bcrypt_1.default.hash(String(newPassword), salt);
+    const updateResult = yield userModels_1.User.findOneAndUpdate({ passwordResetToken: token }, { $set: { password: hashedPassword } }, { runValidators: true, new: true });
+    if (!updateResult) {
+        return res.status(404).json({ message: "User not found" });
+    }
+    console.log("done3");
+    user.passwordResetToken = undefined;
+    user.passwordResetTokenExpires = undefined;
+    user.save();
+    const jwt = createToken(user);
+    res.cookie('token', jwt, { httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000 });
+    return res.status(200).json({ user });
+});
+exports.resetPassword = resetPassword;
 //////////////////////////////////////////////////////////////////////////
 const handleError = (err) => {
     let errors = {};

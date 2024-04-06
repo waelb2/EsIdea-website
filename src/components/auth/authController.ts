@@ -4,7 +4,8 @@ import bcrypt from 'bcrypt';
 import passport from 'passport';
 import { User } from '../user/userModels';
 import jwt from 'jsonwebtoken';
-
+import { sendEmail } from '../../config/nodeMailer';
+import crypto from "crypto";
 const auth = (req: Request, res: Response) => {
     res.send('<a href="/auth/google">Authenticate with Google</a>');
 }
@@ -111,6 +112,75 @@ const updatePassword = async (req: Request, res: Response) => {
 
 //////////////////////////////////////////////////////////////////////////
 
+const forgetPassword = async (req: Request, res: Response, next: NextFunction) => {
+    const email = req.body.email;
+    const user = await User.findOne({ email: email });
+    if (!user) {
+        return res.status(404).json({ message: "User not found" });
+    }
+    const resetToken = user.createResetPasswordToken();
+
+    await user.save();
+
+    const resetUrl = `${req.protocol}://${req.get("host")}/auth/resetPassword/${resetToken}`;
+    const message = `Please use the link below to reset your password \n ${resetUrl}\n this link is valid only for 10 minutes`;
+    try {
+        await sendEmail(
+            {
+                email: user.email,
+                subject: 'Password change request received',
+                message: message
+            }
+        );
+
+        return res.status(200).json({ message: "Password reset email was sent to you" });
+    } catch (error) {
+        console.log(error);
+        user.passwordResetToken = undefined;
+        user.passwordResetTokenExpires = undefined;
+        user.save();
+        return res.status(500).json({ message: "There was an error sending passord reset email. Try again later!" });
+    }
+
+}
+///////////////////////////////////////////////////////////////////////////
+const resetPassword = async (req: Request, res: Response) => {
+    const {newPassword,confirmNewPassword } = req.body;
+    const token = crypto.createHash('sha256').update(req.params.token).digest('hex');
+    const user = await User.findOne({ passwordResetToken: token, passwordResetTokenExpires: { $gt: Date.now() } });
+    if (!user){
+        return res.status(400).json({message:"Token is invalid or has expired!"});
+    }
+    console.log("done1");
+    if (!newPassword==confirmNewPassword){
+        return res.status(400).json({message:"Error, try again!"});
+    }
+    console.log("done2");
+
+    const salt = await bcrypt.genSalt();
+    const hashedPassword = await bcrypt.hash(String(newPassword), salt);
+
+    const updateResult = await User.findOneAndUpdate(
+        { passwordResetToken: token },
+        { $set: { password: hashedPassword } },
+        { runValidators: true, new: true }
+    );
+    
+    if (!updateResult) {
+        return res.status(404).json({ message: "User not found" });
+    }
+    console.log("done3");
+
+    user.passwordResetToken=undefined;
+    user.passwordResetTokenExpires=undefined;
+    user.save();
+    const jwt = createToken(user);
+    res.cookie('token', jwt, { httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000 });
+
+    return res.status(200).json({ user });
+}
+//////////////////////////////////////////////////////////////////////////
+
 const handleError = (err: any) => {
     let errors: any = {};
     if (err.name === 'ValidationError') {
@@ -121,4 +191,4 @@ const handleError = (err: any) => {
     return errors;
 }
 
-export { login_get, login_post, auth, authenticate, authenticateCallback, logout, addPassword, updatePassword };
+export { login_get, login_post, auth, authenticate, authenticateCallback, logout, addPassword, updatePassword, forgetPassword, resetPassword };

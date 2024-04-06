@@ -29,7 +29,8 @@ passport_1.default.use(new passport_google_oauth20_1.Strategy({
 }, (request, accessToken, refreshToken, profile, done) => {
     //to check if the email ends with @esi.dz
     if (profile.emails && profile.emails.length > 0 && profile.emails[0].value.endsWith('@esi.dz')) {
-        userModels_1.User.findOne({ 'googleId': profile.id }).then((user) => {
+        // console.log(user.googleId);
+        userModels_1.User.findOne({ 'email': profile.emails[0].value }).then((user) => {
             if (user) {
                 done(null, user);
             }
