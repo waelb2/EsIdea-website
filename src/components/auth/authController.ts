@@ -14,10 +14,18 @@ const auth = (req: Request, res: Response) => {
 
 const authenticate = passport.authenticate('google', { scope: ['email profile'], prompt: 'select_account' });
 
-const authenticateCallback = passport.authenticate('google');
+const authenticateCallback = passport.authenticate('google',
+    {
+        successRedirect:"/dashboard",
+        failureRedirect:"/failure"
+    }
+);
 
 
 
+const failure = (req: Request, res: Response) => {
+
+}
 const logout = (req: Request, res: Response) => {
     req.logout(() => { });
     res.redirect('/auth');
@@ -145,15 +153,15 @@ const forgetPassword = async (req: Request, res: Response, next: NextFunction) =
 }
 ///////////////////////////////////////////////////////////////////////////
 const resetPassword = async (req: Request, res: Response) => {
-    const {newPassword,confirmNewPassword } = req.body;
+    const { newPassword, confirmNewPassword } = req.body;
     const token = crypto.createHash('sha256').update(req.params.token).digest('hex');
     const user = await User.findOne({ passwordResetToken: token, passwordResetTokenExpires: { $gt: Date.now() } });
-    if (!user){
-        return res.status(400).json({message:"Token is invalid or has expired!"});
+    if (!user) {
+        return res.status(400).json({ message: "Token is invalid or has expired!" });
     }
     console.log("done1");
-    if (!newPassword==confirmNewPassword){
-        return res.status(400).json({message:"Error, try again!"});
+    if (!newPassword == confirmNewPassword) {
+        return res.status(400).json({ message: "Error, try again!" });
     }
     console.log("done2");
 
@@ -165,14 +173,14 @@ const resetPassword = async (req: Request, res: Response) => {
         { $set: { password: hashedPassword } },
         { runValidators: true, new: true }
     );
-    
+
     if (!updateResult) {
         return res.status(404).json({ message: "User not found" });
     }
     console.log("done3");
 
-    user.passwordResetToken=undefined;
-    user.passwordResetTokenExpires=undefined;
+    user.passwordResetToken = undefined;
+    user.passwordResetTokenExpires = undefined;
     user.save();
     const jwt = createToken(user);
     res.cookie('token', jwt, { httpOnly: true, maxAge: 30 * 24 * 60 * 60 * 1000 });
@@ -191,4 +199,4 @@ const handleError = (err: any) => {
     return errors;
 }
 
-export { login_get, login_post, auth, authenticate, authenticateCallback, logout, addPassword, updatePassword, forgetPassword, resetPassword };
+export { login_get, login_post, auth, authenticate, authenticateCallback, logout, failure, addPassword, updatePassword, forgetPassword, resetPassword };

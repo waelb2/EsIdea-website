@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.resetPassword = exports.forgetPassword = exports.updatePassword = exports.addPassword = exports.logout = exports.authenticateCallback = exports.authenticate = exports.auth = exports.login_post = exports.login_get = void 0;
+exports.resetPassword = exports.forgetPassword = exports.updatePassword = exports.addPassword = exports.failure = exports.logout = exports.authenticateCallback = exports.authenticate = exports.auth = exports.login_post = exports.login_get = void 0;
 const bcrypt_1 = __importDefault(require("bcrypt"));
 const passport_1 = __importDefault(require("passport"));
 const userModels_1 = require("../user/userModels");
@@ -26,8 +26,14 @@ exports.auth = auth;
 //////////////////////////////// google auth //////////////////////////////////////
 const authenticate = passport_1.default.authenticate('google', { scope: ['email profile'], prompt: 'select_account' });
 exports.authenticate = authenticate;
-const authenticateCallback = passport_1.default.authenticate('google');
+const authenticateCallback = passport_1.default.authenticate('google', {
+    successRedirect: "/dashboard",
+    failureRedirect: "/failure"
+});
 exports.authenticateCallback = authenticateCallback;
+const failure = (req, res) => {
+};
+exports.failure = failure;
 const logout = (req, res) => {
     req.logout(() => { });
     res.redirect('/auth');

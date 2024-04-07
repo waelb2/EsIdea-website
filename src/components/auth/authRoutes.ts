@@ -1,6 +1,6 @@
 import express, { Router } from "express";
 
-import { login_get, login_post,auth ,authenticate, authenticateCallback, logout,addPassword,updatePassword,forgetPassword,resetPassword} from "./authController";
+import { login_get, login_post,auth ,authenticate, authenticateCallback,failure, logout,addPassword,updatePassword,forgetPassword,resetPassword} from "./authController";
 
 const router: Router = express.Router();
 
@@ -9,11 +9,18 @@ const router: Router = express.Router();
 
 router.get('/google', authenticate);
 router.get('/logout', logout);
-router.get('/google/callback', authenticateCallback, (req, res) => {
-    res.redirect('/dashboard');
-});
+ router.get('/failure', failure);
+router.get('/google/callback', authenticateCallback, 
+// (req, res) => {
+    // res.redirect('/dashboard');
+// }
+);
 
 //////////////////////////////// oauth /////////////////////////////////
+
+
+// localhost:3000/auth/google 
+
 
 //////////////////////////////// login ///////////////////////////////
 
