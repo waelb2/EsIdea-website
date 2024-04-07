@@ -4,6 +4,7 @@ import { Routes,Route, Navigate } from 'react-router-dom';
 import { LoginPage,Dashbord,Projects,Recents,Favorites,Public,Trash, LandingPage, AdminDashboard, General, Tags, Logs, Users, FeedBacks, ForgotPassword, ResetPassword } from './components';
 const App = () => {
   const [user, setUser] = useState(null);
+
   useEffect(() => {
     const getUser = () => {
       fetch("http://localhost:3000/dashboard", {
@@ -28,7 +29,8 @@ const App = () => {
     };
     getUser();
   }, []);
-  console.log(user);
+
+ 
   return (
   <>
       <Routes>
