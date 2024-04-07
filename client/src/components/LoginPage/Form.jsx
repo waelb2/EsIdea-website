@@ -26,7 +26,6 @@ const Form = () => {
             setPasswordError(false);
         }
     },[password])
-
     return (
         <form action="">
 
@@ -57,7 +56,7 @@ const Form = () => {
             </div>
 
             <p className='text-center mt-4 text-[0.875rem]'>
-            Don’t have an account? <p className='text-skyBlue hover:underline inline' href="{">Sign up</p>
+            Don’t have an account? <span className='text-skyBlue hover:underline inline'>Sign up</span>
             </p>
     </form>
   )

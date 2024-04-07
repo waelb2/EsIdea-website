@@ -22,13 +22,16 @@ const Navbar = () => {
     title:"Oops! Invalid Email Address.",
     content:"ESIdea is exclusive to ESI school email accounts. Please use your ESI email address to sign up or log in."
   }
+  const signUp = ()=>{
+    window.open("http://localhost:3000/auth/google","_self")
+  }
   return (
     <>
       <nav className='w-full flex justify-between items-center py-3'>
         <Link to="/">
           <img className='w-[124px] h-[40px]' src={blackLogo} alt="ESIdea_logo" />
         </Link>
-        <button onClick={togglePopUp}  className={`bg-skyBlue w-[120px] p-2 text-white  sm:w-[152px] sm:p-[10px] rounded-3xl font-bold`}>Sign up</button>
+        <button  onClick={signUp} className={`bg-skyBlue w-[120px] p-2 text-white  sm:w-[152px] sm:p-[10px] rounded-3xl font-bold text-center`}>Sign up</button>
       </nav>
       <PopUp visible={popUpVisible} togglePopUp={togglePopUp} content={invalidMail}/>
     </>

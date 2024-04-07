@@ -3,7 +3,11 @@ import React from 'react';
 import Navbar from './Navbar';
 import Form from './Form';
 import {loginPic,google} from '../../assets';
+import { Link } from 'react-router-dom';
 const LoginPage = () => {
+  const login = ()=>{
+    window.open("http://localhost:3000/auth/google","_self")
+  }
   return (
     <div className="bg-white w-full overflow-hidden min-h-screen flex flex-col">
       <div className="sm:px-16 px-6 flex justify-center items-center">
@@ -19,7 +23,7 @@ const LoginPage = () => {
                   <h4 className='text-2xl font-medium'>Welcome to</h4>
                   <h1 className='text-skyBlue font-black text-2xl'>ESIdea</h1>
                 </div>
-                <button className='flex gap-2 items-center justify-center rounded-[10px] shadow-[0_1px_6px_rgb(0,0,0,0.2)] w-full py-[11px] mb-5'>
+                <button onClick={login}  className='flex gap-2 items-center justify-center rounded-[10px] shadow-[0_1px_6px_rgb(0,0,0,0.2)] w-full py-[11px] mb-5'>
                   <img className='w-[28px] h-[28px]' src={google} alt="Google_Icon" />
                   <span className='text-grey font-medium'>Login with Google</span>
                 </button>

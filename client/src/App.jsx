@@ -1,9 +1,34 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Routes,Route, Navigate } from 'react-router-dom';
 import { LoginPage,Dashbord,Projects,Recents,Favorites,Public,Trash, LandingPage, AdminDashboard, General, Tags, Logs, Users, FeedBacks, ForgotPassword, ResetPassword } from './components';
 const App = () => {
-  const [user,setUser] = useState(true);
+  const [user, setUser] = useState(null);
+  useEffect(() => {
+    const getUser = () => {
+      fetch("http://localhost:3000/dashboard", {
+        method: "GET",
+        credentials: "include",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+          "Access-Control-Allow-Credentials": true,
+        },
+      })
+        .then((response) => {
+          if (response.status === 200) return response.json();
+          throw new Error("authentication has been failed!");
+        })
+        .then((resObject) => {
+          setUser(resObject.user);
+        })
+        .catch((err) => {
+          console.log(err);
+        });
+    };
+    getUser();
+  }, []);
+  console.log(user);
   return (
   <>
       <Routes>
