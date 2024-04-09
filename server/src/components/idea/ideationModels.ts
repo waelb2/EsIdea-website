@@ -19,7 +19,7 @@ const ideaSchema = new Schema<IdeaInterface>({
   },
   creation_date: {
     type: Date,
-    default: Date.now
+    default: () => new Date()
   },
   topic: {
     type: mongoose.Schema.Types.ObjectId,

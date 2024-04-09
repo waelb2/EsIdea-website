@@ -23,32 +23,26 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Idea = void 0;
+exports.feedback = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-const ideaSchema = new mongoose_1.Schema({
+const feedbackSchema = new mongoose_1.Schema({
     created_by: {
         type: mongoose_1.default.Schema.Types.ObjectId,
         ref: 'User',
         required: true
     },
-    project_id: {
-        type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: 'Project',
-        required: true
-    },
-    content: {
+    title: {
         type: String,
         required: true
     },
-    creation_date: {
-        type: Date,
-        default: () => new Date()
-    },
-    topic: {
-        type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: 'Topic',
+    description: {
+        type: String,
         required: true
+    },
+    adminResponse: {
+        type: String,
+        default: ""
     }
 });
-const Idea = mongoose_1.default.model('Idea', ideaSchema);
-exports.Idea = Idea;
+const feedback = mongoose_1.default.model('feedback', feedbackSchema);
+exports.feedback = feedback;

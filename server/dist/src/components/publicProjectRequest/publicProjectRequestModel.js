@@ -23,32 +23,14 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Idea = void 0;
+exports.publicProjectRequest = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-const ideaSchema = new mongoose_1.Schema({
-    created_by: {
-        type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
-    },
-    project_id: {
+const publicProjectRequestSchema = new mongoose_1.Schema({
+    projectId: {
         type: mongoose_1.default.Schema.Types.ObjectId,
         ref: 'Project',
         required: true
-    },
-    content: {
-        type: String,
-        required: true
-    },
-    creation_date: {
-        type: Date,
-        default: () => new Date()
-    },
-    topic: {
-        type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: 'Topic',
-        required: true
     }
 });
-const Idea = mongoose_1.default.model('Idea', ideaSchema);
-exports.Idea = Idea;
+const publicProjectRequest = mongoose_1.default.model('publicProjectRequest', publicProjectRequestSchema);
+exports.publicProjectRequest = publicProjectRequest;

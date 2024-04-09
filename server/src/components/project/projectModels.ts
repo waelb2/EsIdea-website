@@ -47,7 +47,7 @@ const projectSchema = new Schema<ProjectInterface>({
     description :{
         type : String ,
     },
-   template : {
+    template : {
        type : mongoose.Types.ObjectId,
        ref:'Template' ,
        required :[true, "Project template is required"]
@@ -56,8 +56,11 @@ const projectSchema = new Schema<ProjectInterface>({
         type : mongoose.Types.ObjectId,
         ref:'IdeationMethod',
         required : [true, "Ideation method is required"]
-    }
-    ,
+    },
+    creationDate : {
+        type : Schema.Types.Date,
+        default : () => new Date()
+    },
     status :{
         type : String,
         required : [true, "Project status is required"],
@@ -75,12 +78,11 @@ const projectSchema = new Schema<ProjectInterface>({
     },
     collaborators :[ {
         member : {
-        type : mongoose.Types.ObjectId,
-        ref : 'User',
-
-    },
-    joinedAt : Date 
-}],
+            type : mongoose.Types.ObjectId,
+            ref : 'User',
+        },
+        joinedAt : Date 
+    }],
     ideas :[ {
         type : mongoose.Types.ObjectId,
         ref : 'Idea',
@@ -95,18 +97,18 @@ const projectSchema = new Schema<ProjectInterface>({
         ref : 'Topic',
     }],
     club : {
-    type : mongoose.Types.ObjectId,
-    ref : 'Club',
-   }, 
+        type : mongoose.Types.ObjectId,
+        ref : 'Club',
+    }, 
     module : {
-    type : mongoose.Types.ObjectId,
-    ref : 'Module',
-   },
+        type : mongoose.Types.ObjectId,
+        ref : 'Module',
+    },
     event  : {
-    type : mongoose.Types.ObjectId,
-    ref : 'Event',
-   },
-   thumbnailUrl : String
+        type : mongoose.Types.ObjectId,
+        ref : 'Event',
+    },
+    thumbnailUrl : String
    })
 
 

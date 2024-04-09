@@ -74,6 +74,10 @@ const projectSchema = new mongoose_1.Schema({
         ref: 'IdeationMethod',
         required: [true, "Ideation method is required"]
     },
+    creationDate: {
+        type: mongoose_1.Schema.Types.Date,
+        default: () => new Date()
+    },
     status: {
         type: String,
         required: [true, "Project status is required"],

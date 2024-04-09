@@ -14,6 +14,10 @@ export interface UserInterface extends Document {
      project: ProjectInterface,
      joinedAt : Date ,   
     }],
-    projectInvitations : [InvitationInterface]
+    projectInvitations : [InvitationInterface],
+    ban : {
+     isBan : boolean,
+     banEnd : Date
+    }
    // notifications
 }

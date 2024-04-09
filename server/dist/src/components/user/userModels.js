@@ -68,8 +68,15 @@ const userSchema = new mongoose_1.Schema({
     projectInvitations: [{
             type: mongoose_1.default.Types.ObjectId,
             ref: 'Invitation'
-        }]
+        }],
     //notifications: [{ type: Schema.Types.ObjectId, ref: 'Notification' }],
+    ban: {
+        isBan: {
+            type: mongoose_1.Schema.Types.Boolean,
+            default: false
+        },
+        banEnd: Date
+    },
 });
 const User = mongoose_1.default.model('User', userSchema);
 exports.User = User;

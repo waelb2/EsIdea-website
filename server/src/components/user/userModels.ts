@@ -46,9 +46,15 @@ const userSchema = new Schema<UserInterface>({
     projectInvitations : [{
         type : mongoose.Types.ObjectId,
         ref : 'Invitation'
-    }]
+    }],
     //notifications: [{ type: Schema.Types.ObjectId, ref: 'Notification' }],
-
+    ban: {
+        isBan: {
+            type : Schema.Types.Boolean,
+            default : false
+        },
+        banEnd: Date
+    },
 })
 
 
