@@ -16,7 +16,7 @@ const authenticate = passport.authenticate('google', { scope: ['email profile'],
 
 const authenticateCallback = passport.authenticate('google',
     {
-        successRedirect:"/dashboard",
+        successRedirect:"http://localhost:5173/Home/Projects",
         failureRedirect:"/failure"
     }
 );

@@ -44,6 +44,7 @@ passport_1.default.use(new passport_google_oauth20_1.Strategy({
                     googleId: profile.id,
                     email: email,
                     joinDate: Date.now(),
+                    profilePicUrl: profile.photos ? profile.photos[0].value : "",
                 }).save().then((savedUser) => {
                     done(null, savedUser);
                 }).catch(error => {

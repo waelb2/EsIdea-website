@@ -27,7 +27,7 @@ exports.auth = auth;
 const authenticate = passport_1.default.authenticate('google', { scope: ['email profile'], prompt: 'select_account' });
 exports.authenticate = authenticate;
 const authenticateCallback = passport_1.default.authenticate('google', {
-    successRedirect: "/dashboard",
+    successRedirect: "http://localhost:5173/Home/Projects",
     failureRedirect: "/failure"
 });
 exports.authenticateCallback = authenticateCallback;
