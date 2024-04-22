@@ -39,10 +39,11 @@ passport.use(new GoogleStrategy({
     (request, accessToken, refreshToken, profile, done) => {
         //to check if the email ends with @esi.dz
         if (profile.emails && profile.emails.length > 0 && profile.emails[0].value.endsWith('@esi.dz')) {
-
-            User.findOne({ 'googleId': profile.id }).then((user) => {
+     
+            // console.log(user.googleId);
+            User.findOne({ 'email': profile.emails[0].value}).then((user) => {
                 if (user) {
-                    done(null, user);
+                     done(null, user);
                 } else {
                     const email = profile.emails!.length > 0 ? profile.emails![0].value : '';
 
@@ -56,6 +57,7 @@ passport.use(new GoogleStrategy({
                         googleId: profile.id,
                         email: email,
                         joinDate: Date.now(),
+                        profilePicUrl:profile.photos ? profile.photos[0].value : "",
                     }).save().then((savedUser,) => {
         
                         done(null, savedUser);
