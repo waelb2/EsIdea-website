@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createProject = void 0;
+exports.deleteProject = exports.updateProject = exports.createProject = void 0;
 const projectModels_1 = require("./projectModels");
 const userModels_1 = require("../user/userModels");
 const templateModel_1 = __importDefault(require("../template/templateModel"));
@@ -23,10 +23,20 @@ const moduleModel_1 = require("../module/moduleModel");
 const eventModel_1 = require("../event/eventModel");
 const invitationModel_1 = require("../invitation/invitationModel");
 const sendInvitationEmail_1 = __importDefault(require("../../utils/sendInvitationEmail"));
+const cloudConfig_1 = __importDefault(require("../../config/cloudConfig"));
+const fs_1 = __importDefault(require("fs"));
 const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //const {userId} = req.user
-    const userId = '65ef22333d0a83e5abef440e';
+    const userId = '65ef22333d0a83e5abef43e3';
+    let secureURL = '';
     try {
+        if (req.file) {
+            const cloudImage = yield cloudConfig_1.default.uploader.upload(req.file.path, {
+                folder: 'projectThumbnails'
+            });
+            secureURL = cloudImage.secure_url;
+            fs_1.default.unlinkSync(req.file.path);
+        }
         let projectAssociation;
         const { projectTitle, description, templateId, ideationMethodId, visibility, collaborators, mainTopic, subTopics, association, associationId } = req.body;
         // Getting and validating project metadata
@@ -104,7 +114,8 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             subTopics: subTopicsIds,
             club: projectAssociation === 'club' ? associationData.id : null,
             module: projectAssociation === 'module' ? associationData.id : null,
-            event: projectAssociation === 'event' ? associationData.id : null
+            event: projectAssociation === 'event' ? associationData.id : null,
+            thumbnailUrl: secureURL
         });
         // creating and sending invitations
         const invitedUsers = yield userModels_1.User.find({
@@ -116,7 +127,7 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             const currentDate = new Date();
             const expirationDate = new Date(currentDate);
             expirationDate.setDate(expirationDate.getDate() + 3);
-            yield invitationModel_1.Invitation.create({
+            const invitation = yield invitationModel_1.Invitation.create({
                 senderId: coordinator.id,
                 receiverId: user ? user.id : null,
                 receiverEmail: collaborator,
@@ -124,7 +135,8 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 invitationDate: currentDate,
                 expiresAt: expirationDate
             });
-            (0, sendInvitationEmail_1.default)(coordinator.lastName + ' ' + coordinator.firstName, user === null || user === void 0 ? void 0 : user.id, collaborator, project.title);
+            //sending the invitation email
+            (0, sendInvitationEmail_1.default)(coordinator.lastName + ' ' + coordinator.firstName, user === null || user === void 0 ? void 0 : user.id, collaborator, project.id, project.title, invitation.id);
             return res.status(201).json({
                 success: 'Project created successfully'
             });
@@ -138,3 +150,66 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.createProject = createProject;
+const updateProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const userId = '65ef22333d0a83e5abef440e';
+    const { projectId } = req.params;
+    try {
+        if (!projectId) {
+            return res.status(400).json({
+                error: 'Project ID must be provided'
+            });
+        }
+        const project = yield projectModels_1.Project.findById(projectId);
+        if (!project) {
+            return res.status(404).json({
+                error: 'Project not found'
+            });
+        }
+        if (project.coordinator.toString() !== userId) {
+            return res.status(403).json({
+                error: 'Unauthorized - Only project coordinator can update the project'
+            });
+        }
+        const { title, description, status } = req.body;
+        project.title = title;
+        project.description = description;
+        project.status = status;
+        yield project.save();
+        res.status(200).json({ message: 'Project updated successfully' });
+    }
+    catch (error) {
+        console.error('Error updating project:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+exports.updateProject = updateProject;
+const deleteProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const userId = '65ef22333d0a83e5abef440e';
+    const { projectId } = req.params;
+    try {
+        if (!projectId) {
+            return res.status(400).json({
+                error: 'Project ID must be provided'
+            });
+        }
+        const project = yield projectModels_1.Project.findById(projectId);
+        if (!project) {
+            return res.status(404).json({
+                error: 'Project not found'
+            });
+        }
+        const user = yield userModels_1.User.findById(userId);
+        if (!user) {
+            return res.status(404).json({
+                error: 'User not found'
+            });
+        }
+        console.log(project.collaborators);
+        res.status(200).json({ message: 'Project deleted successfully' });
+    }
+    catch (error) {
+        console.error('Error deleting project:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+exports.deleteProject = deleteProject;

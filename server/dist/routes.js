@@ -9,10 +9,12 @@ const authRoutes_1 = __importDefault(require("./src/components/auth/authRoutes")
 const dashboardRoutes_1 = __importDefault(require("./src/components/dashboard/dashboardRoutes"));
 const projectRoutes_1 = __importDefault(require("./src/components/project/projectRoutes"));
 const homeRoutes_1 = __importDefault(require("./src/components/home/homeRoutes"));
+const invitationRoutes_1 = __importDefault(require("./src/components/invitation/invitationRoutes"));
 const router = express_1.default.Router();
-router.use("/user", userRoutes_1.default);
-router.use("/home", homeRoutes_1.default);
-router.use("/auth", authRoutes_1.default);
-router.use("/dashboard", dashboardRoutes_1.default);
+router.use('/user', userRoutes_1.default);
+router.use('/home', homeRoutes_1.default);
+router.use('/auth', authRoutes_1.default);
+router.use('/dashboard', dashboardRoutes_1.default);
 router.use('/project', projectRoutes_1.default);
+router.use('/invitation', invitationRoutes_1.default);
 exports.default = router;
