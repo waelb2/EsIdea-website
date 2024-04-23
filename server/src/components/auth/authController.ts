@@ -16,7 +16,7 @@ const authenticate = passport.authenticate('google', { scope: ['email profile'],
 
 const authenticateCallback = passport.authenticate('google',
     {
-        successRedirect:"http://localhost:5173/Home/Projects",
+        successRedirect:"http://localhost:5174/addPassword",
         failureRedirect:"/failure"
     }
 );
@@ -28,7 +28,7 @@ const failure = (req: Request, res: Response) => {
 }
 const logout = (req: Request, res: Response) => {
     req.logout(() => { });
-    res.redirect('/auth');
+    res.redirect('http://localhost:5174/login');
 }
 //////////////////////////////// google auth //////////////////////////////////////
 
@@ -88,7 +88,7 @@ const addPassword = async (req: Request, res: Response) => {
 //////////////////////////////////////////////////////////////////////////
 
 const updatePassword = async (req: Request, res: Response) => {
-    const { email, currentPassword, newPassword } = req.body;
+    const { email, currentPassword, newPassword,confirmNewPassword } = req.body;
 
     try {
         const user = await User.findOne({ email: email },); // no validation !
@@ -100,6 +100,9 @@ const updatePassword = async (req: Request, res: Response) => {
         if (!passwordMatch) {
             return res.status(404).json({ message: "Wrong Password, try again!" });
         }
+        // if (newPassword != confirmNewPassword){
+        //     return res.status(404).json({ message: "Please confirm your new password!" });
+        // }
         const salt = await bcrypt.genSalt();
         const hashedPassword = await bcrypt.hash(String(newPassword), salt);
 
@@ -109,7 +112,7 @@ const updatePassword = async (req: Request, res: Response) => {
             { runValidators: true, new: true }
         );
         if (!updateResult) {
-            return res.status(404).json({ message: "User not found" });
+            return res.status(404).json({ message: "Failed to update password, try again!" });
         }
         return res.status(200).json({ message: "Password Added Successfully" });
     } catch (e) {
@@ -130,7 +133,8 @@ const forgetPassword = async (req: Request, res: Response, next: NextFunction) =
 
     await user.save();
 
-    const resetUrl = `${req.protocol}://${req.get("host")}/auth/resetPassword/${resetToken}`;
+    //const resetUrl = `${req.protocol}://${req.get("host")}/auth/resetPassword/${resetToken}`;
+    const resetUrl = `http://localhost:5174/auth/resetPassword/${resetToken}`;
     const message = `Please use the link below to reset your password:\n ${resetUrl}\nThis link is valid only for 10 minutes.`;
     try {
         await sendEmail(

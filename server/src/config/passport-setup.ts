@@ -56,6 +56,7 @@ passport.use(new GoogleStrategy({
                         lastName: lastName,
                         googleId: profile.id,
                         email: email,
+                        password:null,
                         joinDate: Date.now(),
                         profilePicUrl:profile.photos ? profile.photos[0].value : "",
                     }).save().then((savedUser,) => {

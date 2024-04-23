@@ -27,7 +27,7 @@ exports.auth = auth;
 const authenticate = passport_1.default.authenticate('google', { scope: ['email profile'], prompt: 'select_account' });
 exports.authenticate = authenticate;
 const authenticateCallback = passport_1.default.authenticate('google', {
-    successRedirect: "http://localhost:5173/Home/Projects",
+    successRedirect: "http://localhost:5174/addPassword",
     failureRedirect: "/failure"
 });
 exports.authenticateCallback = authenticateCallback;
@@ -36,7 +36,7 @@ const failure = (req, res) => {
 exports.failure = failure;
 const logout = (req, res) => {
     req.logout(() => { });
-    res.redirect('/auth');
+    res.redirect('http://localhost:5174/login');
 };
 exports.logout = logout;
 //////////////////////////////// google auth //////////////////////////////////////
@@ -90,7 +90,7 @@ const addPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
 exports.addPassword = addPassword;
 //////////////////////////////////////////////////////////////////////////
 const updatePassword = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const { email, currentPassword, newPassword } = req.body;
+    const { email, currentPassword, newPassword, confirmNewPassword } = req.body;
     try {
         const user = yield userModels_1.User.findOne({ email: email }); // no validation !
         if (!user) {
@@ -100,11 +100,14 @@ const updatePassword = (req, res) => __awaiter(void 0, void 0, void 0, function*
         if (!passwordMatch) {
             return res.status(404).json({ message: "Wrong Password, try again!" });
         }
+        // if (newPassword != confirmNewPassword){
+        //     return res.status(404).json({ message: "Please confirm your new password!" });
+        // }
         const salt = yield bcrypt_1.default.genSalt();
         const hashedPassword = yield bcrypt_1.default.hash(String(newPassword), salt);
         const updateResult = yield userModels_1.User.findOneAndUpdate({ email: email }, { $set: { password: hashedPassword } }, { runValidators: true, new: true });
         if (!updateResult) {
-            return res.status(404).json({ message: "User not found" });
+            return res.status(404).json({ message: "Failed to update password, try again!" });
         }
         return res.status(200).json({ message: "Password Added Successfully" });
     }
@@ -123,7 +126,8 @@ const forgetPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
     }
     const resetToken = user.createResetPasswordToken();
     yield user.save();
-    const resetUrl = `${req.protocol}://${req.get("host")}/auth/resetPassword/${resetToken}`;
+    //const resetUrl = `${req.protocol}://${req.get("host")}/auth/resetPassword/${resetToken}`;
+    const resetUrl = `http://localhost:5174/auth/resetPassword/${resetToken}`;
     const message = `Please use the link below to reset your password:\n ${resetUrl}\nThis link is valid only for 10 minutes.`;
     try {
         yield (0, nodeMailer_1.sendEmail)({

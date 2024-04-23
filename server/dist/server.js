@@ -37,8 +37,8 @@ app.use(passport_1.default.initialize());
 app.use(passport_1.default.session());
 /////////////////////////////////////// o auth ///////////////////////////////
 app.use((0, cors_1.default)({
-    origin: "http://localhost:5173",
-    methods: "GET,POST,PUT,DELETE",
+    origin: "http://localhost:5174",
+    methods: "GET,POST,PUT,DELETE,PATCH",
     credentials: true,
 }));
 app.use(body_parser_1.default.json());
