@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { Project, ProjectVisibility } from './projectModels'
+import { Project, ProjectVisibility, ProjectStatus } from './projectModels'
 import { User } from '../user/userModels'
 import { UserInterface } from '../user/userInterface'
 import { TemplateInterface } from '../template/templateInterface'
@@ -18,11 +18,22 @@ import { EventInterface } from '../event/eventInterface'
 import { Invitation } from '../invitation/invitationModel'
 import sendMail from '../../utils/sendInvitationEmail'
 import sendInvitationEMail from '../../utils/sendInvitationEmail'
+import cloudinary from '../../config/cloudConfig'
+import fs from 'fs'
 
 const createProject = async (req: Request, res: Response) => {
   //const {userId} = req.user
-  const userId = '65ef22333d0a83e5abef440e'
+  const userId = '65ef22333d0a83e5abef43e3'
+  let secureURL: string = ''
+
   try {
+    if (req.file) {
+      const cloudImage = await cloudinary.uploader.upload(req.file.path, {
+        folder: 'projectThumbnails'
+      })
+      secureURL = cloudImage.secure_url
+      fs.unlinkSync(req.file.path)
+    }
     let projectAssociation: string
 
     const {
@@ -137,7 +148,8 @@ const createProject = async (req: Request, res: Response) => {
       subTopics: subTopicsIds,
       club: projectAssociation === 'club' ? associationData.id : null,
       module: projectAssociation === 'module' ? associationData.id : null,
-      event: projectAssociation === 'event' ? associationData.id : null
+      event: projectAssociation === 'event' ? associationData.id : null,
+      thumbnailUrl: secureURL
     })
 
     // creating and sending invitations
@@ -150,10 +162,12 @@ const createProject = async (req: Request, res: Response) => {
       const user: UserInterface | undefined = invitedUsers.find(
         user => user.email === collaborator
       )
+
       const currentDate = new Date()
       const expirationDate = new Date(currentDate)
       expirationDate.setDate(expirationDate.getDate() + 3)
-      await Invitation.create({
+
+      const invitation = await Invitation.create({
         senderId: coordinator.id,
         receiverId: user ? user.id : null,
         receiverEmail: collaborator,
@@ -161,11 +175,15 @@ const createProject = async (req: Request, res: Response) => {
         invitationDate: currentDate,
         expiresAt: expirationDate
       })
+
+      //sending the invitation email
       sendInvitationEMail(
         coordinator.lastName + ' ' + coordinator.firstName,
         user?.id,
         collaborator,
-        project.title
+        project.id,
+        project.title,
+        invitation.id
       )
       return res.status(201).json({
         success: 'Project created successfully'
@@ -179,4 +197,77 @@ const createProject = async (req: Request, res: Response) => {
   }
 }
 
-export { createProject }
+const updateProject = async (req: Request, res: Response) => {
+  const userId = '65ef22333d0a83e5abef440e'
+  const { projectId } = req.params
+
+  try {
+    if (!projectId) {
+      return res.status(400).json({
+        error: 'Project ID must be provided'
+      })
+    }
+    const project = await Project.findById(projectId)
+
+    if (!project) {
+      return res.status(404).json({
+        error: 'Project not found'
+      })
+    }
+
+    if (project.coordinator.toString() !== userId) {
+      return res.status(403).json({
+        error: 'Unauthorized - Only project coordinator can update the project'
+      })
+    }
+
+    const {
+      title,
+      description,
+      status
+    }: { title: string; description: string; status: ProjectStatus } = req.body
+    project.title = title
+    project.description = description
+    project.status = status
+
+    await project.save()
+    res.status(200).json({ message: 'Project updated successfully' })
+  } catch (error) {
+    console.error('Error updating project:', error)
+    res.status(500).json({ error: 'Internal Server Error' })
+  }
+}
+const deleteProject = async (req: Request, res: Response) => {
+  const userId = '65ef22333d0a83e5abef440e'
+  const { projectId } = req.params
+
+  try {
+    if (!projectId) {
+      return res.status(400).json({
+        error: 'Project ID must be provided'
+      })
+    }
+
+    const project = await Project.findById(projectId)
+
+    if (!project) {
+      return res.status(404).json({
+        error: 'Project not found'
+      })
+    }
+
+    const user = await User.findById(userId)
+
+    if (!user) {
+      return res.status(404).json({
+        error: 'User not found'
+      })
+    }
+    console.log(project.collaborators)
+    res.status(200).json({ message: 'Project deleted successfully' })
+  } catch (error) {
+    console.error('Error deleting project:', error)
+    res.status(500).json({ error: 'Internal Server Error' })
+  }
+}
+export { createProject, updateProject, deleteProject }
