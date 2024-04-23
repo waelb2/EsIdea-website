@@ -1,4 +1,5 @@
 import transporter from '../config/nodemailer'
+import jwt, { JwtPayload, verify } from 'jsonwebtoken'
 import dotenv from 'dotenv'
 dotenv.config()
 
@@ -9,17 +10,40 @@ interface EmailInterface {
   html: string
 }
 
+export interface LinkPayload extends JwtPayload {
+  userId: string
+  email: string
+  projectId: string
+  invitationId: string
+  exp?: number
+}
+
 const sendInvitationEMail = async (
   coordinator: string,
   userId: string,
   email: string,
-  projectName: string
+  projectId: string,
+  projectName: string,
+  invitationId: string
 ) => {
-  const invitationLink: string = 'http://localhost/invitation'
+  const linkPayload: LinkPayload = {
+    userId,
+    email,
+    projectId,
+    invitationId
+  }
+  const link_token = jwt.sign(
+    linkPayload,
+    process.env.JWT_SECRET_EMAIL as string,
+    {
+      expiresIn: '3d'
+    }
+  )
+  const invitationLink: string = ` http://localhost:3000/invitation/accept?token=${link_token}`
 
   const message: EmailInterface = {
     from: process.env.AUTH_EMAIL as string,
-    to: email,
+    to: 'lw_bouguessa@esi.dz',
     subject: `You are invited to join this project <<${projectName}>>`,
     html: `<p> ${coordinator} has shared the project ${projectName} with you:</p>
         <form action="${invitationLink}" method="post">
