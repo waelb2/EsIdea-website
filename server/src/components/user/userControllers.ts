@@ -1,11 +1,11 @@
 import { Request, Response} from "express"
 import { validationResult } from "express-validator"
 import mongoose, { isObjectIdOrHexString } from "mongoose"
-import { User } from "./userModels"
 import cloudinary from "../../config/cloudConfig"
 import fs from "fs"
 import multer from "multer"
 import { feedback } from "../feedback/feedbackModel"
+import { User } from './userModels'
 
 const upload = multer({ dest: 'uploads/' })
 
@@ -78,8 +78,31 @@ const createFeedback = async (req: Request, res: Response) => {
   }
 }
 
+
+
+const getUser = async (req:Request
+    , res:Response)=>{
+    if(!req.isAuthenticated()){
+       return  res.status(401).json({
+            error: 'unauthorized'
+        })
+    }
+    try{
+        console.log(req.user)
+    }catch(err){
+        console.log(err)
+        res.status(500).json({
+            error : "Internal Server Error"
+        })
+    }
+}
+
+
+
 export {
   upload,
   modifyProfilePicture,
-  createFeedback
+  createFeedback,
+  getUser
 }
+

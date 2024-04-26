@@ -10,9 +10,9 @@ const Footer = () => {
       {/* First section of the footer */}
       <div className='flex flex-col justify-center items-center bg-[#3A86FF] py-4 text-center'>
         {/* Heading */}
-        <p className='text-[#FEFEFE] opacity-65 text-xl pt-3'>Brainstorm a Brighter Tomorrow</p>
-        <p className='text-[#FCFFFF] text-4xl font-bold'>Beautiful Projects are waiting</p>
-        <p className='text-[#FCFFFF] text-4xl font-bold'>for Teams.</p>
+        <p className='text-[#FEFEFE] opacity-65 md:text-xl xs:text- pt-3'>Brainstorm a Brighter Tomorrow</p>
+        <p className='text-[#FCFFFF] md:text-4xl xs:text-2xl font-bold'>Beautiful Projects are waiting</p>
+        <p className='text-[#FCFFFF] md:text-4xl xs:text-2xl font-bold'>for Teams.</p>
         {/* Button for creating the first project */}
         <button className="flex mt-6 items-center justify-center bg-[#FCFFFF] text-sm font-medium text-black px-6 py-3 mb-6 rounded-full">
           <span>Create your first project</span>
