@@ -17,37 +17,68 @@ const acceptInvitation = async (req: Request, res: Response) => {
       invitationToken,
       process.env.JWT_SECRET_EMAIL as string
     )
-    const { userId, exp, projectId, invitationId } =
-      invitationPayload as LinkPayload
+    const { userId, projectId, invitationId } = invitationPayload as LinkPayload
 
-    if ((exp as number) > Date.now()) {
-      return res.status(403).json({
-        error: 'Invitation has expired'
-      })
-    }
-    const invitation = await Invitation.findByIdAndUpdate(invitationId, {
-      accepted: true
-    })
-    if (!invitation) {
+    const invitation = await Invitation.findById(invitationId)
+
+    if (invitation?.accepted || !invitation) {
       return res.status(404).json({
         error: 'Invitation has been accepted'
       })
     }
+    if (invitation.expiresAt.getTime() <= Date.now()) {
+      return res.status(403).json({
+        error: 'Invitation has expired'
+      })
+    }
+    invitation.accepted = true
+    invitation.save()
 
-    const updatedProject = await Project.findByIdAndUpdate(
-      projectId,
+    const user = await User.findById(userId)
+    if (user) {
+      const updatedProject = await Project.findByIdAndUpdate(
+        projectId,
+        {
+          $addToSet: {
+            collaborators: {
+              member: user,
+              joinedAt: new Date()
+            }
+          },
+          $inc: { collaboratorsCount: 1 }
+        },
+        { new: true }
+      )
+      if (!updatedProject) {
+        return res.status(404).json({
+          error: 'Error updating the project or the project does not exist'
+        })
+      }
+    }
+
+    const project = await Project.findById(projectId)
+    if (!project) {
+      return res.json(404).json({
+        error: 'Project not found'
+      })
+    }
+    user?.projects.push({
+      project: project,
+      joinedAt: new Date()
+    })
+    const updateUser = await User.findByIdAndUpdate(
+      userId,
       {
-        $addToSet: { collaborators: await User.findById(userId) },
+        $addToSet: {
+          projects: {
+            project: await Project.findById(projectId),
+            joinedAt: new Date()
+          }
+        },
         $inc: { collaboratorsCount: 1 }
       },
       { new: true }
     )
-
-    if (!updatedProject) {
-      return res.status(404).json({
-        error: 'Project not found'
-      })
-    }
 
     res.status(201).json({
       msg: 'Invitation accepted successfully'
