@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt'
 import passport from 'passport'
 import { User } from '../user/userModels'
 import jwt from 'jsonwebtoken'
-import { sendEmail } from '../../config/nodeMailer'
+import { sendEmail } from '../../config/nodemailer'
 import crypto from 'crypto'
 const auth = (req: Request, res: Response) => {
   res.send('<a href="/auth/google">Authenticate with Google</a>')

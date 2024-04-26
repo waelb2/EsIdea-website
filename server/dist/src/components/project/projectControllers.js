@@ -110,6 +110,13 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                     });
             }
         }
+        if (clubList.length == 0 &&
+            moduleList.length == 0 &&
+            eventList.length == 0) {
+            return res.status(400).json({
+                error: 'Either one club, module or event must be provided'
+            });
+        }
         // creating the project document
         const project = yield projectModels_1.Project.create({
             title: projectTitle,

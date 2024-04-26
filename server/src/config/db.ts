@@ -1,12 +1,5 @@
-
-import mongoose, { ConnectOptions } from 'mongoose';
+import mongoose from 'mongoose'
 
 export const connectDB = (uri: string) => {
-    return mongoose.connect(uri,
-        {
-            useNewUrlParser: true,
-            useUnifiedTopology: true
-        } as ConnectOptions
-    )
+  return mongoose.connect(uri)
 }
-

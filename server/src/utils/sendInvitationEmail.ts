@@ -1,4 +1,4 @@
-import transporter from '../config/nodemailer'
+import transporter from '../config/ndmailer'
 import jwt, { JwtPayload, verify } from 'jsonwebtoken'
 import dotenv from 'dotenv'
 dotenv.config()
