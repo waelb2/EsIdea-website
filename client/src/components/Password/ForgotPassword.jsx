@@ -1,9 +1,44 @@
 // eslint-disable-next-line no-unused-vars
-import React from 'react'
+import React, { useState } from 'react'
 import NavBar from '../LandingPage/NavBar'
 import { ForgotPasswordImage } from '../../assets'
+import { useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
 const ForgotPassword = () => {
+    const navigate = useNavigate();
+    const [email,setEmail]=useState("");
+    const url = 'http://localhost:3000/auth/forgetPassword';
+    const data = { email: email };
+    const handleForgotPassword = () => {
+        axios.post(url, data, {
+          headers: {
+            "Content-type": "application/json; charset=UTF-8",
+          },
+        })
+          .then((response) => {
+            navigate("/login", { state: { fromForgotPassword: true } });
+          })
+          .catch((error) => {
+            console.log(error.message);
+          });
+      };
+    // const handleForgotPassword=()=>{
+    //     fetch(url, {
+    //     method: 'POST',
+    //     body: JSON.stringify(data),
+    //     headers: {
+    //         'Content-type': 'application/json; charset=UTF-8',
+    //     },
+    //     })
+    //     .then((response) => response.json())
+    //     .then((data) => {
+    //         navigate("/login", { state: { fromForgotPassword: true } })
+    //     })
+    //     .catch((err) => {
+    //         console.log(err.message);
+    //     });
+    // }
   return (
     <div className="bg-white w-full overflow-hidden min-h-screen flex flex-col">
         <div className="sm:px-16 px-6 flex justify-center items-center">
@@ -19,9 +54,9 @@ const ForgotPassword = () => {
                         <form className='w-full flex flex-col gap-4' action="">
                             <div className='flex flex-col gap-1'>
                                 <label className='text-gray-500' htmlFor="Emailid">Email :</label>
-                                <input id='Emailid' className='border-gray-300 border-2 rounded-xl text-base p-2 outline-none' placeholder='Enter your email' type="text" />
+                                <input onChange={(e)=>{setEmail(e.target.value)}} id='Emailid' className='border-gray-300 border-2 rounded-xl text-base p-2 outline-none' placeholder='Enter your email' type="text" />
                             </div>
-                            <button className='self-center bg-skyBlue px-12 py-3 rounded-full text-white font-semibold shadow-custom hover:shadow-hover transition-shadow duration-500'>Submit</button>
+                            <button onClick={(e)=>{e.preventDefault();handleForgotPassword()}} className='self-center bg-skyBlue px-12 py-3 rounded-full text-white font-semibold shadow-custom hover:shadow-hover transition-shadow duration-500'>Submit</button>
                         </form>
                     </div>
                     <img className='w-[400px] h-[400px] object-cover mt-3 md:mt-0 p-6 ' src={ForgotPasswordImage} alt="ForgotPasswordImage" />

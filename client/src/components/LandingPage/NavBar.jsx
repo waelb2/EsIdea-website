@@ -23,6 +23,9 @@ const NavBar = () => {
     title:"Oops! Invalid Email Address.",
     content:"ESIdea is exclusive to ESI school email accounts. Please use your ESI email address to sign up or log in."
   }
+  const signUp = ()=>{
+    window.open("http://localhost:3000/auth/google","_self")
+  }
   return (
     // Navbar container
     <>
@@ -40,7 +43,7 @@ const NavBar = () => {
         </li>
         {/* Sign up link */}
         <li>
-          <button onClick={togglePopUp} className='bg-skyBlue w-[120px] p-2 text-white  sm:w-[152px] sm:p-[10px] rounded-3xl font-bold '>Sign up</button>
+          <button onClick={signUp} className='bg-skyBlue w-[120px] p-2 text-white  sm:w-[152px] sm:p-[10px] rounded-3xl font-bold '>Sign up</button>
         </li>
       </ul>
       </nav>

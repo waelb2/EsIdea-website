@@ -2,8 +2,12 @@
 import React,{useState,useEffect} from 'react'
 import NavBar from '../LandingPage/NavBar'
 import { Eye, ResetPasswordImage, hidePassword } from '../../assets'
+import { useLocation, useNavigate } from 'react-router-dom'
+import axios from 'axios'
 
 const ResetPassword = () => {
+    const {pathname} = useLocation();
+    const navigate = useNavigate();
     const [toggle1,setToggle1] = useState(false);
     const [toggle2,setToggle2] = useState(false);
     const [password,setPassword] = useState("");
@@ -26,6 +30,43 @@ const ResetPassword = () => {
             setPasswordConfirmError(false);
         }
     },[passwordConfirm])
+    const data = { newPassword: password,confirmNewPassword:passwordConfirm };
+
+    // const resetPass = (e)=>{
+    //     e.preventDefault();
+    //     if(!passwordError && !passwordConfirmError){
+    //         fetch(`http://localhost:3000${pathname}`, {
+    //         method: 'PATCH',
+    //         body: JSON.stringify(data),
+    //         headers: {
+    //             'Content-type': 'application/json; charset=UTF-8',
+    //         },
+    //         })
+    //         .then((response) => response.json())
+    //         .then((data) => {
+    //             navigate("/login", { state: { fromResetPassword: true } })
+    //         })
+    //         .catch((err) => {
+    //             console.log(err.message);
+    //         });
+    //     }
+    // }
+    const resetPass = (e) => {
+        e.preventDefault();
+        if (!passwordError && !passwordConfirmError) {
+          axios.patch(`http://localhost:3000${pathname}`, data, {
+            headers: {
+              "Content-type": "application/json; charset=UTF-8",
+            },
+          })
+            .then((response) => {
+              navigate("/login", { state: { fromResetPassword: true } });
+            })
+            .catch((error) => {
+              console.log(error.message);
+            });
+        }
+      };
   return (
     <div className="bg-white w-full overflow-hidden min-h-screen flex flex-col">
         <div className="sm:px-16 px-6 flex justify-center items-center">
@@ -56,7 +97,7 @@ const ResetPassword = () => {
                                 </div>
                                 {passwordConfirmError && <p className='text-red text-sm mt-1'>doesn&apos;t match New Password</p>}
                             </div>
-                            <button className='self-center bg-skyBlue px-12 py-3 rounded-full shadow-custom hover:shadow-hover transition-shadow duration-500 text-white font-semibold'>Submit</button>
+                            <button onClick={resetPass} className='self-center bg-skyBlue px-12 py-3 rounded-full shadow-custom hover:shadow-hover transition-shadow duration-500 text-white font-semibold'>Submit</button>
                         </form>
                     </div>
                     <img className='w-[450px] h-[450px] object-cover mt-3 md:mt-0 p-6 ' src={ResetPasswordImage} alt="ForgotPasswordImage" />

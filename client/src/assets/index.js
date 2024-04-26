@@ -61,8 +61,11 @@ import chart3 from './chart3.svg'
 import ForgotPasswordImage from './ForgotPasswordImage.svg'
 import ResetPasswordImage from './ResetPasswordImage.svg'
 import hidePassword from './hidePassword.png'
+import dragdropfiles from './dragdropfiles.svg'
+import Restore from './Restore.svg'
+import RemoveRed from './RemoveRed.svg'
 export {
-    add,OpenProj,Colaborators,hidePassword,ResetPasswordImage,ExportProj,Publish,TrashBlack,MoveFavorite,Edit,chart1,
+    add,OpenProj,Colaborators,hidePassword,ResetPasswordImage,ExportProj,Publish,TrashBlack,MoveFavorite,Edit,chart1,Restore,RemoveRed,
     General,Users,Logs,ForgotPasswordImage,FeedBacks,Tags,chart2,chart3,ChangePFP,ChangePassIcon,LogoutIcon,HelpIcon,FeedBackIcon,DashboardImage,
     brainstorming,
     BrainstormingMethodIcon,
@@ -96,5 +99,5 @@ export {
     UpIcon,
     blackClose,
     Back,blackLogo,BackgroundLandingPage,notification,
-    Hammer,View,Remove
+    Hammer,View,Remove,dragdropfiles
   };
