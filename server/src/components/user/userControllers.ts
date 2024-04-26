@@ -6,6 +6,7 @@ import fs, { lstat, rmSync } from 'fs'
 import multer from 'multer'
 import { feedback } from '../feedback/feedbackModel'
 import { User } from './userModels'
+import { isLowercase } from 'validator'
 
 const upload = multer({ dest: 'uploads/' })
 
@@ -87,7 +88,7 @@ const createFeedback = async (req: Request, res: Response) => {
 }
 
 const getUserByEmail = async (req: Request, res: Response) => {
-  const { emailQuery }: { emailQuery :string } = req.body
+  const { emailQuery }: { emailQuery: string } = req.body
   try {
     const matchedUsers = await User.find({
       email: { $regex: emailQuery, $options: 'i' }
