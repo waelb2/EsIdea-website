@@ -27,8 +27,9 @@ const mongoose_1 = __importStar(require("mongoose"));
 const templateSchema = new mongoose_1.Schema({
     templateName: {
         type: String,
-        required: [true, "Template name is required"]
+        required: [true, 'Template name is required']
     },
     templateDescription: String
 });
 const Template = mongoose_1.default.model('Template', templateSchema);
+exports.default = Template;

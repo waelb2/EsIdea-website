@@ -23,36 +23,13 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Invitation = void 0;
+exports.Topic = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-const invitationSchema = new mongoose_1.Schema({
-    senderId: {
-        type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: 'User',
-        required: [true, 'Invitation sender must be provided']
+const topicSchema = new mongoose_1.Schema({
+    topicName: {
+        type: String,
+        required: [true, 'Topic name is required']
     },
-    receiverId: {
-        type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: 'User'
-    },
-    receiverEmail: {
-        type: mongoose_1.default.Schema.Types.String,
-        required: [true, 'Receiver email must be provided']
-    },
-    projectId: {
-        type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: 'Project',
-        required: true
-    },
-    invitationDate: {
-        type: Date,
-        default: Date.now
-    },
-    expiresAt: Date,
-    accepted: {
-        type: Boolean,
-        default: false
-    }
+    parentTopic: { type: mongoose_1.default.Types.ObjectId, ref: 'Topic' }
 });
-const Invitation = mongoose_1.default.model('Invitation', invitationSchema);
-exports.Invitation = Invitation;
+exports.Topic = mongoose_1.default.model('Topic', topicSchema);

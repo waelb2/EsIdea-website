@@ -4,7 +4,6 @@ const router =  express.Router()
 
 
 router.get("/users",(req: Request, res:Response)=>{
-
 })
 
 

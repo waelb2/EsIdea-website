@@ -28,14 +28,14 @@ const mongoose_1 = __importStar(require("mongoose"));
 const clubSchema = new mongoose_1.Schema({
     clubName: {
         type: String,
-        required: [true, "Club name is required"]
+        required: [true, 'Club name is required']
     },
     description: {
         imageUrl: String,
         creationDate: String,
         field: String,
-        eventsNumber: Number,
-        bestEvent: String
+        numberOfEvents: Number,
+        majorEvents: [String]
     }
 });
 const Club = mongoose_1.default.model('Club', clubSchema);

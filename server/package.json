@@ -1,7 +1,10 @@
 {
   "dependencies": {
+    "@types/multer": "^1.4.11",
+    "@types/nodemailer": "^6.4.14",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
+    "cloudinary": "^2.1.0",
     "cookie-parser": "^1.4.6",
     "cookie-session": "^2.1.0",
     "cors": "^2.8.5",
@@ -14,12 +17,11 @@
     "mongodb": "^6.5.0",
     "mongoose": "^8.2.1",
     "morgan": "^1.10.0",
+    "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.13",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0",
     "rimraf": "^5.0.5",
-    "ts-node": "^10.9.2",
-    "tsc-watch": "^6.0.4",
     "validator": "^13.11.0",
     "validator-js": "^0.2.1"
   },

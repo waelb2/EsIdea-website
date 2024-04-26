@@ -31,14 +31,14 @@ const moduleSchema = new mongoose_1.Schema({
         required: [true, "Module name is required"]
     },
     description: {
-        Title: String,
+        title: String,
         field: String,
-        credit: Number,
-        coef: Number,
+        credit: mongoose_1.default.Schema.Types.BigInt,
+        coef: mongoose_1.default.Schema.Types.BigInt,
         edition: String,
-        courseHours: Number,
-        tdHours: Number,
-        tpHours: Number || undefined
+        courseHours: String,
+        tdHours: String,
+        tpHours: String
     }
 });
 exports.Module = mongoose_1.default.model('Module', moduleSchema);
