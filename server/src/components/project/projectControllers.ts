@@ -150,7 +150,15 @@ const createProject = async (req: Request, res: Response) => {
           })
       }
     }
-
+    if (
+      clubList.length == 0 &&
+      moduleList.length == 0 &&
+      eventList.length == 0
+    ) {
+      return res.status(400).json({
+        error: 'Either one club, module or event must be provided'
+      })
+    }
     // creating the project document
     const project = await Project.create({
       title: projectTitle,
