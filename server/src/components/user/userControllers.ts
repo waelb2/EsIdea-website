@@ -6,6 +6,8 @@ import cloudinary from "../../config/cloudConfig"
 import fs from "fs"
 import multer from "multer"
 import { feedback } from "../feedback/feedbackModel"
+import { Project } from "../project/projectModels"
+import { publicProjectRequest } from "../publicProjectRequest/publicProjectRequestModel"
 
 const upload = multer({ dest: 'uploads/' })
 
@@ -78,8 +80,37 @@ const createFeedback = async (req: Request, res: Response) => {
   }
 }
 
+const createPublicProjectRequest = async (req: Request, res: Response) => {
+  const errResult = validationResult(req)
+  if(!errResult.isEmpty())
+      return res.status(400).send({ errors: errResult.array() })
+
+  const { projectId } = req.body
+  
+  if (!isObjectIdOrHexString(projectId)) {
+    return res
+      .status(400)
+      .send({ error: 'Bad id must be 24 character hex string' })
+  }
+  const objectId = new mongoose.Types.ObjectId(projectId)
+
+  try {
+    const project = await Project.findById(objectId);
+    if (!project) {
+      return res.status(404).send({ error: "The project of the publication request is not found" });
+    }
+    const ppr = new publicProjectRequest({ projectId })
+    await ppr.save()
+    return res.status(201).send(ppr)
+  } catch (error) {
+    console.log(error)
+    return res.sendStatus( 400)
+  }
+}
+
 export {
   upload,
   modifyProfilePicture,
-  createFeedback
+  createFeedback,
+  createPublicProjectRequest
 }

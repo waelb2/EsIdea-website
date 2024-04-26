@@ -3,8 +3,9 @@ import express, {Request , Response} from "express"
 import { body, checkSchema, validationResult } from "express-validator"
 import mongoose, { isObjectIdOrHexString } from "mongoose"
 import { User, userIdValidationSchema } from "./userModels"
-import { createFeedback, modifyProfilePicture, upload } from "./userControllers"
+import { createFeedback, createPublicProjectRequest, modifyProfilePicture, upload } from "./userControllers"
 import { createFeedbackValidationSchema } from "../feedback/feedbackModel"
+import { createPublicProjectRequestValidationSchema } from "../publicProjectRequest/publicProjectRequestModel"
 
 const router =  express.Router()
 
@@ -16,11 +17,14 @@ router.patch("/settings/profile/password",
   // Use bahaa's auth forget password handler
 )
 
-router.patch("/settings/profile/picture", upload.single('profilePicture'), checkSchema(userIdValidationSchema),
+router.patch("/settings/profile/picture", upload.single('profilePicture'),
+  checkSchema(userIdValidationSchema),
   (req: Request, res: Response) => modifyProfilePicture(req, res, req.file)
 )
 
 router.post("/settings/feedback", checkSchema(createFeedbackValidationSchema), createFeedback)
 
+router.post("/publicProjectRequest", checkSchema(createPublicProjectRequestValidationSchema),
+  createPublicProjectRequest)
 
-export default router 
+export default router
