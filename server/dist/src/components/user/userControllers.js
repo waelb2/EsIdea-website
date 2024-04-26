@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUser = exports.createFeedback = exports.modifyProfilePicture = exports.upload = void 0;
+exports.getUserByLastName = exports.getUserByEmail = exports.getUser = exports.createFeedback = exports.modifyProfilePicture = exports.upload = void 0;
 const express_validator_1 = require("express-validator");
 const mongoose_1 = __importStar(require("mongoose"));
 const cloudConfig_1 = __importDefault(require("../../config/cloudConfig"));
@@ -55,14 +55,18 @@ const modifyProfilePicture = (req, res, image) => __awaiter(void 0, void 0, void
             .send({ error: 'Must provide the new profile picture' });
     const userId = req.body.id;
     if (!(0, mongoose_1.isObjectIdOrHexString)(userId))
-        return res.status(400).send({ error: "Bad id: must be 24 character hex string" });
+        return res
+            .status(400)
+            .send({ error: 'Bad id: must be 24 character hex string' });
     const objectId = new mongoose_1.default.Types.ObjectId(userId);
     try {
         const user = yield userModels_1.User.findById(objectId);
         if (!user) {
-            return res.status(404).send({ error: "User not found" });
+            return res.status(404).send({ error: 'User not found' });
         }
-        const result = yield cloudConfig_1.default.uploader.upload(image.path, { public_id: userId });
+        const result = yield cloudConfig_1.default.uploader.upload(image.path, {
+            public_id: userId
+        });
         const secure_url = result.secure_url;
         user.profilePicUrl = secure_url;
         yield user.save();
@@ -71,7 +75,9 @@ const modifyProfilePicture = (req, res, image) => __awaiter(void 0, void 0, void
                 console.log(err);
             }
         });
-        return res.status(200).send({ msg: 'User profile picture updated successfully' });
+        return res
+            .status(200)
+            .send({ msg: 'User profile picture updated successfully' });
     }
     catch (error) {
         console.log(error);
@@ -102,10 +108,72 @@ const createFeedback = (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
     catch (error) {
         console.log(error);
-        return res.sendStatus(400);
+        return res.sendStatus(500);
     }
 });
 exports.createFeedback = createFeedback;
+const getUserByEmail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { emailQuery } = req.body;
+    try {
+        const matchedUsers = yield userModels_1.User.find({
+            email: { $regex: emailQuery, $options: 'i' }
+        });
+        if (matchedUsers.length == 0) {
+            return res.status(200).json({
+                matchedUsers: []
+            });
+        }
+        const formattedUsers = matchedUsers.map(user => {
+            return {
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+                profilePicUrl: user.profilePicUrl
+            };
+        });
+        res.status(200).json({
+            matchedUsers: formattedUsers
+        });
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({
+            error: 'Internal Server Error'
+        });
+    }
+});
+exports.getUserByEmail = getUserByEmail;
+const getUserByLastName = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { lastNameQuery } = req.body;
+    try {
+        const matchedUsers = yield userModels_1.User.find({
+            lastName: { $regex: lastNameQuery, $options: 'i' }
+        });
+        if (matchedUsers.length == 0) {
+            return res.status(200).json({
+                matchedUsers: []
+            });
+        }
+        const formattedUsers = matchedUsers.map(user => {
+            return {
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+                profilePicUrl: user.profilePicUrl
+            };
+        });
+        res.status(200).json({
+            matchedUsers: formattedUsers
+        });
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({
+            error: 'Internal Server Error'
+        });
+    }
+});
+exports.getUserByLastName = getUserByLastName;
 const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.isAuthenticated()) {
         return res.status(401).json({
@@ -118,7 +186,7 @@ const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     catch (err) {
         console.log(err);
         res.status(500).json({
-            error: "Internal Server Error"
+            error: 'Internal Server Error'
         });
     }
 });

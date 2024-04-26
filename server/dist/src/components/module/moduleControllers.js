@@ -14,7 +14,9 @@ const moduleModel_1 = require("./moduleModel");
 const getMoudules = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const modules = yield moduleModel_1.Module.find({});
-        return res.status(200).send(modules);
+        return res.status(200).json({
+            modules
+        });
     }
     catch (error) {
         console.log(error);

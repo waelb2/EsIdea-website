@@ -48,7 +48,7 @@ const login_get = (req, res) => {
 exports.login_get = login_get;
 //!!!!!!!!!!!! This must be in User model method and the secret must be in .env file
 const createToken = (user) => {
-    return jsonwebtoken_1.default.sign({ user }, 'esideasecret', {
+    return jsonwebtoken_1.default.sign({ userId: user.id, email: user.email }, 'esideasecret', {
         expiresIn: 30 * 24 * 60 * 60
     });
 };
@@ -69,7 +69,7 @@ const login_post = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
             httpOnly: true,
             maxAge: 30 * 24 * 60 * 60 * 1000
         });
-        return res.status(200).json({ user });
+        return res.status(200).json({ userToken: token });
     }
     catch (err) {
         const errors = handleError(err);
