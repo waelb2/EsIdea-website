@@ -1,6 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import React,{useState} from 'react'
 import PopUpMethods from './pages/PopUpMethods';
+import CreateNewProject from './pages/CreateNewProject'
 import { add,Folder,BrainstormingMethodIcon,BrainwritingMethodIcon,Flipboard } from '../../assets';
 const Functionalities = () => {
     const [AllMethodsVisible,setAllMethodVisible] = useState(false);
@@ -70,7 +71,7 @@ const Functionalities = () => {
                         </div>)
                     )}
                 </div>
-                <PopUpMethods visible={AllMethodsVisible} currentPage={currentPage} closePopUp={closePopUp} nextPage={nextPage} prevPage={prevPage}/>
+                <CreateNewProject visible={AllMethodsVisible} currentPage={currentPage} closePopUp={closePopUp} nextPage={nextPage} prevPage={prevPage}/>
             </div>
   )
 }

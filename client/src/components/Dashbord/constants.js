@@ -1,4 +1,5 @@
-import {ProjectIcon,RecentsIcon,FavoritesIcon,PublicIcon,TrashIcon, ChangePFP, ChangePassIcon, HelpIcon, FeedBackIcon, LogoutIcon, OpenProj, Edit, MoveFavorite, TrashBlack, Publish, ExportProj, Colaborators} from '../../assets'
+import { useEffect, useState } from 'react';
+import {ProjectIcon,RecentsIcon,FavoritesIcon,PublicIcon,TrashIcon} from '../../assets'
 export const NavLinks = [
     {
         title : "Projects",
@@ -26,58 +27,13 @@ export const NavLinks = [
         icon : TrashIcon
     }
 ];
-export const userDetails = [
-    {
-        icon:ChangePFP,
-        title:"Change pfp"
-    },{
-        icon:ChangePassIcon,
-        title:"Change password"
-    },{
-        icon:HelpIcon,
-        title:"Help"
-    },{
-        icon:FeedBackIcon,
-        title:"Feedback"
-    },{
-        icon:LogoutIcon,
-        title:"Log out"
-    }
-]
-export const projectDetails = [
-    {
-        title:"Open",
-        icon:OpenProj,
-        line:false
-    },
-    {
-        title:"Edit file info",
-        icon:Edit,
-        line:true
-    },
-    {
-        title:"Move to favorites",
-        icon:MoveFavorite,
-        line:false
-    },
-    {
-        title:"Move to trash",
-        icon:TrashBlack,
-        line:false
-    },
-    {
-        title:"Publish",
-        icon:Publish,
-        line:true
-    },
-    {
-        title:"Export",
-        icon:ExportProj,
-        line:true
-    },
-    {
-        title:"Colaborators",
-        icon:Colaborators,
-        line:false
-    }
-]
+export const useDebounce = (value,delay)=>{
+    const [debouncedValue,setDebouncedValue] = useState("");
+    useEffect(()=>{
+        const timeout = setTimeout(()=>{
+            setDebouncedValue(value);
+        },delay)
+        return ()=>clearTimeout(timeout);
+    },[value,delay]);
+    return debouncedValue;
+}

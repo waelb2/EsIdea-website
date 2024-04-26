@@ -1,10 +1,34 @@
 // eslint-disable-next-line no-unused-vars
-import React,{useRef, useState} from 'react'
-import {More, Search,blackClose, User} from '../../assets';
+import React,{useRef, useState,useContext} from 'react'
+import {More, Search,blackClose, ChangePFP, ChangePassIcon, HelpIcon, FeedBackIcon, LogoutIcon} from '../../assets';
 import propTypes from 'prop-types';
-import { userDetails } from './constants';
 import { Link } from 'react-router-dom';
+import { UserContext } from '../../App';
 const DashboardNav = ({currentLoc,action}) => {
+    const {user} = useContext(UserContext);
+    const userDetails = [
+        {
+            icon:ChangePFP,
+            title:"Change pfp",
+            path:""
+        },{
+            icon:ChangePassIcon,
+            title:"Change password",
+            path:"/ChangePassword"
+        },{
+            icon:HelpIcon,
+            title:"Help",
+            path:""
+        },{
+            icon:FeedBackIcon,
+            title:"Feedback",
+            path:"/"
+        },{
+            icon:LogoutIcon,
+            title:"Log out",
+            path:"http://localhost:3000/auth/logout"
+        }
+    ]
     const [toggleSearch,setToggleSearch] = useState(false);
     const inputRef = useRef();
     const [toggle,setToggle] = useState(false);
@@ -19,18 +43,18 @@ const DashboardNav = ({currentLoc,action}) => {
                                 <img onClick={()=>{setToggleSearch(false)}} className={`w-5 h-5 cursor-pointer ${!toggleSearch && "hidden"}`} src={blackClose} alt="Close" />
             </div>
             <div>
-                <img onClick={()=>{setToggle(prev => !prev)}} className='w-10 h-10 cursor-pointer object-contain' src={User} alt="User" />
+                <img onClick={()=>{setToggle(prev => !prev)}} className='w-10 h-10 cursor-pointer object-contain rounded-full border-2 border-skyBlue p-0.5' src={user.profilePicUrl} alt="User" />
                 <div className={`${!toggle ? "hidden":"flex border-[2px]"} p-4 bg-white absolute z-20 top-16 right-6 mx-4 my-2 min-w-[250px] rounded-xl sidebar flex-col`}>
                     <img onClick={()=>{setToggle(prev => !prev)}} className='w-5 h-5 object-contain cursor-pointer fixed top-2 right-3' src={blackClose} alt="Close"/>
                     <div className='flex flex-col items-center mb-3'>
-                        <img className='w-20 h-20 object-contain' src={User} alt="UserPic" />
-                        <p className='font-medium'>Ahcen Chabbi</p>
-                        <p>ma_chabbi@esi.dz</p>
+                        <img className='w-20 h-20 rounded-full object-contain mb-2 border-2 border-skyBlue p-0.5' src={user.profilePicUrl} alt="UserPic" />
+                        <p className='font-medium'>{`${user.firstName} ${user.lastName}`}</p>
+                        <p>{user.email}</p>
                     </div>
                     <ul className='list-none flex justify-end items-start flex-1 flex-col'>
                         {userDetails.map((det,ind) =><div className='w-full' key={det.title}>
-                            <li className={`w-full rounded-md transition-all hover:bg-lightGrey p-2`}>
-                                <Link className='flex w-full items-center'>
+                            <li className={`w-full rounded-md transition-all hover:bg-lightGrey`}>
+                                <Link to={det.path} className='flex w-full items-center  p-2'>
                                     <img className='mr-3 w-5 h-5 object-contain' src={det.icon} alt={det.title} />
                                     <p className='flex-grow'>{det.title}</p>
                                 </Link>

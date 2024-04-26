@@ -1,10 +1,13 @@
 // eslint-disable-next-line no-unused-vars
-import React,{useEffect, useState} from 'react'
+import React,{useContext, useEffect, useState} from 'react'
 import {Eye, hidePassword} from '../../assets';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
+import { UserContext } from '../../App';
+import axios from 'axios';
 const Form = () => {
+    const {setUser} = useContext(UserContext);
     const [toggle,setToggle] = useState(false);
-    const navigate = useNavigate();
+
     const [email,setEmail] = useState("");
     const [password,setPassword] = useState("");
 
@@ -26,6 +29,42 @@ const Form = () => {
             setPasswordError(false);
         }
     },[password])
+    const data = {email:email,password:password}
+    // const login = (e)=>{
+    //     e.preventDefault();
+    //     if(!passwordError && !emailError){
+    //         fetch("http://localhost:3000/auth/login", {
+    //         method: 'POST',
+    //         body: JSON.stringify(data),
+    //         headers: {
+    //             'Content-type': 'application/json; charset=UTF-8',
+    //         },
+    //         })
+    //         .then((response) => response.json())
+    //         .then((data) => {
+    //             setUser(data.user);
+    //         })
+    //         .catch((err) => {
+    //             console.log(err.message);
+    //         });
+    //     }
+    // }
+    const login = (e) => {
+        e.preventDefault();
+        if (!passwordError && !emailError) {
+          axios.post("http://localhost:3000/auth/login", data, {
+            headers: {
+              "Content-type": "application/json; charset=UTF-8",
+            },
+          })
+            .then((response) => {
+              setUser(response.data.user);
+            })
+            .catch((error) => {
+              console.log(error.message);
+            });
+        }
+      };
     return (
         <form action="">
 
@@ -51,7 +90,7 @@ const Form = () => {
             </div>
 
             <div className='flex justify-center items-center mt-3'>
-                <button onClick={()=>{navigate("/Projects")}} className={`bg-skyBlue w-[120px] p-2 text-white  sm:w-[152px] sm:p-[10px] rounded-3xl font-bold`}>Login
+                <button onClick={login} className={`bg-skyBlue w-[120px] p-2 text-white  sm:w-[152px] sm:p-[10px] rounded-3xl font-bold`}>Login
                 </button>
             </div>
 
