@@ -29,7 +29,7 @@ const sendInvitationEMail = (coordinator, userId, email, projectId, projectName,
     const invitationLink = ` http://localhost:3000/invitation/accept?token=${link_token}`;
     const message = {
         from: process.env.AUTH_EMAIL,
-        to: 'lw_bouguessa@esi.dz',
+        to: email,
         subject: `You are invited to join this project <<${projectName}>>`,
         html: `<p> ${coordinator} has shared the project ${projectName} with you:</p>
         <form action="${invitationLink}" method="post">

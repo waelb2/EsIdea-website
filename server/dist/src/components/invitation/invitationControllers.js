@@ -23,29 +23,56 @@ const acceptInvitation = (req, res) => __awaiter(void 0, void 0, void 0, functio
             });
         }
         const invitationPayload = (0, jsonwebtoken_1.verify)(invitationToken, process.env.JWT_SECRET_EMAIL);
-        const { userId, exp, projectId, invitationId } = invitationPayload;
-        if (exp > Date.now()) {
-            return res.status(403).json({
-                error: 'Invitation has expired'
-            });
-        }
-        const invitation = yield invitationModel_1.Invitation.findByIdAndUpdate(invitationId, {
-            accepted: true
-        });
-        if (!invitation) {
+        const { userId, projectId, invitationId } = invitationPayload;
+        const invitation = yield invitationModel_1.Invitation.findById(invitationId);
+        if ((invitation === null || invitation === void 0 ? void 0 : invitation.accepted) || !invitation) {
             return res.status(404).json({
                 error: 'Invitation has been accepted'
             });
         }
-        const updatedProject = yield projectModels_1.Project.findByIdAndUpdate(projectId, {
-            $addToSet: { collaborators: yield userModels_1.User.findById(userId) },
-            $inc: { collaboratorsCount: 1 }
-        }, { new: true });
-        if (!updatedProject) {
-            return res.status(404).json({
+        if (invitation.expiresAt.getTime() <= Date.now()) {
+            return res.status(403).json({
+                error: 'Invitation has expired'
+            });
+        }
+        invitation.accepted = true;
+        invitation.save();
+        const user = yield userModels_1.User.findById(userId);
+        if (user) {
+            const updatedProject = yield projectModels_1.Project.findByIdAndUpdate(projectId, {
+                $addToSet: {
+                    collaborators: {
+                        member: user,
+                        joinedAt: new Date()
+                    }
+                },
+                $inc: { collaboratorsCount: 1 }
+            }, { new: true });
+            if (!updatedProject) {
+                return res.status(404).json({
+                    error: 'Error updating the project or the project does not exist'
+                });
+            }
+        }
+        const project = yield projectModels_1.Project.findById(projectId);
+        if (!project) {
+            return res.json(404).json({
                 error: 'Project not found'
             });
         }
+        user === null || user === void 0 ? void 0 : user.projects.push({
+            project: project,
+            joinedAt: new Date()
+        });
+        const updateUser = yield userModels_1.User.findByIdAndUpdate(userId, {
+            $addToSet: {
+                projects: {
+                    project: yield projectModels_1.Project.findById(projectId),
+                    joinedAt: new Date()
+                }
+            },
+            $inc: { collaboratorsCount: 1 }
+        }, { new: true });
         res.status(201).json({
             msg: 'Invitation accepted successfully'
         });

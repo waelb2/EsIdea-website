@@ -113,22 +113,30 @@ const projectSchema = new mongoose_1.Schema({
             ref: 'Topic'
         }
     ],
-    club: {
-        type: mongoose_1.default.Types.ObjectId,
-        ref: 'Club'
-    },
-    module: {
-        type: mongoose_1.default.Types.ObjectId,
-        ref: 'Module'
-    },
-    event: {
-        type: mongoose_1.default.Types.ObjectId,
-        ref: 'Event'
-    },
+    clubs: [
+        {
+            type: mongoose_1.default.Types.ObjectId,
+            ref: 'Club'
+        }
+    ],
+    modules: [
+        {
+            type: mongoose_1.default.Types.ObjectId,
+            ref: 'Module'
+        }
+    ],
+    events: [
+        {
+            type: mongoose_1.default.Types.ObjectId,
+            ref: 'Event'
+        }
+    ],
     thumbnailUrl: String
 });
 projectSchema.pre('save', function (next) {
-    if (!this.club && !this.module && !this.event) {
+    if (this.clubs.length === 0 &&
+        this.modules.length == 0 &&
+        this.events.length == 0) {
         const error = new Error('At least one of module, club or event must be provided');
         return next(error);
     }

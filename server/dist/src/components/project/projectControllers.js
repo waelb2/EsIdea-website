@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteProject = exports.updateProject = exports.createProject = void 0;
+exports.getProjectByUserId = exports.deleteProject = exports.updateProject = exports.createProject = void 0;
 const projectModels_1 = require("./projectModels");
 const userModels_1 = require("../user/userModels");
 const templateModel_1 = __importDefault(require("../template/templateModel"));
@@ -38,7 +38,7 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             fs_1.default.unlinkSync(req.file.path);
         }
         let projectAssociation;
-        const { projectTitle, description, templateId, ideationMethodId, visibility, collaborators, mainTopic, subTopics, association, associationId } = req.body;
+        const { projectTitle, description, templateId, ideationMethodId, visibility, collaborators, mainTopic, subTopics, tags } = req.body;
         // Getting and validating project metadata
         const coordinator = yield userModels_1.User.findById(userId);
         if (!coordinator) {
@@ -70,37 +70,45 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             });
             subTopicsIds.push(subTopic.id);
         }
-        let associationData;
-        projectAssociation = association.toLowerCase();
-        switch (projectAssociation) {
-            case 'club':
-                associationData = yield clubModel_1.Club.findById(associationId);
-                if (!associationData) {
-                    return res.status(404).json({
-                        error: 'Club not found '
+        let clubList = [];
+        let moduleList = [];
+        let eventList = [];
+        for (const tag of tags) {
+            const tagId = tag.tagId;
+            const tagType = tag.tagType.toLowerCase();
+            switch (tagType) {
+                case 'club':
+                    const club = yield clubModel_1.Club.findById(tagId);
+                    if (!club) {
+                        return res.status(404).json({
+                            error: `Club ${tagId} not found `
+                        });
+                    }
+                    clubList.push(club);
+                    break;
+                case 'module':
+                    const module = yield moduleModel_1.Module.findById(tagId);
+                    if (!module) {
+                        return res.status(404).json({
+                            error: `Module ${tagId} not found `
+                        });
+                    }
+                    moduleList.push(module);
+                    break;
+                case 'event':
+                    const event = yield eventModel_1.Event.findById(tagId);
+                    if (!event) {
+                        return res.status(404).json({
+                            error: `Event ${tagId} not found `
+                        });
+                    }
+                    eventList.push(event);
+                    break;
+                default:
+                    return res.status(400).json({
+                        error: 'Invalid association type'
                     });
-                }
-                break;
-            case 'module':
-                associationData = yield moduleModel_1.Module.findById(associationId);
-                if (!associationData) {
-                    return res.status(404).json({
-                        error: 'Module not found '
-                    });
-                }
-                break;
-            case 'event':
-                associationData = yield eventModel_1.Event.findById(associationId);
-                if (!associationData) {
-                    return res.status(404).json({
-                        error: 'Event not found '
-                    });
-                }
-                break;
-            default:
-                return res.status(400).json({
-                    error: 'Invalid association type'
-                });
+            }
         }
         // creating the project document
         const project = yield projectModels_1.Project.create({
@@ -112,21 +120,22 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             visibility,
             mainTopic: parentTopic.id,
             subTopics: subTopicsIds,
-            club: projectAssociation === 'club' ? associationData.id : null,
-            module: projectAssociation === 'module' ? associationData.id : null,
-            event: projectAssociation === 'event' ? associationData.id : null,
+            clubs: clubList,
+            modules: moduleList,
+            events: eventList,
             thumbnailUrl: secureURL
         });
+        const normalized_collaborators = collaborators.map(email => email.toLowerCase().trim());
         // creating and sending invitations
         const invitedUsers = yield userModels_1.User.find({
-            email: { $in: collaborators }
+            email: { $in: normalized_collaborators }
         });
         // creating invitations
-        for (const collaborator of collaborators) {
+        for (const collaborator of normalized_collaborators) {
             const user = invitedUsers.find(user => user.email === collaborator);
             const currentDate = new Date();
-            const expirationDate = new Date(currentDate);
-            expirationDate.setDate(expirationDate.getDate() + 3);
+            const expirationDate = new Date();
+            expirationDate.setDate(currentDate.getDate() + 3);
             const invitation = yield invitationModel_1.Invitation.create({
                 senderId: coordinator.id,
                 receiverId: user ? user.id : null,
@@ -135,12 +144,16 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 invitationDate: currentDate,
                 expiresAt: expirationDate
             });
+            // Associating project with his coordinator
+            coordinator.projects.push({ project, joinedAt: new Date() });
+            user === null || user === void 0 ? void 0 : user.projectInvitations.push(invitation);
+            user === null || user === void 0 ? void 0 : user.save();
             //sending the invitation email
             (0, sendInvitationEmail_1.default)(coordinator.lastName + ' ' + coordinator.firstName, user === null || user === void 0 ? void 0 : user.id, collaborator, project.id, project.title, invitation.id);
-            return res.status(201).json({
-                success: 'Project created successfully'
-            });
         }
+        return res.status(201).json({
+            success: 'Project created successfully'
+        });
     }
     catch (err) {
         console.log('Error : ', err);
@@ -184,12 +197,23 @@ const updateProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 });
 exports.updateProject = updateProject;
 const deleteProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const userId = '65ef22333d0a83e5abef440e';
+    const userId = '65ef22333d0a83e5abef43fd';
     const { projectId } = req.params;
     try {
         if (!projectId) {
             return res.status(400).json({
                 error: 'Project ID must be provided'
+            });
+        }
+        if (!userId) {
+            return res.status(400).json({
+                error: 'User ID must be provided'
+            });
+        }
+        const collaborator = yield userModels_1.User.findById(userId);
+        if (!collaborator) {
+            return res.status(404).json({
+                error: 'User not found'
             });
         }
         const project = yield projectModels_1.Project.findById(projectId);
@@ -198,13 +222,22 @@ const deleteProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 error: 'Project not found'
             });
         }
-        const user = yield userModels_1.User.findById(userId);
-        if (!user) {
-            return res.status(404).json({
-                error: 'User not found'
+        const collaborators = project.collaborators.filter(collaborator => collaborator.member._id.toString() === userId);
+        if (collaborators.length < 0) {
+            return res.status(400).json({
+                error: 'This user is not a collaborator in this project'
             });
         }
-        console.log(project.collaborators);
+        const updatedCollaborators = project.collaborators.filter(collaborator => collaborator.member._id.toString() !== userId);
+        // deleting the collaborator from project collaborators list
+        project.collaborators = updatedCollaborators;
+        project.save();
+        const updatedProjectsList = collaborator.projects.filter(collaboratorProject => console.log(collaboratorProject)
+        //collaboratorProject.project._id.toString() !== projectId
+        );
+        // deleting the project from user projects list
+        collaborator.projects = updatedProjectsList;
+        collaborator.save();
         res.status(200).json({ message: 'Project deleted successfully' });
     }
     catch (error) {
@@ -213,3 +246,98 @@ const deleteProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.deleteProject = deleteProject;
+const getProjectByUserId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const userId = req.params.userId;
+    try {
+        if (!userId) {
+            return res.status(400).json({
+                error: 'User ID must be provided'
+            });
+        }
+        const user = yield userModels_1.User.findById(userId)
+            .populate({
+            path: 'projects.project',
+            populate: {
+                path: 'subTopics', // Populate the `subTopics` array for each project
+                model: 'Topic' // Specify the model for `subTopics` (adjust based on your schema)
+            }
+        })
+            .populate({
+            path: 'projects.project',
+            populate: {
+                path: 'collaborators.member',
+                model: 'User'
+            }
+        })
+            .populate({
+            path: 'projects.project',
+            populate: {
+                path: 'mainTopic',
+                model: 'Topic'
+            }
+        })
+            .populate({
+            path: 'projects.project',
+            populate: {
+                path: 'clubs',
+                model: 'Club'
+            }
+        })
+            .populate({
+            path: 'projects.project',
+            populate: {
+                path: 'events',
+                model: 'Event'
+            }
+        })
+            .populate({
+            path: 'projects.project',
+            populate: {
+                path: 'modules',
+                model: 'Module'
+            }
+        });
+        if (!user) {
+            return res.status(404).json({
+                error: 'User not found'
+            });
+        }
+        const projects = user.projects.map(project => project === null || project === void 0 ? void 0 : project.project);
+        const projectStrings = projects.map(project => {
+            const { title, description, visibility, collaboratorsCount, collaborators, mainTopic, subTopics, clubs, modules, events, thumbnailUrl } = project;
+            const formattedSubTopics = subTopics === null || subTopics === void 0 ? void 0 : subTopics.map(topic => topic.topicName);
+            const formattedCollaborators = collaborators === null || collaborators === void 0 ? void 0 : collaborators.map(collaborator => {
+                if (collaborator.member) {
+                    const { firstName, lastName, email, profilePicUrl } = collaborator.member;
+                    return {
+                        firstName,
+                        lastName,
+                        email,
+                        profilePicUrl
+                    };
+                }
+                return null;
+            });
+            const formattedProject = {
+                ProjectTitle: title,
+                Description: description,
+                Visibility: visibility,
+                CollaboratorsCount: collaboratorsCount.toString(),
+                collaborators: formattedCollaborators,
+                MainTopic: (mainTopic === null || mainTopic === void 0 ? void 0 : mainTopic.topicName) || '',
+                SubTopics: formattedSubTopics,
+                Clubs: clubs.map(club => club.clubName),
+                Modules: modules.map(module => module.moduleName),
+                Events: events.map(event => event.eventName),
+                ThumbnailUrl: thumbnailUrl
+            };
+            return formattedProject;
+        });
+        res.status(201).json(projectStrings);
+    }
+    catch (error) {
+        console.error('Error deleting project:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+exports.getProjectByUserId = getProjectByUserId;
