@@ -2,7 +2,8 @@ import express from 'express'
 import {
   createProject,
   updateProject,
-  deleteProject
+  deleteProject,
+  getProjectByUserId
 } from './projectControllers'
 
 import multer from 'multer'
@@ -12,7 +13,8 @@ const upload = multer({ dest: 'uploads/' })
 const router = express.Router()
 
 router.post('/create-project', upload.single('projectThumbnail'), createProject)
-router.post('/update-project/:projectId', updateProject)
-router.post('/delete-project/:projectId', deleteProject)
+router.patch('/update-project/:projectId', updateProject)
+router.delete('/delete-project/:projectId', deleteProject)
+router.get('/get-all-projects/:userId',getProjectByUserId)
 
 export default router
