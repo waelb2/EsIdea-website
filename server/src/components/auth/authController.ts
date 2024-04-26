@@ -62,7 +62,7 @@ const login_post = async (req: Request, res: Response) => {
       maxAge: 30 * 24 * 60 * 60 * 1000
     })
 
-    return res.status(200).json({ user })
+    return res.status(200).json({ userToken: token })
   } catch (err) {
     const errors = handleError(err)
     res.status(500).json({ errors })
