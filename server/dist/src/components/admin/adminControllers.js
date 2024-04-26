@@ -43,11 +43,11 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.approvePublicProjectRequest = exports.createPublicProjectRequest = exports.getPublicProjectRequests = exports.replyFeedback = exports.createFeedback = exports.getFeedbacks = exports.modifyTag = exports.deleteTag = exports.createTag = exports.getTags = exports.forceUnbanUser = exports.unbanUser = exports.banUser = exports.deleteUser = exports.getUsers = exports.getStats = void 0;
+exports.approvePublicProjectRequest = exports.getPublicProjectRequests = exports.replyFeedback = exports.getFeedbacks = exports.modifyTag = exports.deleteTag = exports.createTag = exports.getTags = exports.forceUnbanUser = exports.unbanUser = exports.banUser = exports.deleteUser = exports.getUsers = exports.getStats = void 0;
 const userModels_1 = require("../user/userModels");
 const projectModels_1 = require("../project/projectModels");
 const adminInterface_1 = require("./adminInterface");
-const adminMethods_1 = require("./adminMethods");
+const adminUtils_1 = require("../../utils/adminUtils");
 const mongoose_1 = __importStar(require("mongoose"));
 const express_validator_1 = require("express-validator");
 const clubModel_1 = require("../club/clubModel");
@@ -57,25 +57,30 @@ const feedbackModel_1 = require("../feedback/feedbackModel");
 const publicProjectRequestModel_1 = require("../publicProjectRequest/publicProjectRequestModel");
 const ideationMethodModel_1 = require("../idea/ideationMethodModel");
 const getStats = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    let stats = { nbUsers: 0, nbProjets: [], nbVisite24h: 0, nbProjets24h: 0 };
+    let stats = {
+        nbUsers: 0,
+        nbProjects: [],
+        nbVisits24h: 0,
+        nbProjects24h: 0
+    };
     try {
-        //Nombre d'utilisateurs
+        //Number of users
         stats.nbUsers = yield userModels_1.User.countDocuments();
-        //Nombre de projets par methode
+        //Number of projects per method
         const methods = yield ideationMethodModel_1.IdeationMethod.find();
         for (const method of methods) {
-            const nb = yield projectModels_1.Project.find({ ideationMethod: method._id }).countDocuments();
-            stats.nbProjets.push(nb);
+            const nb = yield projectModels_1.Project.find({
+                ideationMethod: method._id
+            }).countDocuments();
+            stats.nbProjects.push(nb);
         }
-        //Nombre de visites du site (par une periode de 24h)
-        stats.nbVisite24h = yield (0, adminMethods_1.nbVisites24h)();
-        //Nombre de nouveaux projets (par une periode de 24h)
-        const avant24h = Date.now() - 24 * 3600 * 1000;
-        //filtrer les projets qui ont etaient créer dans les dernieres 24h
-        //const projets24h = await Project.find({creationDate: { $gte: avant24h }}); // marche dans le cas ou creation timestamp (ms since 1970)
-        const projets = yield projectModels_1.Project.find({});
-        const projets24h = projets.filter(project => project.creationDate.getTime() >= avant24h);
-        stats.nbProjets24h = projets24h.length;
+        //Number of website visits in the last 24h
+        stats.nbVisits24h = yield (0, adminUtils_1.nbVisits24h)();
+        //Number of the new projects in the last 24h
+        const avant24h = new Date(Date.now() - 24 * 3600 * 1000);
+        //filtering the projects that were created in the last 24h
+        const projects24h = yield projectModels_1.Project.find({ creationDate: { $gte: avant24h } });
+        stats.nbProjects24h = projects24h.length;
         return res.status(200).send(stats);
     }
     catch (error) {
@@ -101,16 +106,17 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         return res.status(400).send({ errors: errResult.array() });
     const userId = req.body.id;
     if (!(0, mongoose_1.isObjectIdOrHexString)(userId)) {
-        return res.status(400).send({ error: "Bad id must be 24 character hex string" });
+        return res
+            .status(400)
+            .send({ error: 'Bad id must be 24 character hex string' });
     }
     const objectId = new mongoose_1.default.Types.ObjectId(userId);
     try {
         const user = yield userModels_1.User.findById(objectId);
         if (!user) {
-            return res.status(404).send({ error: "User not found" });
+            return res.status(404).send({ error: 'User not found' });
         }
         yield userModels_1.User.deleteOne(objectId);
-        console.log(user);
         return res.sendStatus(200);
     }
     catch (error) {
@@ -126,20 +132,23 @@ const banUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const userId = req.body.id;
     const duration = req.body.duration;
     if (duration <= 0)
-        return res.status(400).send({ error: "Bad duration: must be positive different from 0 integer" });
+        return res.status(400).send({
+            error: 'Bad duration: must be positive different from 0 integer'
+        });
     if (!(0, mongoose_1.isObjectIdOrHexString)(userId))
-        return res.status(400).send({ error: "Bad id: must be 24 character hex string" });
+        return res
+            .status(400)
+            .send({ error: 'Bad id: must be 24 character hex string' });
     const objectId = new mongoose_1.default.Types.ObjectId(userId);
     try {
         const user = yield userModels_1.User.findById(objectId);
         if (!user) {
-            return res.status(404).send({ error: "User not found" });
+            return res.status(404).send({ error: 'User not found' });
         }
-        const endDate = new Date(Date.now() + (duration * 24 * 3600 * 1000));
+        const endDate = new Date(Date.now() + duration * 24 * 3600 * 1000);
         user.ban.isBan = true;
         user.ban.banEnd = endDate;
         yield user.save();
-        console.log(user);
         return res.sendStatus(200);
     }
     catch (error) {
@@ -154,23 +163,24 @@ const unbanUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         return res.status(400).send({ errors: errResult.array() });
     const userId = req.body.id;
     if (!(0, mongoose_1.isObjectIdOrHexString)(userId))
-        return res.status(400).send({ error: "Bad id: must be 24 character hex string" });
+        return res
+            .status(400)
+            .send({ error: 'Bad id: must be 24 character hex string' });
     const objectId = new mongoose_1.default.Types.ObjectId(userId);
     try {
         const user = yield userModels_1.User.findById(objectId);
         if (!user) {
-            return res.status(404).send({ error: "User not found" });
+            return res.status(404).send({ error: 'User not found' });
         }
         if (user.ban.isBan) {
             if (Date.now() >= user.ban.banEnd.getTime()) {
                 user.ban.isBan = false;
                 yield user.save();
-                console.log(user);
                 return res.sendStatus(200);
             }
             return res.status(403).send({ error: adminInterface_1.banMsg });
         }
-        return res.status(400).send({ error: "User is not banned" });
+        return res.status(400).send({ error: 'User is not banned' });
     }
     catch (error) {
         console.log(error);
@@ -184,20 +194,21 @@ const forceUnbanUser = (req, res) => __awaiter(void 0, void 0, void 0, function*
         return res.status(400).send({ errors: errResult.array() });
     const userId = req.body.id;
     if (!(0, mongoose_1.isObjectIdOrHexString)(userId))
-        return res.status(400).send({ error: "Bad id: must be 24 character hex string" });
+        return res
+            .status(400)
+            .send({ error: 'Bad id: must be 24 character hex string' });
     const objectId = new mongoose_1.default.Types.ObjectId(userId);
     try {
         const user = yield userModels_1.User.findById(objectId);
         if (!user) {
-            return res.status(404).send({ error: "User not found" });
+            return res.status(404).send({ error: 'User not found' });
         }
         if (user.ban.isBan) {
             user.ban.isBan = false;
             yield user.save();
-            console.log(user);
             return res.sendStatus(200);
         }
-        return res.status(400).send({ error: "User is not banned" });
+        return res.status(400).send({ error: 'User is not banned' });
     }
     catch (error) {
         console.log(error);
@@ -213,17 +224,17 @@ const getTags = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let docs;
     try {
         switch (type.toLowerCase()) {
-            case "club":
+            case 'club':
                 docs = yield clubModel_1.Club.find({});
                 break;
-            case "module":
+            case 'module':
                 docs = yield moduleModel_1.Module.find({});
                 break;
-            case "event":
+            case 'event':
                 docs = yield eventModel_1.Event.find({});
                 break;
             default:
-                return res.status(400).send({ error: "Invalid tag type" });
+                return res.status(400).send({ error: 'Invalid tag type' });
         }
         return res.status(200).send(docs);
     }
@@ -241,22 +252,22 @@ const createTag = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let savedDoc;
     try {
         switch (type.toLowerCase()) {
-            case "club":
+            case 'club':
                 const newClub = new clubModel_1.Club(tag);
                 savedDoc = yield newClub.save();
                 break;
-            case "module":
+            case 'module':
                 const newModule = new moduleModel_1.Module(tag);
                 savedDoc = yield newModule.save();
                 break;
-            case "event":
+            case 'event':
                 const newEvent = new eventModel_1.Event(tag);
                 savedDoc = yield newEvent.save();
                 break;
             default:
-                return res.status(400).send({ error: "Invalid tag type" });
+                return res.status(400).send({ error: 'Invalid tag type' });
         }
-        return res.status(201).send({ msg: "Created successfully", savedDoc });
+        return res.status(201).send({ msg: 'Created successfully', savedDoc });
     }
     catch (error) {
         console.log(error);
@@ -270,37 +281,36 @@ const deleteTag = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         return res.status(400).send({ errors: errResult.array() });
     const id = req.body.id, type = req.body.type;
     if (!(0, mongoose_1.isObjectIdOrHexString)(id)) {
-        return res.status(400).send({ error: "Bad id must be 24 character hex string" });
+        return res
+            .status(400)
+            .send({ error: 'Bad id must be 24 character hex string' });
     }
     const objectId = new mongoose_1.default.Types.ObjectId(id);
     try {
         switch (type.toLowerCase()) {
-            case "club":
+            case 'club':
                 const club = yield clubModel_1.Club.findById(objectId);
                 if (!club) {
-                    return res.status(404).send({ error: "Club not found" });
+                    return res.status(404).send({ error: 'Club not found' });
                 }
                 yield clubModel_1.Club.deleteOne(objectId);
-                console.log(club);
                 break;
-            case "module":
+            case 'module':
                 const module = yield moduleModel_1.Module.findById(objectId);
                 if (!module) {
-                    return res.status(404).send({ error: "Module not found" });
+                    return res.status(404).send({ error: 'Module not found' });
                 }
                 yield moduleModel_1.Module.deleteOne(objectId);
-                console.log(module);
                 break;
-            case "event":
+            case 'event':
                 const event = yield eventModel_1.Event.findById(objectId);
                 if (!event) {
-                    return res.status(404).send({ error: "Event not found" });
+                    return res.status(404).send({ error: 'Event not found' });
                 }
                 yield eventModel_1.Event.deleteOne(objectId);
-                console.log(event);
                 break;
             default:
-                return res.status(400).send({ error: "Invalid tag type" });
+                return res.status(400).send({ error: 'Invalid tag type' });
         }
         return res.sendStatus(200);
     }
@@ -316,49 +326,48 @@ const modifyTag = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         return res.status(400).send({ errors: errResult.array() });
     const _b = req.body, { id, type } = _b, tag = __rest(_b, ["id", "type"]);
     if (!(0, mongoose_1.isObjectIdOrHexString)(id)) {
-        return res.status(400).send({ error: "Bad id must be 24 character hex string" });
+        return res
+            .status(400)
+            .send({ error: 'Bad id must be 24 character hex string' });
     }
     const objectId = new mongoose_1.default.Types.ObjectId(id);
     try {
         switch (type.toLowerCase()) {
-            case "club":
+            case 'club':
                 let club = yield clubModel_1.Club.findById(objectId);
                 if (!club) {
-                    return res.status(404).send({ error: "Club not found" });
+                    return res.status(404).send({ error: 'Club not found' });
                 }
                 if (tag.clubName)
                     club.clubName = tag.clubName;
                 if (tag.description)
                     club.description = Object.assign(Object.assign({}, club.description), tag.description);
                 yield club.save();
-                console.log(tag);
                 break;
-            case "module":
+            case 'module':
                 const module = yield moduleModel_1.Module.findById(objectId);
                 if (!module) {
-                    return res.status(404).send({ error: "Module not found" });
+                    return res.status(404).send({ error: 'Module not found' });
                 }
                 if (tag.moduleName)
                     module.moduleName = tag.moduleName;
                 if (tag.description)
                     module.description = Object.assign(Object.assign({}, module.description), tag.description);
                 yield module.save();
-                console.log(tag);
                 break;
-            case "event":
+            case 'event':
                 let event = yield eventModel_1.Event.findById(objectId);
                 if (!event) {
-                    return res.status(404).send({ error: "Event not found" });
+                    return res.status(404).send({ error: 'Event not found' });
                 }
                 if (tag.eventName)
                     event.eventName = tag.eventName;
                 if (tag.description)
                     event.description = tag.description;
                 yield event.save();
-                console.log(tag);
                 break;
             default:
-                return res.status(400).send({ error: "Invalid tag type" });
+                return res.status(400).send({ error: 'Invalid tag type' });
         }
         return res.sendStatus(200);
     }
@@ -379,38 +388,26 @@ const getFeedbacks = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.getFeedbacks = getFeedbacks;
-const createFeedback = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const fb = new feedbackModel_1.feedback(req.body);
-        yield fb.save();
-        return res.status(201).send(fb);
-    }
-    catch (error) {
-        console.log(error);
-        return res.sendStatus(400);
-    }
-});
-exports.createFeedback = createFeedback;
 const replyFeedback = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const errResult = (0, express_validator_1.validationResult)(req);
     if (!errResult.isEmpty())
         return res.status(400).send({ errors: errResult.array() });
     const fbId = req.body.id, adminRes = req.body.response;
     if (!(0, mongoose_1.isObjectIdOrHexString)(fbId))
-        return res.status(400).send({ error: "Bad id: must be 24 character hex string" });
+        return res
+            .status(400)
+            .send({ error: 'Bad id: must be 24 character hex string' });
     const fbObjectId = new mongoose_1.default.Types.ObjectId(fbId);
     try {
         const fb = yield feedbackModel_1.feedback.findById(fbObjectId);
         if (!fb) {
-            return res.status(404).send({ error: "feedback not found" });
+            return res.status(404).send({ error: 'feedback not found' });
         }
         fb.adminResponse = adminRes;
         yield fb.save();
-        console.log(fb);
         return res.sendStatus(200);
     }
     catch (error) {
-        console.log(error);
         return res.sendStatus(500);
     }
 });
@@ -426,39 +423,33 @@ const getPublicProjectRequests = (req, res) => __awaiter(void 0, void 0, void 0,
     }
 });
 exports.getPublicProjectRequests = getPublicProjectRequests;
-const createPublicProjectRequest = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    try {
-        const ppr = new publicProjectRequestModel_1.publicProjectRequest(req.body);
-        yield ppr.save();
-        return res.status(201).send(ppr);
-    }
-    catch (error) {
-        console.log(error);
-        return res.sendStatus(400);
-    }
-});
-exports.createPublicProjectRequest = createPublicProjectRequest;
+// Needs some discussion, 'cause the admin should approve the public project based on certain verifications (file uploaded)
 const approvePublicProjectRequest = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const errResult = (0, express_validator_1.validationResult)(req);
     if (!errResult.isEmpty())
         return res.status(400).send({ errors: errResult.array() });
     const pprId = req.body.id;
     if (!(0, mongoose_1.isObjectIdOrHexString)(pprId))
-        return res.status(400).send({ error: "Bad id: must be 24 character hex string" });
+        return res
+            .status(400)
+            .send({ error: 'Bad id: must be 24 character hex string' });
     const pprObjectId = new mongoose_1.default.Types.ObjectId(pprId);
     try {
         const ppr = yield publicProjectRequestModel_1.publicProjectRequest.findById(pprObjectId);
         if (!ppr) {
-            return res.status(404).send({ error: "Project publication request not found" });
+            return res
+                .status(404)
+                .send({ error: 'Project publication request not found' });
         }
         const project = yield projectModels_1.Project.findById(ppr.projectId);
         if (!project) {
-            return res.status(404).send({ error: "The project of the publication request not found" });
+            return res
+                .status(404)
+                .send({ error: 'The project of the publication request not found' });
         }
         project.visibility = projectModels_1.ProjectVisibility.PUBLIC;
         yield project.save();
-        console.log(project);
-        return res.status(200).send({ msg: "The public" });
+        return res.status(200).send({ msg: 'The public' });
     }
     catch (error) {
         console.log(error);

@@ -1,20 +1,8 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.nbVisites24h = exports.loggerMiddleware = void 0;
+exports.nbVisits24h = void 0;
 const fs_1 = require("fs");
-function loggerMiddleware(req, res, next) {
-    console.log(`-------------------------------------
-    ${req.method} request made to ${req.path}`);
-    // Rajouter la requete dans le fichier log
-    (0, fs_1.appendFile)('access.log', `${new Date().toISOString()} - ${req.method} ${req.url}\n`, err => {
-        if (err) {
-            console.error('Error writing to access.log file:', err);
-        }
-    });
-    next();
-}
-exports.loggerMiddleware = loggerMiddleware;
-function nbVisites24h() {
+function nbVisits24h() {
     return new Promise((resolve, reject) => {
         (0, fs_1.readFile)('access.log', 'utf8', (err, data) => {
             if (err) {
@@ -41,4 +29,4 @@ function nbVisites24h() {
         });
     });
 }
-exports.nbVisites24h = nbVisites24h;
+exports.nbVisits24h = nbVisits24h;

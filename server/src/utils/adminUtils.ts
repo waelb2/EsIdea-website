@@ -1,28 +1,6 @@
-import { Request, Response } from 'express'
-import { NextFunction } from 'express'
-import { appendFile, readFile } from 'fs'
+import { readFile } from 'fs'
 
-export function loggerMiddleware (
-  req: Request,
-  res: Response,
-  next: NextFunction
-): void {
-  console.log(`-------------------------------------
-    ${req.method} request made to ${req.path}`)
-  // Rajouter la requete dans le fichier log
-  appendFile(
-    'access.log',
-    `${new Date().toISOString()} - ${req.method} ${req.url}\n`,
-    err => {
-      if (err) {
-        console.error('Error writing to access.log file:', err)
-      }
-    }
-  )
-  next()
-}
-
-export function nbVisites24h (): Promise<number> {
+export function nbVisits24h (): Promise<number> {
   return new Promise<number>((resolve, reject) => {
     readFile('access.log', 'utf8', (err, data) => {
       if (err) {

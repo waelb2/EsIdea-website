@@ -1,10 +1,8 @@
-// TODO : this page needs some review
-
 import { Request, Response } from 'express'
 import { User } from '../user/userModels'
 import { Project, ProjectVisibility } from '../project/projectModels'
-import { Statistiques, banMsg } from './adminInterface'
-import { nbVisites24h } from './adminMethods'
+import { Statistics, banMsg } from './adminInterface'
+import { nbVisits24h } from '../../utils/adminUtils'
 import mongoose, { isObjectIdOrHexString } from 'mongoose'
 import { validationResult } from 'express-validator'
 import { ClubInterface } from '../club/clubInterface'
@@ -18,38 +16,34 @@ import { publicProjectRequest } from '../publicProjectRequest/publicProjectReque
 import { IdeationMethod } from '../idea/ideationMethodModel'
 
 const getStats = async (req: Request, res: Response) => {
-  let stats: Statistiques = {
+  let stats: Statistics = {
     nbUsers: 0,
-    nbProjets: [],
-    nbVisite24h: 0,
-    nbProjets24h: 0
+    nbProjects: [],
+    nbVisits24h: 0,
+    nbProjects24h: 0
   }
 
   try {
-    //Nombre d'utilisateurs
+    //Number of users
     stats.nbUsers = await User.countDocuments()
 
-    //Nombre de projets par methode
+    //Number of projects per method
     const methods = await IdeationMethod.find()
     for (const method of methods) {
       const nb = await Project.find({
         ideationMethod: method._id
       }).countDocuments()
-      stats.nbProjets.push(nb)
+      stats.nbProjects.push(nb)
     }
 
-    //Nombre de visites du site (par une periode de 24h)
-    stats.nbVisite24h = await nbVisites24h()
+    //Number of website visits in the last 24h
+    stats.nbVisits24h = await nbVisits24h()
 
-    //Nombre de nouveaux projets (par une periode de 24h)
-    const avant24h = Date.now() - 24 * 3600 * 1000
-    //filtrer les projets qui ont etaient créer dans les dernieres 24h
-    //const projets24h = await Project.find({creationDate: { $gte: avant24h }}); // marche dans le cas ou creation timestamp (ms since 1970)
-    const projets = await Project.find({}) //better to filter the data before retreiving it from db (look for some methods or somethin
-    const projets24h = projets.filter(
-      project => project.creationDate.getTime() >= avant24h
-    )
-    stats.nbProjets24h = projets24h.length
+    //Number of the new projects in the last 24h
+    const avant24h = new Date(Date.now() - 24 * 3600 * 1000)
+    //filtering the projects that were created in the last 24h
+    const projects24h = await Project.find({ creationDate: { $gte: avant24h } })
+    stats.nbProjects24h = projects24h.length
 
     return res.status(200).send(stats)
   } catch (error) {
@@ -371,17 +365,6 @@ const getFeedbacks = async (req: Request, res: Response) => {
   }
 }
 
-const createFeedback = async (req: Request, res: Response) => {
-  try {
-    const fb = new feedback(req.body) // ensure data validation for example const {desc, name} :{desc: string....} =....
-    await fb.save()
-    return res.status(201).send(fb)
-  } catch (error) {
-    console.log(error)
-    return res.sendStatus(400)
-  }
-}
-
 const replyFeedback = async (req: Request, res: Response) => {
   const errResult = validationResult(req)
   if (!errResult.isEmpty())
@@ -417,17 +400,6 @@ const getPublicProjectRequests = async (req: Request, res: Response) => {
   } catch (error) {
     console.log(error)
     return res.sendStatus(500)
-  }
-}
-
-const createPublicProjectRequest = async (req: Request, res: Response) => {
-  try {
-    const ppr = new publicProjectRequest(req.body) // same note, validation !! you should k what is the data provided by the front-end
-    await ppr.save()
-    return res.status(201).send(ppr)
-  } catch (error) {
-    console.log(error)
-    return res.sendStatus(400)
   }
 }
 
@@ -480,9 +452,7 @@ export {
   deleteTag,
   modifyTag,
   getFeedbacks,
-  createFeedback,
   replyFeedback,
   getPublicProjectRequests,
-  createPublicProjectRequest,
   approvePublicProjectRequest
 }

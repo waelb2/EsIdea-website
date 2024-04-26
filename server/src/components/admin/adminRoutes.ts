@@ -1,40 +1,36 @@
-import express from "express";
-import { body, checkSchema } from "express-validator";
-import { approvePublicProjectRequest, banUser, createFeedback, createPublicProjectRequest, createTag, deleteTag, deleteUser, forceUnbanUser, getFeedbacks, getPublicProjectRequests, getStats, getTags, getUsers, modifyTag, replyFeedback, unbanUser } from "./adminControllers";
-import { feedbackReplyValidationSchema, publicProjectRequestApproveValidationSchema, tagTypeIdValidationSchema, tagTypeValidationSchema, userBanValidationSchema, userIdValidationSchema } from "./adminValidationSchemas";
+import express from "express"
+import { checkSchema } from "express-validator"
+import { approvePublicProjectRequest, banUser, createTag, deleteTag, deleteUser, forceUnbanUser, getFeedbacks, getPublicProjectRequests, getStats, getTags, getUsers, modifyTag, replyFeedback, unbanUser } from "./adminControllers"
+import { feedbackReplyValidationSchema, publicProjectRequestApproveValidationSchema, tagTypeIdValidationSchema, tagTypeValidationSchema, userBanValidationSchema, userIdValidationSchema } from "./adminInterface"
 
-const router = express.Router();
+const router = express.Router()
 
-router.get("/admin/stats", getStats);
+router.get("/stats", getStats)
 
-router.get("/admin/users", getUsers);
+router.get("/users", getUsers)
 
-router.delete("/admin/users", checkSchema(userIdValidationSchema), deleteUser);
+router.delete("/users", checkSchema(userIdValidationSchema), deleteUser)
 
-router.patch("/admin/users/ban", checkSchema(userBanValidationSchema), banUser);
+router.patch("/users/ban", checkSchema(userBanValidationSchema), banUser)
 
-router.patch("/admin/users/unban", checkSchema(userIdValidationSchema), unbanUser);
+router.patch("/users/unban", checkSchema(userIdValidationSchema), unbanUser)
 
-router.patch("/admin/users/forceUnban", checkSchema(userIdValidationSchema), forceUnbanUser);
+router.patch("/users/forceUnban", checkSchema(userIdValidationSchema), forceUnbanUser)
 
-router.get("/admin/tags", checkSchema(tagTypeValidationSchema), getTags);
+router.get("/tags", checkSchema(tagTypeValidationSchema), getTags)
 
-router.post("/admin/tags", checkSchema(tagTypeValidationSchema), createTag);
+router.post("/tags", checkSchema(tagTypeValidationSchema), createTag)
 
-router.delete("/admin/tags", checkSchema(tagTypeIdValidationSchema), deleteTag);
+router.delete("/tags", checkSchema(tagTypeIdValidationSchema), deleteTag)
 
-router.patch("/admin/tags", checkSchema(tagTypeIdValidationSchema), modifyTag);
+router.patch("/tags", checkSchema(tagTypeIdValidationSchema), modifyTag)
 
-router.get("/admin/feedbacks", getFeedbacks);
+router.get("/feedbacks", getFeedbacks)
 
-router.post("/admin/feedbacks", createFeedback);
+router.patch("/feedbacks/reply", checkSchema(feedbackReplyValidationSchema), replyFeedback)
 
-router.patch("/admin/feedbacks/reply", checkSchema(feedbackReplyValidationSchema), replyFeedback);
+router.get("/publicProjectRequest", getPublicProjectRequests)
 
-router.get("/admin/publicProjectRequest", getPublicProjectRequests);
+router.patch("/publicProjectRequest/approve", checkSchema(publicProjectRequestApproveValidationSchema), approvePublicProjectRequest)
 
-router.post("/admin/publicProjectRequest", createPublicProjectRequest);
-
-router.patch("/admin/publicProjectRequest/approve", checkSchema(publicProjectRequestApproveValidationSchema), approvePublicProjectRequest);
-
-export default router;
+export default router
