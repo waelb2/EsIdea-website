@@ -54,5 +54,12 @@ const userSchema = new Schema<UserInterface>({
 
 const User = mongoose.model<UserInterface>('User', userSchema);
 
+const userIdValidationSchema = {
+    id: {
+        notEmpty: {
+            errorMessage: "Must provide the id of the user"
+        }
+    }
+}
 
-export {User,UserRole}
+export { User, UserRole, userIdValidationSchema }
