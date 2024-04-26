@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserRole = exports.User = void 0;
+exports.userIdValidationSchema = exports.UserRole = exports.User = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 const validator_1 = __importDefault(require("validator"));
 const crypto_1 = __importDefault(require("crypto"));
@@ -96,3 +96,11 @@ userSchema.methods.createResetPasswordToken = function () {
 };
 const User = mongoose_1.default.model('User', userSchema);
 exports.User = User;
+const userIdValidationSchema = {
+    id: {
+        notEmpty: {
+            errorMessage: "Must provide the id of the user"
+        }
+    }
+};
+exports.userIdValidationSchema = userIdValidationSchema;
