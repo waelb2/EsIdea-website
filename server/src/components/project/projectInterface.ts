@@ -20,17 +20,16 @@ export interface ProjectInterface extends Document {
   status: ProjectStatus
   visibility: ProjectVisibility
   collaboratorsCount: number
-  collaborators: [
-    {
-      member: UserInterface
-      joinedAt: Date
-    }
-  ]
+  collaborators: {
+    member: UserInterface
+    joinedAt: Date
+  }[]
+
   ideas: IdeaInterface[]
   mainTopic: TopicInterface
   subTopics?: TopicInterface[]
-  club: ClubInterface
-  module: ModuleInterface
-  event: EventInterface
+  clubs: ClubInterface[]
+  modules: ModuleInterface[]
+  events: EventInterface[]
   thumbnailUrl: string
 }

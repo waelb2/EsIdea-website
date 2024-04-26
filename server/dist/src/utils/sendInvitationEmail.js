@@ -12,11 +12,21 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-const nodemailer_1 = __importDefault(require("../config/nodemailer"));
+const ndmailer_1 = __importDefault(require("../config/ndmailer"));
+const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
-const sendInvitationEMail = (coordinator, userId, email, projectName) => __awaiter(void 0, void 0, void 0, function* () {
-    const invitationLink = 'http://localhost/invitation';
+const sendInvitationEMail = (coordinator, userId, email, projectId, projectName, invitationId) => __awaiter(void 0, void 0, void 0, function* () {
+    const linkPayload = {
+        userId,
+        email,
+        projectId,
+        invitationId
+    };
+    const link_token = jsonwebtoken_1.default.sign(linkPayload, process.env.JWT_SECRET_EMAIL, {
+        expiresIn: '3d'
+    });
+    const invitationLink = ` http://localhost:3000/invitation/accept?token=${link_token}`;
     const message = {
         from: process.env.AUTH_EMAIL,
         to: email,
@@ -27,7 +37,7 @@ const sendInvitationEMail = (coordinator, userId, email, projectName) => __await
         </form>`
     };
     try {
-        yield nodemailer_1.default.sendMail(message);
+        yield ndmailer_1.default.sendMail(message);
     }
     catch (err) {
         console.log(err);

@@ -26,9 +26,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.UserRole = exports.User = void 0;
+exports.userIdValidationSchema = exports.UserRole = exports.User = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 const validator_1 = __importDefault(require("validator"));
+const crypto_1 = __importDefault(require("crypto"));
 var UserRole;
 (function (UserRole) {
     UserRole["ADMIN"] = "admin";
@@ -79,12 +80,27 @@ const userSchema = new mongoose_1.Schema({
     projectInvitations: [{
             type: mongoose_1.default.Types.ObjectId,
             ref: 'Invitation'
-        }]
+        }],
+    passwordResetToken: [{
+            type: String,
+        }],
+    passwordResetTokenExpires: [{
+            type: Date,
+        }],
 });
-// userSchema.pre('save', async function (next) { // this is only used before adding the doc to db, since we r using google sign up, it wont be fired
-//     const salt = await bcrypt.genSalt();
-//     this.password = await bcrypt.hash(String(this.password), salt);
-//     next();
-//   });
+userSchema.methods.createResetPasswordToken = function () {
+    const resetToken = crypto_1.default.randomBytes(32).toString('hex');
+    this.passwordResetToken = crypto_1.default.createHash('sha256').update(resetToken).digest('hex');
+    this.passwordResetTokenExpires = Date.now() + 10 * 60 * 1000;
+    return resetToken;
+};
 const User = mongoose_1.default.model('User', userSchema);
 exports.User = User;
+const userIdValidationSchema = {
+    id: {
+        notEmpty: {
+            errorMessage: "Must provide the id of the user"
+        }
+    }
+};
+exports.userIdValidationSchema = userIdValidationSchema;

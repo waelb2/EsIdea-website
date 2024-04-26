@@ -1,10 +1,20 @@
-import express from "express"
-import { createProject } from "./projectControllers";
+import express from 'express'
+import {
+  createProject,
+  updateProject,
+  deleteProject,
+  getProjectByUserId
+} from './projectControllers'
 
-const router = express.Router();
+import multer from 'multer'
 
+const upload = multer({ dest: 'uploads/' })
 
-router.post('/create-project', createProject)
+const router = express.Router()
 
+router.post('/create-project', upload.single('projectThumbnail'), createProject)
+router.patch('/update-project/:projectId', updateProject)
+router.delete('/delete-project/:projectId', deleteProject)
+router.get('/get-all-projects/:userId',getProjectByUserId)
 
-export default router ;
+export default router

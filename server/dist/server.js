@@ -19,10 +19,12 @@ require("./src/config/passport-setup");
 const db_1 = require("./src/config/db");
 const express_session_1 = __importDefault(require("express-session"));
 const body_parser_1 = __importDefault(require("body-parser"));
+const cors_1 = __importDefault(require("cors"));
 dotenv_1.default.config();
 // Configuring the host
 const HOST = process.env.HOST;
 const PORT = process.env.PORT || 3000;
+const DB_URI = process.env.DATABASE_URI;
 const app = (0, express_1.default)();
 // app config
 app.use((0, express_session_1.default)({
@@ -33,6 +35,12 @@ app.use((0, express_session_1.default)({
 }));
 app.use(passport_1.default.initialize());
 app.use(passport_1.default.session());
+/////////////////////////////////////// o auth ///////////////////////////////
+app.use((0, cors_1.default)({
+    origin: 'http://localhost:5174',
+    methods: 'GET,POST,PUT,DELETE,PATCH',
+    credentials: true
+}));
 app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
 // routes
