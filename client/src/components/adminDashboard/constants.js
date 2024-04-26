@@ -1,0 +1,28 @@
+import { General,Users,Tags,Logs,FeedBacks } from "../../assets";
+export const AdminNavLinks = [
+    {
+        title : "General",
+        path:"/Admin/General",
+        icon : General
+    },
+    {
+        title : "Tags",
+        path:"/Admin/Tags",
+        icon : Tags
+    },
+    {
+        title : "Users",
+        path:"/Admin/Users",
+        icon : Users
+    },
+    {
+        title : "Feed backs",
+        path:"/Admin/FeedBacks",
+        icon : FeedBacks
+    },
+    {
+        title : "Logs",
+        path:"/Admin/Logs",
+        icon : Logs
+    }
+];
