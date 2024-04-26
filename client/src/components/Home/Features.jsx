@@ -13,9 +13,9 @@ const Features = () => {
     // Container for the features section
     <div className='flex flex-col justify-center items-center my-16'>
       {/* Section titles */}
-      <p className='font-extrabold text-4xl py-1'>Features for running</p>
-      <p className='font-extrabold text-4xl py-1'>a better online ideation</p>
-      <p className='font-extrabold text-4xl py-1'>sessions</p>
+      <p className='font-extrabold md:text-4xl xs:text-2xl py-1'>Features for running</p>
+      <p className='font-extrabold md:text-4xl xs:text-2xl py-1'>a better online ideation</p>
+      <p className='font-extrabold md:text-4xl xs:text-2xl py-1'>sessions</p>
 
       {/* Grid for displaying features */}
       <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 px-10 mt-12'>

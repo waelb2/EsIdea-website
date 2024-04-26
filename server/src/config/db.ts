@@ -1,6 +1,5 @@
-import mongoose from "mongoose";
+import mongoose from 'mongoose'
 
-export const connectDB = (uri : string )=>{
-    return mongoose.connect(uri)
+export const connectDB = (uri: string) => {
+  return mongoose.connect(uri)
 }
-
