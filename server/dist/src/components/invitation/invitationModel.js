@@ -29,15 +29,12 @@ const invitationSchema = new mongoose_1.Schema({
     senderId: {
         type: mongoose_1.default.Schema.Types.ObjectId,
         ref: 'User',
-        required: [true, 'Invitation sender must be provided']
+        required: true
     },
     receiverId: {
         type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: 'User'
-    },
-    receiverEmail: {
-        type: mongoose_1.default.Schema.Types.String,
-        required: [true, 'Receiver email must be provided']
+        ref: 'User',
+        required: true
     },
     projectId: {
         type: mongoose_1.default.Schema.Types.ObjectId,
@@ -52,7 +49,7 @@ const invitationSchema = new mongoose_1.Schema({
     accepted: {
         type: Boolean,
         default: false
-    }
+    },
 });
 const Invitation = mongoose_1.default.model('Invitation', invitationSchema);
 exports.Invitation = Invitation;

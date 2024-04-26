@@ -7,6 +7,7 @@ import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { useDebounce } from '../constants';
 import { ColorRing } from 'react-loader-spinner';
+import axios from 'axios';
 export const DependenciesContext = createContext();
 const PopUpMethods = ({visible,closePopUp,currentPage,nextPage,prevPage}) => {
     ////////////////////////////////////////////////////////////////////////////////////////
@@ -177,13 +178,14 @@ const PopUpMethods = ({visible,closePopUp,currentPage,nextPage,prevPage}) => {
     const [collaborators,setCollaborators] = useState([]);
     const debouncedSearch = useDebounce(searchColl,500);
     useEffect(()=>{
-        const  loadCollaborators = async ()=>{
+        const  loadCollaborators = ()=>{
             setLoading(true);
-            const response = await fetch('https://jsonplaceholder.typicode.com/users');
-            const data = await response.json();
-            const coll = data.filter(collaborator => collaborator.name.toLowerCase().includes(debouncedSearch.toLowerCase()))
-            setDisplayedCollaborators(coll);
-            setLoading(false);
+            axios.get('https://jsonplaceholder.typicode.com/users')
+            .then(response => {
+                const coll = response.data.filter(collaborator => collaborator.name.toLowerCase().includes(debouncedSearch.toLowerCase()));
+                setDisplayedCollaborators(coll);
+                setLoading(false);
+            }).catch(err => console.log(err));
         }
         loadCollaborators();
     },[debouncedSearch])
@@ -231,14 +233,18 @@ const PopUpMethods = ({visible,closePopUp,currentPage,nextPage,prevPage}) => {
     const displayedMethods = methods.filter(method=>method.title.toLocaleLowerCase().includes(inputValue.toLocaleLowerCase()))
     return (
         <div onClick={closePopUp} className={`fixed top-0 left-0 bg-black bg-opacity-40 w-screen min-h-screen backdrop-blur z-50 duration-500  transition-opacity ease-in-out flex justify-center items-center  ${visible?"Pop-up-Active":"Pop-up-notActive"}`}>
-
                 <div onClick={(e)=>{e.stopPropagation();setActive("")}} className='bg-white max-w-full w-[600px] min-h-[450px] ss:min-h-[500px]  max-h-full  rounded-2xl shadow-md  px-3 py-4 sm:py-7 sm:px-9 m-4'>
-{/* ---------------------------------------------first page ---------------------------------------------- */}
-                    <div className={`w-full h-full ${currentPage === 1 ? "block":"hidden"}`}>
-                        <div  className='flex justify-end w-full'>
-                            <img onClick={closePopUp} className='w-5 h-5 cursor-pointer' src={blackClose} alt="close" />
+
+                <div className={`w-full h-full flex flex-col`}>
+                        <div className={`w-full flex  ${currentPage === 1 ? "justify-end":"justify-between"}`}>
+
+                            <img onClick={prevPage} className={`w-6 h-6 cursor-pointer ${currentPage > 1 ?"block":"hidden"}`} src={Back} alt="Back" />
+
+                            <img onClick={closePopUp} className={`w-5 h-5 cursor-pointer`} src={blackClose} alt="Close" />
+
                         </div>
-                        <div className='w-full flex flex-col items-center'>
+
+                        <div className={`w-full ${currentPage === 1 ?"flex flex-col items-center":"hidden"}`}>
                             <h1 className='font-bold text-2xl text-center mb-4'>
                                 Choose a method
                             </h1>
@@ -254,14 +260,8 @@ const PopUpMethods = ({visible,closePopUp,currentPage,nextPage,prevPage}) => {
                                 </div>))}
                             </div>
                         </div>
-                    </div>
-{/* ---------------------------------------------second page ---------------------------------------------- */}
-                    <div className={`w-full h-full ${currentPage === 2 ? "block":"hidden"}`}>
-                        <div className='w-full flex justify-between'>
-                            <img onClick={prevPage} className='w-6 h-6 cursor-pointer' src={Back} alt="Back" />
-                            <img onClick={closePopUp} className='w-5 h-5 cursor-pointer' src={blackClose} alt="Close" />
-                        </div>
-                        <div className='w-full flex flex-col items-center'>
+
+                        <div className={`w-full ${currentPage === 2 ?"flex flex-col items-center":"hidden"}`}>
                             <h1 className='font-bold text-2xl text-center mb-4'>
                                 New <span className='text-skyBlue'>{method}</span>
                             </h1>
@@ -300,19 +300,10 @@ const PopUpMethods = ({visible,closePopUp,currentPage,nextPage,prevPage}) => {
                                     </div>
                                 </DependenciesContext.Provider>
                             </div>
-                            <div className='w-full ss:w-[90%] flex justify-end'>
-                                <button onClick={nextPage} className='bg-skyBlue px-3 py-1 rounded-md text-white'>next</button>
-                            </div>
+                            
                         </div>
-                    </div>
-{/* ---------------------------------------------third page ---------------------------------------------- */}
-                    <div className={`w-full h-full ${currentPage === 3 ? "block":"hidden"}`}>
 
-                        <div className='w-full flex justify-between'>
-                            <img onClick={prevPage} className='w-6 h-6 cursor-pointer' src={Back} alt="Back" />
-                            <img onClick={closePopUp} className='w-5 h-5 cursor-pointer' src={blackClose} alt="Close" />
-                        </div>
-                        <div className='w-full flex flex-col items-center'>
+                        <div className={`w-full ${currentPage === 3 ?"flex flex-col items-center":"hidden"}`}>
                             <h1 className='font-bold text-2xl text-center mb-4'>
                                 New <span className='text-skyBlue'>Brainstorming</span>
                             </h1>
@@ -329,8 +320,14 @@ const PopUpMethods = ({visible,closePopUp,currentPage,nextPage,prevPage}) => {
                                     {loading? <div className='flex justify-center items-center'><ColorRing visible={true} height="50" width="50" ariaLabel="color-ring-loading" wrapperStyle={{}} wrapperClass="color-ring-wrapper" colors={['#3A86FF', '#3A86FF', '#3A86FF', '#3A86FF', '#3A86FF']}
                                     /></div> : displayedCollaborators.length !== 0 && debouncedSearch !== "" ? <div className='flex flex-col gap-1 max-h-44 overflow-y-auto scroll-smooth'>
                                     {
-                                        displayedCollaborators.map((collaborator)=><div  className='flex justify-between items-center border rounded-md border-black p-2' key={collaborator.name}>
-                                            <p>{collaborator.name}</p>
+                                        displayedCollaborators.map((collaborator)=><div  className='flex justify-between items-center border rounded-md border-black p-1' key={collaborator.name}>
+                                             <div className='flex gap-2'>
+                                                <img className='w-11 h-11' src={User} alt="user" />
+                                                <div className='flex flex-col justify-center'>
+                                                    <p className='font-medium text-sm'>{collaborator.name}</p>
+                                                    <p className='text-sm'>{collaborator.email}</p>
+                                                </div>
+                                            </div>
                                             <button onClick={()=>{handleAddCollaborator(collaborator)}} className='bg-skyBlue text-realWhite px-2 py-0.5 rounded-lg'>invite</button>
                                         </div>)
                                     }
@@ -361,18 +358,11 @@ const PopUpMethods = ({visible,closePopUp,currentPage,nextPage,prevPage}) => {
                                         </div>)}
                                     </div>}
                             </div>
-                            <div className='w-full ss:w-[90%] flex justify-end'>
-                                <button onClick={nextPage} className='bg-skyBlue px-3 py-1 rounded-md text-white'>next</button>
-                            </div>
+                            
                         </div>
-                    </div>
-{/* ---------------------------------------------fourth page ---------------------------------------------- */}
-                    <div className={`w-full h-full ${currentPage === 4 ? "block":"hidden"}`}>
-                        <div className='w-full flex justify-between'>
-                            <img onClick={prevPage} className='w-6 h-6 cursor-pointer' src={Back} alt="Back" />
-                            <img onClick={closePopUp} className='w-5 h-5 cursor-pointer' src={blackClose} alt="Close" />
-                        </div>
-                        <div className='w-full flex flex-col items-center'>
+
+
+                        <div className={`w-full ${currentPage === 4 ?"flex flex-col items-center":"hidden"}`}>
                             <h1 className='font-bold text-2xl text-center mb-4'>
                                 New <span className='text-skyBlue'>{method}</span>
                             </h1>
@@ -398,7 +388,7 @@ const PopUpMethods = ({visible,closePopUp,currentPage,nextPage,prevPage}) => {
                                         <img className='w-32 h-32' src={ProjectsEmpty} alt="empty" />
                                         <p className='text-base'>{"No sub topics :("}</p>
                                         <p className='text-center text-base'>Don’t worry you can make a section with no sub topics and you can also add new ones her.</p>
-                                    </div>:<div>
+                                    </div>:<div className='flex flex-col gap-2'>
                                             {subTopics.map((subTopic,ind)=><div className='flex justify-between items-center border rounded-md border-black p-2' key={ind}>
                                                 <p>{subTopic}</p>
                                                 <button onClick={()=>{handleRemoveSubTopic(ind)}} className='bg-red text-realWhite px-2 py-0.5 rounded-lg'>Remove</button>
@@ -406,24 +396,16 @@ const PopUpMethods = ({visible,closePopUp,currentPage,nextPage,prevPage}) => {
                                         </div>}
                                 </div>
                             </div>
-                            <div className='w-full ss:w-[90%] flex justify-end'>
-                                <button onClick={nextPage} className='bg-skyBlue px-3 py-1 rounded-md text-white'>next</button>
-                            </div>
+                            
                         </div>
-                    </div>
-{/* ---------------------------------------------fifth page ---------------------------------------------- */}
-                <div className={`w-full h-full ${currentPage === 5 ? "block":"hidden"}`}>
-                        <div className='w-full flex justify-between'>
-                            <img onClick={prevPage} className='w-6 h-6 cursor-pointer' src={Back} alt="Back" />
-                            <img onClick={closePopUp} className='w-5 h-5 cursor-pointer' src={blackClose} alt="Close" />
-                        </div>
-                        <div className='w-full flex flex-col items-center'>
+
+                        <div className={`w-full  ${currentPage === 5 ?"flex flex-col items-center":"hidden"}`}>
                             <h1 className='font-bold text-2xl text-center mb-4'>
                                 New <span className='text-skyBlue'>{method}</span>
                             </h1>
-                            <div className='my-2'>
-                                <h1 className='text-black font-bold'>Upload a picture to use it as a banner for the project ( you can not use one )</h1>
-                                {!banner ? <div onDrop={handleDrop} onDragOver={handleDragOver} className='flex flex-col items-center justify-center gap-1 border-4 border-dashed border-skyBlue rounded-lg p-2'>
+                            <div className='my-2 w-full ss:w-[90%]'>
+                                <h1 className='text-black font-bold mb-2'>Upload a picture to use it as a banner for the project ( you can not use one )</h1>
+                                {!banner ? <div onDrop={handleDrop} onDragOver={handleDragOver} className='flex flex-col items-center justify-center gap-1 border-2 border-dashed border-skyBlue rounded-lg p-2'>
                                     <img src={dragdropfiles} alt="files" />
                                     <h1 className='text-black font-bold'>Drag and Drop pic to upload</h1>
                                     <h1 className='text-black font-semibold'>Or</h1>
@@ -434,14 +416,16 @@ const PopUpMethods = ({visible,closePopUp,currentPage,nextPage,prevPage}) => {
                                         <button onClick={()=>{setBanner(null)}} className='bg-red text-realWhite py-1 px-2 rounded-lg'>Cancel</button>
                                     </div>}
                             </div> 
-                            <div className='w-full ss:w-[90%] flex justify-end'>
-                                <button onClick={nextPage} className='bg-skyBlue px-3 py-1 rounded-md text-white'>next</button>
-                            </div>
+                            
                         </div>
-                    </div>
+                        <div className={`w-[90%] self-center  ${currentPage>1 && currentPage <=5 ? "flex justify-end" : "hidden" }`}>
+                                <button onClick={nextPage} className={`bg-skyBlue px-3 py-1 rounded-md text-white ${currentPage < 5 ?"inline":"hidden"}`}>Next</button>
+                                <button className={`bg-skyBlue px-3 py-1 rounded-md text-white ${currentPage < 5 ?"hidden":"inline"}`}>Create</button>
+                        </div>
+                </div>
                 </div>
                 <ToastContainer/>
-            </div>
+        </div>
   )
 }
 PopUpMethods.propTypes = {

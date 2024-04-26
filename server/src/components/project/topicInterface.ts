@@ -1,6 +1,6 @@
-import { Document } from 'mongoose'
+import { Document } from "mongoose";
 
 export interface TopicInterface extends Document {
-  topicName: string
-  parentTopic?: TopicInterface | null
+    topicName : string,
+    parentTopic? : TopicInterface,
 }

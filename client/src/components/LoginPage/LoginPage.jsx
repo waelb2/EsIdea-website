@@ -1,14 +1,58 @@
 // eslint-disable-next-line no-unused-vars
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import Navbar from './Navbar';
 import Form from './Form';
 import {loginPic,google} from '../../assets';
-import { Link } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
+import {ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const LoginPage = () => {
+  const {state} = useLocation();
+  const [fromResetPassword,setFromResetPassword] = useState(false);
+  const [fromForgotPassword,setFromForgotPassword] = useState(false);
+  useEffect(()=>{
+    if(state){
+      // eslint-disable-next-line no-prototype-builtins
+      if(state.hasOwnProperty('fromResetPassword')){
+        setFromResetPassword(true);
+      }
+      // eslint-disable-next-line no-prototype-builtins
+      if(state.hasOwnProperty('fromForgotPassword')){
+        setFromForgotPassword(true);
+      }
+    }
+  },[state])
+  useEffect(()=>{
+      if(fromResetPassword){
+        toast.success('Password reset successfully. you can login with your new password', {
+          position: "top-center",
+          autoClose: 8000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+          theme: "colored",
+          });
+      }
+      if(fromForgotPassword){
+        toast.success('A reset password email has been sent to your email address.', {
+          position: "top-center",
+          autoClose: 8000,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+          theme: "colored",
+          });
+      }
+  },[fromResetPassword,fromForgotPassword])
   const login = ()=>{
     window.open("http://localhost:3000/auth/google","_self")
   }
   return (
+    <>
     <div className="bg-white w-full overflow-hidden min-h-screen flex flex-col">
       <div className="sm:px-16 px-6 flex justify-center items-center">
           <div className="xl:max-w-[1280px] w-full">
@@ -36,7 +80,8 @@ const LoginPage = () => {
           </div>
       </div>
     </div>
+    <ToastContainer />
+    </>
   )
 }
-
 export default LoginPage

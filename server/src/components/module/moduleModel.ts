@@ -8,14 +8,14 @@ const moduleSchema = new Schema<ModuleInterface>({
         required : [true, "Module name is required"]
     }, 
     description  : {
-        title : String,
+        Title : String,
         field : String,
-        credit : mongoose.Schema.Types.BigInt, 
-        coef : mongoose.Schema.Types.BigInt,
+        credit : Number, 
+        coef : Number,
         edition: String ,
-        courseHours : String,
-        tdHours : String,
-        tpHours : String 
+        courseHours : Number,
+        tdHours : Number,
+        tpHours : Number || undefined 
     }
 })
 

@@ -14,6 +14,8 @@ import  Users  from "./adminDashboard/pages/Users";
 import  Logs  from "./adminDashboard/pages/Logs";
 import ForgotPassword from "./Password/ForgotPassword";
 import ResetPassword from "./Password/ResetPassword";
+import AddPassword from "./Password/AddPassword";
+import ChangePassword from './Password/ChangePassword'
 export {
     LoginPage,
     Dashbord,
@@ -30,5 +32,7 @@ export {
     Users,
     Logs,
     ForgotPassword,
-    ResetPassword
+    ResetPassword,
+    AddPassword,
+    ChangePassword
 }

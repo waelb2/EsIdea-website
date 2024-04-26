@@ -9,8 +9,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createProject = void 0;
-const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.send("Good job");
+const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    if (!req.isAuthenticated()) {
+        return res.status(401).json({
+            error: 'unauthorized'
+        });
+    }
+    try {
+        console.log(req.user);
+    }
+    catch (err) {
+        console.log(err);
+        res.status(500).json({
+            error: "Internal Server Error"
+        });
+    }
 });
-exports.createProject = createProject;
+exports.default = getUser;
