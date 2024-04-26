@@ -23,61 +23,50 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userIdValidationSchema = exports.UserRole = exports.User = void 0;
+exports.createFeedbackValidationSchema = exports.feedback = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-var UserRole;
-(function (UserRole) {
-    UserRole["ADMIN"] = "admin";
-    UserRole["USER"] = "user";
-})(UserRole || (exports.UserRole = UserRole = {}));
-const userSchema = new mongoose_1.Schema({
-    firstName: {
+const feedbackSchema = new mongoose_1.Schema({
+    created_by: {
+        type: mongoose_1.default.Schema.Types.ObjectId,
+        ref: 'User',
+        required: true
+    },
+    title: {
         type: String,
-        required: [true, "First name is required"]
+        required: true
     },
-    lastName: {
+    description: {
         type: String,
-        required: [true, "Last name is required"]
+        required: true
     },
-    email: {
+    adminResponse: {
         type: String,
-        required: [true, "Email is required"],
-    },
-    password: {
-        type: String,
-    },
-    profilePicUrl: {
-        type: String,
-    },
-    role: {
-        type: String,
-        enum: Object.values(UserRole),
-        default: UserRole.USER
-    },
-    joinDate: {
-        type: Date,
-        required: [true, "User joining date is required"]
-    },
-    projects: [{
-            project: {
-                type: mongoose_1.default.Types.ObjectId,
-                ref: 'Project',
-            },
-            joinedAt: Date,
-        }],
-    projectInvitations: [{
-            type: mongoose_1.default.Types.ObjectId,
-            ref: 'Invitation'
-        }]
-    //notifications: [{ type: Schema.Types.ObjectId, ref: 'Notification' }],
+        default: ""
+    }
 });
-const User = mongoose_1.default.model('User', userSchema);
-exports.User = User;
-const userIdValidationSchema = {
-    id: {
+const feedback = mongoose_1.default.model('feedback', feedbackSchema);
+exports.feedback = feedback;
+const createFeedbackValidationSchema = {
+    created_by: {
         notEmpty: {
             errorMessage: "Must provide the id of the user"
         }
+    },
+    title: {
+        isString: {
+            errorMessage: "The title of the feedback must be a string"
+        },
+        notEmpty: {
+            errorMessage: "Must provide the title of feedback"
+        }
+    },
+    description: {
+        isString: {
+            errorMessage: "The feedback must be a string"
+        },
+        notEmpty: {
+            errorMessage: "Must provide the feedback of the user"
+        }
     }
 };
-exports.userIdValidationSchema = userIdValidationSchema;
+exports.createFeedbackValidationSchema = createFeedbackValidationSchema;
