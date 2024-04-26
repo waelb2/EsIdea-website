@@ -1,24 +1,39 @@
-import express, { Router } from 'express'
+import express, { Router } from "express";
 
-import {
-  login_get,
-  login_post,
-  auth,
-  authenticate,
-  authenticateCallback,
-  logout
-} from './authController'
+import { login_get, login_post,auth ,authenticate, authenticateCallback,failure, logout,addPassword,updatePassword,forgetPassword,resetPassword} from "./authController";
 
-const router: Router = express.Router()
+const router: Router = express.Router();
 
-router.get('/google', authenticate)
-router.get('/logout', logout)
-router.get('/google/callback', authenticateCallback, (req, res) => {
-  res.redirect('/dashboard/profile')
-})
 
-router.get('/', auth)
-router.get('/login', login_get)
-router.post('/login', login_post)
+//////////////////////////////// oauth /////////////////////////////////
 
-export = router
+router.get('/google', authenticate);
+router.get('/logout', logout);
+ router.get('/failure', failure);
+router.get('/google/callback', authenticateCallback, 
+// (req, res) => {
+    // res.redirect('/dashboard');
+// }
+);
+
+//////////////////////////////// oauth /////////////////////////////////
+
+
+// localhost:3000/auth/google 
+
+
+//////////////////////////////// login ///////////////////////////////
+
+router.get("/",auth);
+router.get('/login',login_get);
+router.post('/login',login_post);
+router.post('/addPassword',addPassword); 
+router.post('/updatePassword',updatePassword);
+router.patch('/resetPassword/:token',resetPassword);
+router.post('/forgetPassword',forgetPassword);
+
+//////////////////////////////// login ///////////////////////////////
+
+/////////////////////////////////////////////////////////////////
+
+export = router;

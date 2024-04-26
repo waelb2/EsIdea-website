@@ -29,9 +29,9 @@ passport_1.default.use(new passport_google_oauth20_1.Strategy({
 }, (request, accessToken, refreshToken, profile, done) => {
     //to check if the email ends with @esi.dz
     if (profile.emails && profile.emails.length > 0 && profile.emails[0].value.endsWith('@esi.dz')) {
-        userModels_1.User.findOne({ 'googleId': profile.id }).then((user) => {
+        // console.log(user.googleId);
+        userModels_1.User.findOne({ 'email': profile.emails[0].value }).then((user) => {
             if (user) {
-                console.log("The user is already in db:" + user);
                 done(null, user);
             }
             else {
@@ -43,9 +43,10 @@ passport_1.default.use(new passport_google_oauth20_1.Strategy({
                     lastName: lastName,
                     googleId: profile.id,
                     email: email,
+                    password: null,
                     joinDate: Date.now(),
+                    profilePicUrl: profile.photos ? profile.photos[0].value : "",
                 }).save().then((savedUser) => {
-                    console.log("The user is saved successfully:" + savedUser);
                     done(null, savedUser);
                 }).catch(error => {
                     console.error('Error saving user:', error);

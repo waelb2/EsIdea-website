@@ -1,16 +1,15 @@
 
 import { Request, Response, NextFunction } from 'express';
 
-const dashboard= (req:Request,res:Response)=>{
-    res.send(req.user);
+const dashboard = (req: Request, res: Response) => {
+    if (req.user) {
+        res.status(200).json({
+          success: true,
+          message: "successfull",
+          user: req.user,
+          //   cookies: req.cookies
+        });
+      }
 };
-
-// const isLoggedIn= (req:Request,res:Response,next:NextFunction)=>{
-//     if (!req.user){
-//       res.redirect('/auth');
-//     }else {
-//       next();
-//     }
-// }
 
 export {dashboard};
