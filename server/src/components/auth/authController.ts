@@ -6,6 +6,7 @@ import { User } from '../user/userModels'
 import jwt from 'jsonwebtoken'
 import { sendEmail } from '../../config/nodemailer'
 import crypto from 'crypto'
+import { UserInterface } from '../user/userInterface'
 const auth = (req: Request, res: Response) => {
   res.send('<a href="/auth/google">Authenticate with Google</a>')
 }
@@ -34,8 +35,8 @@ const login_get = (req: Request, res: Response) => {
 }
 
 //!!!!!!!!!!!! This must be in User model method and the secret must be in .env file
-const createToken = (user: any) => {
-  return jwt.sign({ user }, 'esideasecret', {
+const createToken = (user: UserInterface) => {
+  return jwt.sign({ userId: user.id, email: user.email }, 'esideasecret', {
     expiresIn: 30 * 24 * 60 * 60
   })
 }
