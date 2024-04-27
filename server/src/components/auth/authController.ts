@@ -19,11 +19,16 @@ const authenticate = passport.authenticate('google', {
 })
 
 const authenticateCallback = passport.authenticate('google', {
-  successRedirect: 'http://localhost:5174/addPassword',
-  failureRedirect: '/failure'
+  // successRedirect: 'http://localhost:5174/addPassword',
+  successRedirect: '/dashboard',
+  failureRedirect: '/auth/failure'
 })
 
-const failure = (req: Request, res: Response) => {}
+const failure = (req: Request, res: Response) => {
+  res.status(403).json({
+    error: 'You must be an Esi member'
+  })
+}
 const logout = (req: Request, res: Response) => {
   req.logout(() => {})
   res.redirect('http://localhost:5174/login')
@@ -65,7 +70,14 @@ const login_post = async (req: Request, res: Response) => {
       maxAge: 30 * 24 * 60 * 60 * 1000
     })
 
-    return res.status(200).json({ userToken: token })
+    const formattedUser = {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      profilePicUrl: user.profilePicUrl,
+      role: user.role
+    }
+    return res.status(200).json({ user: formattedUser, userToken: token })
   } catch (err) {
     const errors = handleError(err)
     res.status(500).json({ errors })
@@ -79,16 +91,28 @@ const addPassword = async (req: Request, res: Response) => {
   const salt = await bcrypt.genSalt()
   const hashedPassword = await bcrypt.hash(String(newPassword), salt)
   try {
-    const updateResult = await User.findOneAndUpdate(
-      { email: email },
-      { $set: { password: hashedPassword } },
-      { runValidators: true, new: true }
-    )
-    if (!updateResult) {
-      // !!!!!!!!!!!Any error could happen here not just not found so better to say error updating the user's password
+    const user = await User.findOne({ email: email })
+
+    if (!user) {
       return res.status(404).json({ message: 'User not found' })
     }
-    return res.status(200).json({ message: 'Password Added Successfully' })
+
+    user.password = hashedPassword as string
+    user.save()
+
+    const formattedUser = {
+      firstName: user.firstName,
+      lastName: user.lastName,
+      email: user.email,
+      profilePicUrl: user.profilePicUrl,
+      role: user.role
+    }
+
+    const token = createToken(user)
+
+    return res
+      .status(200)
+      .json({ message: 'Password Added Successfully', user, userToken: token })
   } catch (e) {
     const errors = handleError(e)
     return res.status(500).json({ errors })
