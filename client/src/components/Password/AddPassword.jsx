@@ -10,6 +10,7 @@ const AddPassword = () => {
             navigate("/");
         }
     },[user])
+    console.log(user)
     const [password,setPassword] = useState("");
     const [passwordError,setPasswordError] = useState(true);
     const [toggle1,setToggle1] = useState(false);

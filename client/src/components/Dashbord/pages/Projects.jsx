@@ -1,5 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useEffect, useState,useContext  } from 'react'
+import axios  from 'axios'
 import DashboardNav from '../DashboardNav'
 import Functionalities from '../Functionalities'
 import Card from './Card'
@@ -11,10 +12,35 @@ import 'react-toastify/dist/ReactToastify.css';
 import EditProject from './EditProject'
 const Projects = () => {
     //User
-    const {user} = useContext(UserContext);
 
     const {state} = useLocation();
     const [fromChangePassword,setFromChangePassword] = useState(false);
+    // getProjects function 
+
+    const getProjects = async()=>{
+         try {
+        const userToken = localStorage.getItem('userToken') 
+        const response = await axios.get(`http://localhost:3000/project/get-all-projects/}`, {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+             'Authorization': `Bearer ${userToken}`
+          },
+        });
+
+        if (response.statusText == 'OK') {
+          setProjects(response.data)
+        } else {
+            console.log(response)
+            throw new Error ("Authentication has failed")
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    useEffect(()=>{
+        getProjects()
+    },[])
     useEffect(()=>{
         if(state){
           // eslint-disable-next-line no-prototype-builtins
@@ -40,41 +66,6 @@ const Projects = () => {
 
     const [openedMore,setOpenedMore] = useState(-1);
     const [Projects,setProjects] = useState([
-        {
-            projectId:"Project_1",
-            thumbnailUrl:"https://images.unsplash.com/photo-1625842268584-8f3296236761?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-            title:"Project-1",
-            date: new Date().toLocaleDateString(),
-            description:"Lorem ipsum, dolor sit amet consectetur adipisicing elit. Repellat voluptatum fuga labore delectus illum tempora laudantium officia quam optio vero"
-        },
-        {
-            projectId:"Project_2",
-            thumbnailUrl:"https://images.unsplash.com/photo-1625842268584-8f3296236761?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-            title:"Project-2",
-            date: new Date().toLocaleDateString(),
-            description:"Lorem ipsum, dolor sit amet consectetur adipisicing elit. Repellat voluptatum fuga labore delectus illum tempora laudantium officia quam optio vero"
-        },
-        {
-            projectId:"Project-3",
-            thumbnailUrl:"https://images.unsplash.com/photo-1625842268584-8f3296236761?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-            title:"Project-1",
-            date: new Date().toLocaleDateString(),
-            description:"Lorem ipsum, dolor sit amet consectetur adipisicing elit. Repellat voluptatum fuga labore delectus illum tempora laudantium officia quam optio vero"
-        },
-        {
-            projectId:"Project_4",
-            thumbnailUrl:"https://images.unsplash.com/photo-1625842268584-8f3296236761?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-            title:"Project-4",
-            date: new Date().toLocaleDateString(),
-            description:"Lorem ipsum, dolor sit amet consectetur adipisicing elit. Repellat voluptatum fuga labore delectus illum tempora laudantium officia quam optio vero"
-        },
-        {
-            projectId:"Project-5",
-            thumbnailUrl:"https://images.unsplash.com/photo-1625842268584-8f3296236761?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-            title:"Project-5",
-            date: new Date().toLocaleDateString(),
-            description:"Lorem ipsum, dolor sit amet consectetur adipisicing elit. Repellat voluptatum fuga labore delectus illum tempora laudantium officia quam optio vero"
-        }
     ]);
     const [displayedProjects,setDisplayedProjects] = useState([]);
 
@@ -84,7 +75,7 @@ const Projects = () => {
         setInputValue(e.target.value);
     }
     useEffect(()=>{
-        const arr = Projects.filter((proj)=>proj.title.toLowerCase().includes(inputValue.toLowerCase()));
+        const arr = Projects.filter((proj)=>proj.ProjectTitle.toLowerCase().includes(inputValue.toLowerCase()));
         setDisplayedProjects([...arr]);
     },[inputValue,Projects])
 

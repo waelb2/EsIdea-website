@@ -8,7 +8,7 @@ import axios from 'axios';
 export const UserContext = createContext();
 const App = () => {
   const [User, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false );
   const user = useMemo(() => User, [User]);
   // useEffect(() => {
   //   const getUser = () => {
@@ -36,14 +36,15 @@ const App = () => {
   //   };
   //   getUser();
   // }, []);
-  useEffect(() => {
-    const getUser = async () => {
+ const getUser = async () => {
       try {
-        const response = await axios.get("http://localhost:3000/dashboard", {
+        const userToken = localStorage.getItem('userToken')
+        const response = await axios.get("http://localhost:3000/user/get-user", {
           withCredentials: true, // Ensure cookies are sent
           headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
+             'Authorization': `Bearer ${userToken}`
           },
         });
 
@@ -58,6 +59,8 @@ const App = () => {
         setLoading(false);
       }
     };
+  useEffect(() => {
+   
     getUser();
   }, []);
   if (loading) {
@@ -65,7 +68,7 @@ const App = () => {
   }
   return (
   <>
-   <UserContext.Provider value={{user,setUser}}>
+   <UserContext.Provider value={{user,setUser, getUser}}>
       <Routes>
         <Route path="/login" element={user ? <Navigate to="/Home/Projects"/>:<LoginPage setUser={setUser}/>}/>
         <Route path='/' element={user?<Navigate to="/Home/Projects"/>:<LandingPage/>}/>

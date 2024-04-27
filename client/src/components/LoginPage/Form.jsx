@@ -4,8 +4,9 @@ import {Eye, hidePassword} from '../../assets';
 import { Link } from 'react-router-dom';
 import { UserContext } from '../../App';
 import axios from 'axios';
+
 const Form = () => {
-    const {setUser} = useContext(UserContext);
+    const {getUser} = useContext(UserContext);
     const [toggle,setToggle] = useState(false);
 
     const [email,setEmail] = useState("");
@@ -58,7 +59,9 @@ const Form = () => {
             },
           })
             .then((response) => {
-              setUser(response.data.user);
+             const userToken = response.data.userToken
+              localStorage.setItem('userToken', userToken)
+              getUser()
             })
             .catch((error) => {
               console.log(error.message);

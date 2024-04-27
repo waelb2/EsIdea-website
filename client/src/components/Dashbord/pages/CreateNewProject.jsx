@@ -12,104 +12,35 @@ export const DependenciesContext = createContext();
 const PopUpMethods = ({visible,closePopUp,currentPage,nextPage,prevPage}) => {
     ////////////////////////////////////////////////////////////////////////////////////////
     // Data for test
-        const data = [{"id":1,"first_name":"Bernardina","last_name":"Bastone"},
-        {"id":2,"first_name":"Heall","last_name":"Langlois"},
-        {"id":3,"first_name":"Ricki","last_name":"Doohan"},
-        {"id":4,"first_name":"Galina","last_name":"Scourfield"},
-        {"id":5,"first_name":"Fergus","last_name":"Bagley"},
-        {"id":6,"first_name":"Domini","last_name":"Aiston"},
-        {"id":7,"first_name":"Dulcinea","last_name":"Conachy"},
-        {"id":8,"first_name":"Bernadine","last_name":"Reinert"},
-        {"id":9,"first_name":"Torin","last_name":"Perroni"},
-        {"id":10,"first_name":"Christabella","last_name":"Wix"},
-        {"id":11,"first_name":"Gretel","last_name":"Cornau"},
-        {"id":12,"first_name":"Gideon","last_name":"Bool"},
-        {"id":13,"first_name":"Antoni","last_name":"Devenny"},
-        {"id":14,"first_name":"Patsy","last_name":"Waker"},
-        {"id":15,"first_name":"Latisha","last_name":"Strowthers"},
-        {"id":16,"first_name":"Haley","last_name":"Gerald"},
-        {"id":17,"first_name":"Celine","last_name":"Beardon"},
-        {"id":18,"first_name":"Emmie","last_name":"Tasker"},
-        {"id":19,"first_name":"Kellen","last_name":"Brion"},
-        {"id":20,"first_name":"Karin","last_name":"Wathall"},
-        {"id":21,"first_name":"Quent","last_name":"Novis"},
-        {"id":22,"first_name":"Elisabeth","last_name":"Birkmyr"},
-        {"id":23,"first_name":"Hilly","last_name":"Stolz"},
-        {"id":24,"first_name":"Adan","last_name":"Barwick"},
-        {"id":25,"first_name":"Patricia","last_name":"Jira"},
-        {"id":26,"first_name":"Erl","last_name":"Sullivan"},
-        {"id":27,"first_name":"Ogdan","last_name":"Backshaw"},
-        {"id":28,"first_name":"Ursulina","last_name":"Kurdani"},
-        {"id":29,"first_name":"June","last_name":"Lapham"},
-        {"id":30,"first_name":"Rodrigo","last_name":"Kolodziejski"},
-        {"id":31,"first_name":"Carny","last_name":"Harbach"},
-        {"id":32,"first_name":"Aluin","last_name":"Gusticke"},
-        {"id":33,"first_name":"Lurline","last_name":"Volett"},
-        {"id":34,"first_name":"Marybelle","last_name":"Jorden"},
-        {"id":35,"first_name":"Mamie","last_name":"Brand-Hardy"},
-        {"id":36,"first_name":"Alec","last_name":"Maden"},
-        {"id":37,"first_name":"Ede","last_name":"Cornner"},
-        {"id":38,"first_name":"Fowler","last_name":"Riddett"},
-        {"id":39,"first_name":"Krista","last_name":"Buckel"},
-        {"id":40,"first_name":"Janessa","last_name":"Vesco"},
-        {"id":41,"first_name":"Jaye","last_name":"Brugman"},
-        {"id":43,"first_name":"Creight","last_name":"Stammirs"},
-        {"id":44,"first_name":"Noby","last_name":"Salliere"},
-        {"id":45,"first_name":"Fabio","last_name":"Stannas"},
-        {"id":46,"first_name":"Adelheid","last_name":"Verheijden"},
-        {"id":47,"first_name":"Axe","last_name":"Bertwistle"},
-        {"id":48,"first_name":"Mollee","last_name":"Di Biasi"},
-        {"id":49,"first_name":"Griffie","last_name":"Daughtery"},
-        {"id":50,"first_name":"Joshia","last_name":"Ledeker"},
-        {"id":51,"first_name":"Dionne","last_name":"Borges"},
-        {"id":52,"first_name":"Cecil","last_name":"Wallington"},
-        {"id":53,"first_name":"Doretta","last_name":"McFee"},
-        {"id":54,"first_name":"Eimile","last_name":"Stronghill"},
-        {"id":55,"first_name":"Raddie","last_name":"Mingaud"},
-        {"id":56,"first_name":"Neal","last_name":"Orrell"},
-        {"id":57,"first_name":"Abby","last_name":"Calabry"},
-        {"id":58,"first_name":"Salli","last_name":"Gregoire"},
-        {"id":59,"first_name":"Kai","last_name":"Choak"},
-        {"id":60,"first_name":"Tish","last_name":"Armstrong"},
-        {"id":61,"first_name":"Ara","last_name":"Bellamy"},
-        {"id":62,"first_name":"Melba","last_name":"Gorner"},
-        {"id":63,"first_name":"Ashil","last_name":"Suttling"},
-        {"id":64,"first_name":"Fredra","last_name":"Reimers"},
-        {"id":65,"first_name":"Kenny","last_name":"Wylie"},
-        {"id":66,"first_name":"Truman","last_name":"Ammer"},
-        {"id":67,"first_name":"Alexis","last_name":"Smallcomb"},
-        {"id":68,"first_name":"Murial","last_name":"Clyne"},
-        {"id":69,"first_name":"Hube","last_name":"Finley"},
-        {"id":70,"first_name":"Herrick","last_name":"Luten"},
-        {"id":71,"first_name":"Trefor","last_name":"Wingfield"},
-        {"id":72,"first_name":"Maryann","last_name":"Sedgman"},
-        {"id":73,"first_name":"Glenn","last_name":"Clere"},
-        {"id":74,"first_name":"Bond","last_name":"Porteous"},
-        {"id":75,"first_name":"Brittany","last_name":"Roelofsen"},
-        {"id":76,"first_name":"Brig","last_name":"Ostick"},
-        {"id":77,"first_name":"Olimpia","last_name":"Bromage"},
-        {"id":78,"first_name":"Franky","last_name":"Pennetti"},
-        {"id":79,"first_name":"Quintilla","last_name":"Jurgensen"},
-        {"id":80,"first_name":"Pepillo","last_name":"Sarle"},
-        {"id":81,"first_name":"Lockwood","last_name":"Carnaman"},
-        {"id":82,"first_name":"Sonya","last_name":"MacCollom"},
-        {"id":83,"first_name":"Randy","last_name":"Baigrie"},
-        {"id":84,"first_name":"Lemmy","last_name":"Boays"},
-        {"id":85,"first_name":"Gradey","last_name":"Nairns"},
-        {"id":86,"first_name":"Butch","last_name":"Clinning"},
-        {"id":87,"first_name":"Standford","last_name":"Hollow"},
-        {"id":88,"first_name":"Florian","last_name":"Kopec"},
-        {"id":89,"first_name":"Elyn","last_name":"Veldstra"},
-        {"id":90,"first_name":"Ameline","last_name":"Grise"},
-        {"id":92,"first_name":"Ashely","last_name":"Alasdair"},
-        {"id":93,"first_name":"Patrizio","last_name":"Kissick"},
-        {"id":94,"first_name":"Cynthia","last_name":"Cunnington"},
-        {"id":95,"first_name":"Gaspard","last_name":"Bursell"},
-        {"id":96,"first_name":"Lorelle","last_name":"Gley"},
-        {"id":97,"first_name":"Dolores","last_name":"Dudny"},
-        {"id":98,"first_name":"Lacie","last_name":"Skells"},
-        {"id":99,"first_name":"Carmela","last_name":"Jodrelle"},
-        {"id":100,"first_name":"Gael","last_name":"Gawkroge"}]
+        const [tagsData,setTagsData] = useState([]); 
+        const getTags = async (tagPath) =>{
+                try {
+            const userToken = localStorage.getItem('userToken')
+            const response = await axios.get(`http://localhost:3000/${tagPath}`, {
+            headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+             'Authorization': `Bearer ${userToken}`
+          },
+        });
+
+        if (response.status === 200) {
+            setTagsData(prev=>[...prev, response.data])
+            console.log(tagsData)
+          console.log(response.data)
+        } else {
+          throw new Error("Authentication has failed!");
+        } 
+                } catch (error) {
+                   console.log(error) 
+                   throw new Error 
+                }
+        }
+        useEffect(()=>{
+            getTags('club/getClubs')
+            getTags('module/getModules')
+            getTags('event/getEvents')
+        }, [tagsData])
     //////////////////////////////////////////////////////
     const [method,setMethod] = useState("");
     const [projectName,setProjectName] = useState("");
@@ -231,6 +162,16 @@ const PopUpMethods = ({visible,closePopUp,currentPage,nextPage,prevPage}) => {
         }
     ]
     const displayedMethods = methods.filter(method=>method.title.toLocaleLowerCase().includes(inputValue.toLocaleLowerCase()))
+    //     const projectData = {
+    //     projectTitle : projectName,
+    //     description,
+    //     ideationMethod : method,
+    //     collaborators : collaborators.map(collaborator => collaborator.email),
+    //     mainTopic,
+    //     subTopics,
+    //     tag
+
+    // }
     return (
         <div onClick={closePopUp} className={`fixed top-0 left-0 bg-black bg-opacity-40 w-screen min-h-screen backdrop-blur z-50 duration-500  transition-opacity ease-in-out flex justify-center items-center  ${visible?"Pop-up-Active":"Pop-up-notActive"}`}>
                 <div onClick={(e)=>{e.stopPropagation();setActive("")}} className='bg-white max-w-full w-[600px] min-h-[450px] ss:min-h-[500px]  max-h-full  rounded-2xl shadow-md  px-3 py-4 sm:py-7 sm:px-9 m-4'>
@@ -294,9 +235,9 @@ const PopUpMethods = ({visible,closePopUp,currentPage,nextPage,prevPage}) => {
                                 </div>
                                 <DependenciesContext.Provider value={dependencies}>
                                     <div onClick={(e)=>{e.stopPropagation()}} className='flex gap-2 items-center flex-wrap relative'>
-                                        <Select title={"Modules"} data={data} accesorKey={"first_name"}/>
-                                        <Select title={"Club"} data={data} accesorKey={"last_name"}/>
-                                        <Select title={"Events"} data={data} accesorKey={"first_name"}/>
+                                        <Select  title={"Modules"} data={tagsData[1]} accesorKey={"moduleName"}/>
+                                        <Select  title={"Club"} data={tagsData[0]} accesorKey={"clubName"}/>
+                                        <Select  title={"Events"} data={tagsData[2]} accesorKey={"eventName"}/>
                                     </div>
                                 </DependenciesContext.Provider>
                             </div>
