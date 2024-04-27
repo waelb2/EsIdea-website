@@ -1,12 +1,13 @@
 // eslint-disable-next-line no-unused-vars
 import React,{useContext, useEffect, useState} from 'react'
 import {Eye, hidePassword} from '../../assets';
-import { Link } from 'react-router-dom';
-import { UserContext } from '../../App';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import useUser from '../../hooks/useUser';
 
 const Form = () => {
-    const {getUser} = useContext(UserContext);
+    const { setUser } = useUser();
+    const navigate = useNavigate();
     const [toggle,setToggle] = useState(false);
 
     const [email,setEmail] = useState("");
@@ -31,25 +32,7 @@ const Form = () => {
         }
     },[password])
     const data = {email:email,password:password}
-    // const login = (e)=>{
-    //     e.preventDefault();
-    //     if(!passwordError && !emailError){
-    //         fetch("http://localhost:3000/auth/login", {
-    //         method: 'POST',
-    //         body: JSON.stringify(data),
-    //         headers: {
-    //             'Content-type': 'application/json; charset=UTF-8',
-    //         },
-    //         })
-    //         .then((response) => response.json())
-    //         .then((data) => {
-    //             setUser(data.user);
-    //         })
-    //         .catch((err) => {
-    //             console.log(err.message);
-    //         });
-    //     }
-    // }
+    
     const login = (e) => {
         e.preventDefault();
         if (!passwordError && !emailError) {
@@ -59,9 +42,14 @@ const Form = () => {
             },
           })
             .then((response) => {
-             const userToken = response.data.userToken
-              localStorage.setItem('userToken', userToken)
-              getUser()
+            console.log(response)
+             const {user, userToken} = response.data;
+             
+              localStorage.setItem('userToken', userToken);
+              localStorage.setItem('user', JSON.stringify(user));
+              setUser(user)
+              
+              navigate(user.role === 'admin' ? "/Admin" : "/Home");
             })
             .catch((error) => {
               console.log(error.message);
