@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt'
 import passport from 'passport'
 import { User } from '../user/userModels'
 import jwt from 'jsonwebtoken'
-import { sendEmail } from '../../config/nodeMailer'
+import { sendEmail } from '../../config/nodemailer'
 import crypto from 'crypto'
 import { UserInterface } from '../user/userInterface'
 const auth = (req: Request, res: Response) => {
