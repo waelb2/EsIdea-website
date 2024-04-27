@@ -11,12 +11,12 @@ const userModels_1 = require("../components/user/userModels");
 dotenv_1.default.config();
 const CLIENT_ID = process.env.CLIENT_ID;
 const SECRET_ID = process.env.SECRET_ID;
-const callbackURL = "http://localhost:3000/auth/google/callback";
+const callbackURL = 'http://localhost:3000/auth/google/callback';
 passport_1.default.serializeUser((user, done) => {
     done(null, user.id);
 });
 passport_1.default.deserializeUser((id, done) => {
-    userModels_1.User.findById(id).then((user) => {
+    userModels_1.User.findById(id).then(user => {
         done(null, user);
     });
 });
@@ -28,9 +28,11 @@ passport_1.default.use(new passport_google_oauth20_1.Strategy({
     scope: ['email profile']
 }, (request, accessToken, refreshToken, profile, done) => {
     //to check if the email ends with @esi.dz
-    if (profile.emails && profile.emails.length > 0 && profile.emails[0].value.endsWith('@esi.dz')) {
+    if (profile.emails &&
+        profile.emails.length > 0 &&
+        profile.emails[0].value.endsWith('@esi.dz')) {
         // console.log(user.googleId);
-        userModels_1.User.findOne({ 'email': profile.emails[0].value }).then((user) => {
+        userModels_1.User.findOne({ email: profile.emails[0].value }).then(user => {
             if (user) {
                 done(null, user);
             }
@@ -45,10 +47,13 @@ passport_1.default.use(new passport_google_oauth20_1.Strategy({
                     email: email,
                     password: null,
                     joinDate: Date.now(),
-                    profilePicUrl: profile.photos ? profile.photos[0].value : "",
-                }).save().then((savedUser) => {
+                    profilePicUrl: profile.photos ? profile.photos[0].value : ''
+                })
+                    .save()
+                    .then(savedUser => {
                     done(null, savedUser);
-                }).catch(error => {
+                })
+                    .catch(error => {
                     console.error('Error saving user:', error);
                 });
             }
