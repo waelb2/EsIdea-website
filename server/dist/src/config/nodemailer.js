@@ -36,18 +36,18 @@ exports.sendEmail = void 0;
 const nodeMailer = __importStar(require("nodemailer"));
 const sendEmail = (option) => __awaiter(void 0, void 0, void 0, function* () {
     const transporter = nodeMailer.createTransport({
-        service: "gmail",
+        service: 'gmail',
         host: process.env.EMAIL_HOST,
         auth: {
             user: process.env.EMAIL_USER,
-            pass: process.env.USER_PASSWORD,
-        },
+            pass: process.env.USER_PASSWORD
+        }
     });
     const emailOptions = {
         from: 'from@example.com',
         to: option.email,
         subject: option.subject,
-        text: option.message,
+        text: option.message
     };
     yield transporter.sendMail(emailOptions);
 });
