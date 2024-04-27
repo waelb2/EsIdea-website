@@ -1,15 +1,35 @@
+import { Request, Response, NextFunction } from 'express'
+import jwt from 'jsonwebtoken'
+import { UserInterface } from '../user/userInterface'
+import { User } from '../user/userModels'
 
-import { Request, Response, NextFunction } from 'express';
+const createToken = (user: UserInterface) => {
+  jwt.sign(
+    { userId: user.id, email: user.email },
+    process.env.JWT_SECRET as string,
+    {
+      expiresIn: 30 * 24 * 60 * 60
+    }
+  )
+}
 
 const dashboard = (req: Request, res: Response) => {
-    if (req.user) {
-        res.status(200).json({
-          success: true,
-          message: "successfull",
-          user: req.user,
-          //   cookies: req.cookies
-        });
-      }
-};
+  const user = req.user as UserInterface
+  const token = createToken(req.user as UserInterface)
 
-export {dashboard};
+  const formattedUser = {
+    firstName: user.firstName,
+    lastName: user.lastName,
+    email: user.email,
+    profilePicUrl: user.profilePicUrl,
+    role: user.role
+  }
+
+  res.redirect(
+    `http://localhost:5174/addPassword?user=${JSON.stringify(
+      user
+    )}&userToken=${token}`
+  )
+}
+
+export { dashboard }
