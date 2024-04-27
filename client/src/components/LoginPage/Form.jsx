@@ -69,7 +69,7 @@ const Form = () => {
 
                 <input onChange={(e)=>{setPassword(e.target.value)}}  className={`${passwordError ? "border-red text-red":"border-grey"} border rounded-md h-10 p-4 outline-none text-[0.875rem]`} id='passwordInput' type={toggle ?"text":"password"} />
                 
-                <img onClick={()=>{setToggle(prev => !prev)}} className='w-[20px] h-[20px] absolute right-3 top-2/4  cursor-pointer' src={toggle?Eye:hidePassword} alt="Show_password" />
+                <img onClick={()=>{setToggle(prev => !prev)}} className='w-[1.25rem] h-[1.25rem] absolute right-3 top-2/4  cursor-pointer' src={toggle?Eye:hidePassword} alt="Show_password" />
             </div>
 
             <div className='flex justify-between items-center mt-1'>
@@ -81,7 +81,7 @@ const Form = () => {
             </div>
 
             <div className='flex justify-center items-center mt-3'>
-                <button onClick={login} className={`bg-skyBlue w-[120px] p-2 text-white  sm:w-[152px] sm:p-[10px] rounded-3xl font-bold`}>Login
+                <button onClick={login} className={`bg-skyBlue w-[7.5rem] p-2 text-white  sm:w-[9.5rem] sm:p-2 rounded-3xl font-bold`}>Login
                 </button>
             </div>
 

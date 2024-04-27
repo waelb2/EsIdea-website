@@ -79,7 +79,6 @@ const CreateNewProject = ({visible,closePopUp,currentPage,nextPage,prevPage}) =>
     // ////////////////////////////////
     const addTag= (item)=>{
         setTags(prevtags => [...prevtags,item.obj]);
-        console.log(tags)
         setTagsDisplayed(prevDisTags=>[...prevDisTags,item]);
     }
     const removeTag = (index)=>{
@@ -174,7 +173,7 @@ const CreateNewProject = ({visible,closePopUp,currentPage,nextPage,prevPage}) =>
     // }
     return (
         <div onClick={closePopUp} className={`fixed top-0 left-0 bg-black bg-opacity-40 w-screen min-h-screen backdrop-blur z-50 duration-500  transition-opacity ease-in-out flex justify-center items-center  ${visible?"Pop-up-Active":"Pop-up-notActive"}`}>
-                <div onClick={(e)=>{e.stopPropagation();setActive("")}} className='bg-white max-w-full w-[600px] min-h-[450px] ss:min-h-[500px]  max-h-full  rounded-2xl shadow-md  px-3 py-4 sm:py-7 sm:px-9 m-4'>
+                <div onClick={(e)=>{e.stopPropagation();setActive("")}} className='bg-white max-w-full w-[37.5rem] min-h-[28.125rem] ss:min-h-[31.25rem]  max-h-full  rounded-2xl shadow-md  px-3 py-4 sm:py-7 sm:px-9 m-4'>
 
                 <div className={`w-full h-full flex flex-col`}>
                         <div className={`w-full flex  ${currentPage === 1 ? "justify-end":"justify-between"}`}>
@@ -189,15 +188,15 @@ const CreateNewProject = ({visible,closePopUp,currentPage,nextPage,prevPage}) =>
                             <h1 className='font-bold text-2xl text-center mb-4'>
                                 Choose a method
                             </h1>
-                            <div className='flex w-full ss:w-[87%] self-center border-[2px] rounded-md ss:p-1 shadow-md mb-5 p-2'>
+                            <div className='flex w-full ss:w-[87%] self-center border-2 rounded-md ss:p-1 shadow-md mb-5 p-2'>
                                 <input  onChange={(e)=>{setInputValue(e.target.value)}} className='flex-grow flex-shrink w-full outline-none ml-2 text-sm' placeholder='Search' type="text" />
                                 <img className='w-5 h-5 ss:w-7 ss:h-7 ml-1' src={Search} alt="Search" />
                             </div>
 
                             <div className='flex flex-wrap gap-3 justify-center  ss:px-9 ss:justify-start overflow-y-auto scroll-smooth py-2'>
-                                {displayedMethods.map((method)=>(<div onClick={method.action}className='bg-lightGrey w-[144px] h-[113px] rounded-md flex flex-col items-center justify-center cursor-pointer transition-shadow duration-300 hover:shadow-md' key={method.Id}>
-                                    <img className='w-[65px] h-[65px]' src={method.icon} alt={method.title} />
-                                    <p className='text-black text-[14px] font-medium'>{method.title}</p>
+                                {displayedMethods.map((method)=>(<div onClick={method.action} className='bg-lightGrey w-[9rem] h-[7rem] rounded-md flex flex-col items-center justify-center cursor-pointer transition-shadow duration-300 hover:shadow-md' key={method.Id}>
+                                    <img className='w-16 h-16' src={method.icon} alt={method.title} />
+                                    <p className='text-black text-sm font-medium'>{method.title}</p>
                                 </div>))}
                             </div>
                         </div>
@@ -211,19 +210,19 @@ const CreateNewProject = ({visible,closePopUp,currentPage,nextPage,prevPage}) =>
                                 <label htmlFor="projectName" className='text-black font-semibold'>
                                     What shall we name your project
                                 </label>
-                                <input onChange={(e)=>{setProjectName(e.target.value)}} id='projectName' className='outline-none text-sm border-[1px] border-grey rounded-md py-2 px-4' type="text" />
+                                <input onChange={(e)=>{setProjectName(e.target.value)}} id='projectName' className='outline-none text-sm border border-grey rounded-md py-2 px-4' type="text" />
                             </div>
 
                             <div className='flex flex-col w-full ss:w-[90%] gap-1 mb-3'>
                                 <label htmlFor="projectDescription" className='text-black font-semibold'>
                                     Give your project a short description
                                 </label>
-                                <textarea onChange={(e)=>{setDescription(e.target.value)}} className='outline-none text-sm border-[1px] border-grey rounded-md resize-none py-2 px-4' name="Description" id="projectDescription" cols="30" rows="4">
+                                <textarea onChange={(e)=>{setDescription(e.target.value)}} className='outline-none text-sm border border-grey rounded-md resize-none py-2 px-4' name="Description" id="projectDescription" cols="30" rows="4">
                                 </textarea>
                             </div>
                             <div className='flex flex-col w-full ss:w-[90%] gap-1 mb-3'>
                                 <h1 className='text-black font-semibold'>In which category do you wanna put your project </h1>
-                                <div className='border-[1px] border-grey rounded-md py-3 px-4 mb-2 '>
+                                <div className='border border-grey rounded-md py-3 px-4 mb-2 '>
                                     {tagsDisplayed.length !== 0 ?
                                         <div className='w-full flex flex-wrap gap-2 max-h-16 overflow-y-auto'>
                                             {tagsDisplayed.map((val,ind)=><div className='flex gap-1 p-1 items-center rounded-md bg-gray-200' key={ind}>
@@ -252,7 +251,7 @@ const CreateNewProject = ({visible,closePopUp,currentPage,nextPage,prevPage}) =>
                             <label className='text-black font-semibold ss:w-[90%] mb-2'  htmlFor="collaborator">Do you want to add some collaborator</label>
 
                             <div className='w-full ss:w-[90%] self-center relative'>
-                                <div className='flex w-full  self-center border-[2px] rounded-md ss:p-1 shadow-lg mb-5 p-2'>
+                                <div className='flex w-full  self-center border-2 rounded-md ss:p-1 shadow-lg mb-5 p-2'>
                                     <input value={searchColl} onChange={(e)=>{setSearchColl(e.target.value)}} className='flex-grow w-full flex-shrink outline-none ml-2 text-sm' id='collaborator' placeholder='Search' type="text" />
                                     <img className='w-5 h-5 ss:w-7 ss:h-7 ml-1' src={Search} alt="Search" />
                                 </div>
@@ -282,11 +281,11 @@ const CreateNewProject = ({visible,closePopUp,currentPage,nextPage,prevPage}) =>
                             </div>
 
                             <div className='w-full ss:w-[90%] self-center mb-2'>
-                                {collaborators.length === 0 ? <div className='flex flex-col items-center justify-center h-64'>
+                                {collaborators.length === 0 ? <div className='flex flex-col items-center justify-center max-h-64'>
                                         <img className='w-32 h-32' src={ProjectsEmpty} alt="empty" />
                                         <p className='text-base'>{"No collaborator :("}</p>
                                         <p className='text-center text-base'>Don’t worry you can add them by just searching there names.</p>
-                                    </div>:<div className='flex flex-col gap-1 overflow-y-auto scroll-smooth h-56'>
+                                    </div>:<div className='flex flex-col gap-1 overflow-y-auto scroll-smooth max-h-56'>
                                         {collaborators.map((collab,ind)=><div className='flex justify-between items-center border rounded-md border-black p-1 w-full' key={collab.name}>
                                             <div className='flex gap-2'>
                                                 <img className='w-11 h-11' src={User} alt="user" />
@@ -312,7 +311,7 @@ const CreateNewProject = ({visible,closePopUp,currentPage,nextPage,prevPage}) =>
                                 <label htmlFor="MainTopic" className='text-black font-semibold'>
                                     Give me the main topic of your ideation section
                                 </label>
-                                <input onChange={(e)=>{setMainTopic(e.target.value)}} id='MainTopic' className='outline-none text-sm border-[1px] border-grey rounded-md py-2 px-4' type="text" />
+                                <input onChange={(e)=>{setMainTopic(e.target.value)}} id='MainTopic' className='outline-none text-sm border border-grey rounded-md py-2 px-4' type="text" />
                             </div>
                             <div className='flex flex-col w-full ss:w-[90%] gap-1 mb-3'>
                                 <div className='flex justify-between items-center'>

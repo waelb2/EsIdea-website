@@ -17,9 +17,9 @@ const CardTrash = ({proj,index,openedMore,setOpenedMore}) => {
         }
     ]
   return (
-    <div className={`group flex flex-col h-[256px] w-full rounded-xl   relative transition-shadow duration-400 borderGrey hover:shadow-lg`}>
+    <div className={`group flex flex-col max-h-64 w-full rounded-xl   relative transition-shadow duration-400 borderGrey hover:shadow-lg`}>
         {/* <input  onChange={handleCheck} className='absolute top-2 left-2 outline-none border-none scale-110 cursor-pointer hidden group-hover:inline ' type="checkbox" /> */}
-        <img className='h-[128px] object-cover rounded-t-xl' src={proj.ThumbnailUrl} alt="Project_Picture" />
+        <img className='h-32 object-cover rounded-t-xl' src={proj.ThumbnailUrl} alt="Project_Picture" />
         <div className=' flex flex-col gap-y-1 p-3 bg-lightGrey flex-grow'>
             <div className='flex justify-between items-center'>
                 <h1 className='text-[14px] font-semibold'>{proj.ProjectTitle}</h1>
@@ -31,7 +31,7 @@ const CardTrash = ({proj,index,openedMore,setOpenedMore}) => {
         </div>
         <div onClick={(e)=>{e.stopPropagation()}}>
           <img onClick={()=>{index !== openedMore ? setOpenedMore(index):setOpenedMore(-1)}} className='absolute bottom-3 right-2 w-4 h-4 hidden group-hover:inline cursor-pointer' src={More} alt='More'/>
-          <div className={`${index !== openedMore ?"hidden":"bg-lightBlue min-w-[170px] absolute bottom-8 right-4 border-[1px] p-3 rounded-lg border-black sidebar"}`}>
+          <div className={`${index !== openedMore ?"hidden":"bg-lightBlue min-w-[10.625rem] absolute bottom-8 right-4 border p-3 rounded-lg border-black sidebar"}`}>
               <ul>
                   {projectTrashDetails.map(pd=><li key={pd.title}>
                     <Link className={`flex px-2 py-1 items-center hover:bg-lightGrey  rounded-md transition-all`}>

@@ -39,10 +39,10 @@ const Trash = () => {
         <DashboardNav currentLoc='Trash' action={handleSearch}/>
         <div className={`${displayedProjects.length === 0 ?"flex flex-wrap":"grid grid-cols-1 ss:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6"} gap-[15px] mt-3 flex-grow ${displayedProjects.length === 0 && "items-center justify-center"}`}>
             {(displayedProjects.length !== 0 ? displayedProjects.map((proj,ind)=><CardTrash key={proj.projectId} proj={proj} index={ind} openedMore={openedMore} setOpenedMore={setOpenedMore} />): <div className='flex flex-col items-center justify-start gap-y-2'>
-                <img className='w-[150px] h-[150px]' src={TrashEmpty} alt="Projects_Empty" />
+                <img className='w-[9.375rem] h-[9.375rem]' src={TrashEmpty} alt="Projects_Empty" />
                 <div>
                     <h1 className='text-grey font-semibold text-center'>Trash Empty</h1>
-                    <p className='text-center max-w-[45ch] text-[14px] font-medium text-grey'>There are no deleted items.
+                    <p className='text-center max-w-[45ch] text-sm font-medium text-grey'>There are no deleted items.
                     </p>
                 </div>
             </div>)}

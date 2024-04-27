@@ -37,14 +37,14 @@ const DashboardNav = ({currentLoc,action}) => {
         <h1 className='text-black font-bold text-2xl'>{currentLoc}</h1>
         <div className='flex items-center gap-3'>
             <img className='w-4 h-4 md:w-6 md:h-6 cursor-pointer' src={More} alt="More" />
-            <div className={`flex flex-shrink items-center justify-center gap-1 ${toggleSearch && "border-grey border-[1px] px-1 py-[6px] rounded-md"}`}>
+            <div className={`flex flex-shrink items-center justify-center gap-1 ${toggleSearch && "border-grey border px-1 py-[0.375rem] rounded-md"}`}>
                                 <img onClick={()=>{setToggleSearch(true);inputRef.current.focus()}} className={`w-6 h-6 ${!toggleSearch && "cursor-pointer"}`} src={Search} alt="Search" />
                                 <input ref={inputRef}  onChange={(e)=>{action(e)}} className={`bg-realWhite outline-none border-none min-w-0 ${!toggleSearch ?"w-0":" w-8 ss:w-16 md:w-36"} transition-all flex-shrink`} type="text" />
                                 <img onClick={()=>{setToggleSearch(false)}} className={`w-5 h-5 cursor-pointer ${!toggleSearch && "hidden"}`} src={blackClose} alt="Close" />
             </div>
             <div>
                 <img onClick={()=>{setToggle(prev => !prev)}} className='w-10 h-10 cursor-pointer object-contain rounded-full border-2 border-skyBlue p-0.5' src={user.profilePicUrl} alt="User" />
-                <div className={`${!toggle ? "hidden":"flex border-[2px]"} p-4 bg-white absolute z-20 top-16 right-6 mx-4 my-2 min-w-[250px] rounded-xl sidebar flex-col`}>
+                <div className={`${!toggle ? "hidden":"flex border-2"} p-4 bg-white absolute z-20 top-16 right-6 mx-4 my-2 min-w-[15.625rem] rounded-xl sidebar flex-col`}>
                     <img onClick={()=>{setToggle(prev => !prev)}} className='w-5 h-5 object-contain cursor-pointer fixed top-2 right-3' src={blackClose} alt="Close"/>
                     <div className='flex flex-col items-center mb-3'>
                         <img className='w-20 h-20 rounded-full object-contain mb-2 border-2 border-skyBlue p-0.5' src={user.profilePicUrl} alt="UserPic" />
