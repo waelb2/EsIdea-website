@@ -22,10 +22,11 @@ import cloudinary from '../../config/cloudConfig'
 import fs from 'fs'
 import path from 'path'
 import { model } from 'mongoose'
+import { AuthPayload } from '../auth/authInterface'
 
 const createProject = async (req: Request, res: Response) => {
   //const {userId} = req.user
-  const userId = '65ef22333d0a83e5abef43e3'
+  const userId = '662bda8263ebf49a5dba18ba'
   let secureURL: string = ''
 
   try {
@@ -226,7 +227,6 @@ const createProject = async (req: Request, res: Response) => {
     })
   }
 }
-
 const updateProject = async (req: Request, res: Response) => {
   const userId = '65ef22333d0a83e5abef440e'
   const { projectId } = req.params
@@ -331,7 +331,7 @@ const deleteProject = async (req: Request, res: Response) => {
   }
 }
 const getProjectByUserId = async (req: Request, res: Response) => {
-  const userId: string = req.params.userId
+  const { userId } = req.user as AuthPayload
   try {
     if (!userId) {
       return res.status(400).json({
@@ -437,7 +437,7 @@ const getProjectByUserId = async (req: Request, res: Response) => {
       return formattedProject
     })
 
-    res.status(201).json(projectStrings)
+    res.status(200).json(projectStrings)
   } catch (error) {
     console.error('Error deleting project:', error)
     res.status(500).json({ error: 'Internal Server Error' })
