@@ -1,12 +1,12 @@
 // eslint-disable-next-line no-unused-vars
-import React,{useState,useEffect, useContext} from 'react'
+import React,{useState,useEffect} from 'react'
 import { ChangePFP, ChangePassIcon, Eye, FeedBackIcon, HelpIcon, LogoutIcon, ResetPasswordImage, blackClose, blackLogo, hidePassword, notification } from '../../assets'
 import { Link, useNavigate } from 'react-router-dom'
-import { UserContext } from '../../App'
 import axios from 'axios'
+import useUser from '../../hooks/useUser';
 
 const ResetPassword = () => {
-    const {user} = useContext(UserContext);
+    const { user } = useUser()
     const navigate = useNavigate();
     const [toggle1,setToggle1] = useState(false);
     const [toggle2,setToggle2] = useState(false);

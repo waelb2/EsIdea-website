@@ -1,19 +1,32 @@
 // eslint-disable-next-line no-unused-vars
-import React,{useState,useEffect, useContext} from 'react'
+import React,{useState,useEffect } from 'react'
 import { Eye, blackLogo, hidePassword } from '../../assets';
-import { Link, useNavigate } from 'react-router-dom';
-import { UserContext } from '../../App';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import useUser from '../../hooks/useUser';
+
 const AddPassword = () => {
-    const {user} = useContext(UserContext);
-    useEffect(()=>{
-        if(user.password !== null){
-            navigate("/");
-        }
-    },[user])
-    console.log(user)
+    const navigate = useNavigate();
+    const location = useLocation();
+  
+    const queryParams = new URLSearchParams(location.search);
+  
+    // Get a specific query parameter
+    const userToken = queryParams.get('userToken'); 
+    const user =JSON.parse(queryParams.get('user')); 
+
+    const { setUser } = useUser();
+    
     const [password,setPassword] = useState("");
     const [passwordError,setPasswordError] = useState(true);
     const [toggle1,setToggle1] = useState(false);
+
+    useEffect(()=>{
+        // Effect to init user context's data with Google sign up data
+        localStorage.setItem('userToken', userToken);
+        localStorage.setItem('user', JSON.stringify(user));
+        setUser(user);
+    }, [])
+
     useEffect(()=>{
         if(password.length < 8 && password !== ""){
             setPasswordError(true);
@@ -21,7 +34,7 @@ const AddPassword = () => {
             setPasswordError(false);
         }
     },[password])
-    const navigate = useNavigate();
+
     const data = {email:user.email,newPassword:password}
     const addPassword = (e)=>{
         e.preventDefault();
@@ -35,6 +48,10 @@ const AddPassword = () => {
             })
             .then((response) => response.json())
             .then((data) => {
+                localStorage.setItem('userToken', data.userToken);
+                localStorage.setItem('user', JSON.stringify(data.user));
+                setUser(data.user);
+
                 navigate("../Home/Projects");
             })
             .catch((err) => {
