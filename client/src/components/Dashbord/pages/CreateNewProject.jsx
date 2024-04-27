@@ -9,11 +9,11 @@ import { useDebounce } from '../constants';
 import { ColorRing } from 'react-loader-spinner';
 import axios from 'axios';
 export const DependenciesContext = createContext();
-const PopUpMethods = ({visible,closePopUp,currentPage,nextPage,prevPage}) => {
-    ////////////////////////////////////////////////////////////////////////////////////////
-    // Data for test
-        const [tagsData,setTagsData] = useState([]); 
-        const getTags = async (tagPath) =>{
+const CreateNewProject = ({visible,closePopUp,currentPage,nextPage,prevPage}) => {
+        const [clubs,setClubs] = useState(null);
+        const [modules,setModules] = useState(null);
+        const [events,setEvents] = useState(null);
+        const getTags = async (tagPath,callback) =>{
                 try {
             const userToken = localStorage.getItem('userToken')
             const response = await axios.get(`http://localhost:3000/${tagPath}`, {
@@ -25,9 +25,8 @@ const PopUpMethods = ({visible,closePopUp,currentPage,nextPage,prevPage}) => {
         });
 
         if (response.status === 200) {
-            setTagsData(prev=>[...prev, response.data])
-            console.log(tagsData)
-          console.log(response.data)
+            callback(response.data);
+            //console.log(response.data)
         } else {
           throw new Error("Authentication has failed!");
         } 
@@ -37,10 +36,10 @@ const PopUpMethods = ({visible,closePopUp,currentPage,nextPage,prevPage}) => {
                 }
         }
         useEffect(()=>{
-            getTags('club/getClubs')
-            getTags('module/getModules')
-            getTags('event/getEvents')
-        }, [tagsData])
+            getTags('club/getClubs',setClubs)
+            getTags('module/getModules',setModules)
+            getTags('event/getEvents',setEvents)
+        }, [])
     //////////////////////////////////////////////////////
     const [method,setMethod] = useState("");
     const [projectName,setProjectName] = useState("");
@@ -79,7 +78,8 @@ const PopUpMethods = ({visible,closePopUp,currentPage,nextPage,prevPage}) => {
     }
     // ////////////////////////////////
     const addTag= (item)=>{
-        setTags(prevtags => [...prevtags,item.item]);
+        setTags(prevtags => [...prevtags,item.obj]);
+        console.log(tags)
         setTagsDisplayed(prevDisTags=>[...prevDisTags,item]);
     }
     const removeTag = (index)=>{
@@ -225,9 +225,9 @@ const PopUpMethods = ({visible,closePopUp,currentPage,nextPage,prevPage}) => {
                                 <h1 className='text-black font-semibold'>In which category do you wanna put your project </h1>
                                 <div className='border-[1px] border-grey rounded-md py-3 px-4 mb-2 '>
                                     {tagsDisplayed.length !== 0 ?
-                                        <div className='w-full flex flex-wrap gap-2 h-16 overflow-y-auto'>
-                                            {tagsDisplayed.map((val,ind)=><div className='flex gap-1 p-1 items-center rounded-md bg-gray-200' key={val.item.id}>
-                                            <p className='text-xs'>{val.item[val.accesorKey]}</p>
+                                        <div className='w-full flex flex-wrap gap-2 max-h-16 overflow-y-auto'>
+                                            {tagsDisplayed.map((val,ind)=><div className='flex gap-1 p-1 items-center rounded-md bg-gray-200' key={ind}>
+                                            <p className='text-xs'>{val.obj.tagName}</p>
                                             <img onClick={()=>{removeTag(ind)}} className='w-2 cursor-pointer' src={blackClose} alt="remove" />
                                         </div>)}
                                         </div>
@@ -235,9 +235,9 @@ const PopUpMethods = ({visible,closePopUp,currentPage,nextPage,prevPage}) => {
                                 </div>
                                 <DependenciesContext.Provider value={dependencies}>
                                     <div onClick={(e)=>{e.stopPropagation()}} className='flex gap-2 items-center flex-wrap relative'>
-                                        <Select  title={"Modules"} data={tagsData[1]} accesorKey={"moduleName"}/>
-                                        <Select  title={"Club"} data={tagsData[0]} accesorKey={"clubName"}/>
-                                        <Select  title={"Events"} data={tagsData[2]} accesorKey={"eventName"}/>
+                                        <Select  title={"module"} data={modules} accesorKey={"moduleName"}/>
+                                        <Select  title={"club"} data={clubs} accesorKey={"clubName"}/>
+                                        <Select  title={"event"} data={events} accesorKey={"eventName"}/>
                                     </div>
                                 </DependenciesContext.Provider>
                             </div>
@@ -369,11 +369,11 @@ const PopUpMethods = ({visible,closePopUp,currentPage,nextPage,prevPage}) => {
         </div>
   )
 }
-PopUpMethods.propTypes = {
+CreateNewProject.propTypes = {
     visible:propTypes.bool.isRequired,
     closePopUp:propTypes.func.isRequired,
     nextPage:propTypes.func.isRequired,
     prevPage:propTypes.func.isRequired,
     currentPage:propTypes.number.isRequired
 }
-export default PopUpMethods
+export default CreateNewProject

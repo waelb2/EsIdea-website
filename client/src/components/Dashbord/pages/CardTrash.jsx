@@ -19,14 +19,14 @@ const CardTrash = ({proj,index,openedMore,setOpenedMore}) => {
   return (
     <div className={`group flex flex-col h-[256px] w-full rounded-xl   relative transition-shadow duration-400 borderGrey hover:shadow-lg`}>
         {/* <input  onChange={handleCheck} className='absolute top-2 left-2 outline-none border-none scale-110 cursor-pointer hidden group-hover:inline ' type="checkbox" /> */}
-        <img className='h-[128px] object-cover rounded-t-xl' src={proj.thumbnailUrl} alt="Project_Picture" />
+        <img className='h-[128px] object-cover rounded-t-xl' src={proj.ThumbnailUrl} alt="Project_Picture" />
         <div className=' flex flex-col gap-y-1 p-3 bg-lightGrey flex-grow'>
             <div className='flex justify-between items-center'>
-                <h1 className='text-[14px] font-semibold'>{proj.title}</h1>
+                <h1 className='text-[14px] font-semibold'>{proj.ProjectTitle}</h1>
                 <p className='text-[12px] '>{proj.date}</p>
             </div>
             <p className='text-[12px] font-normal'>
-                {proj.description}
+                {proj.Description}
             </p>
         </div>
         <div onClick={(e)=>{e.stopPropagation()}}>

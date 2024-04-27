@@ -1,6 +1,5 @@
 // eslint-disable-next-line no-unused-vars
 import React,{useState} from 'react'
-import PopUpMethods from './pages/PopUpMethods';
 import CreateNewProject from './pages/CreateNewProject'
 import { add,Folder,BrainstormingMethodIcon,BrainwritingMethodIcon,Flipboard } from '../../assets';
 const Functionalities = () => {
