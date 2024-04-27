@@ -7,6 +7,7 @@ import multer from 'multer'
 import { feedback } from '../feedback/feedbackModel'
 import { User } from './userModels'
 import { isLowercase } from 'validator'
+import { AuthPayload } from '../auth/authInterface'
 
 const upload = multer({ dest: 'uploads/' })
 
@@ -84,6 +85,26 @@ const createFeedback = async (req: Request, res: Response) => {
   } catch (error) {
     console.log(error)
     return res.sendStatus(500)
+  }
+}
+
+const getUserById = async (req: Request, res: Response) => {
+  const { userId, email } = req.user as AuthPayload
+  try {
+    const user = await User.findById(userId)
+    res.status(200).json({
+      user: {
+        firstName: user?.firstName,
+        lastName: user?.lastName,
+        email: user?.email,
+        profilePicUrl: user?.profilePicUrl
+      }
+    })
+  } catch (error) {
+    console.log(error)
+    return res.status(500).json({
+      error: 'Internal server error'
+    })
   }
 }
 
@@ -168,5 +189,6 @@ export {
   createFeedback,
   getUser,
   getUserByEmail,
-  getUserByLastName
+  getUserByLastName,
+  getUserById
 }

@@ -6,11 +6,13 @@ import { User, userIdValidationSchema } from './userModels'
 import {
   createFeedback,
   getUserByEmail,
+  getUserById,
   getUserByLastName,
   modifyProfilePicture,
   upload
 } from './userControllers'
 import { createFeedbackValidationSchema } from '../feedback/feedbackModel'
+import { authMiddleWare } from '../auth/authMiddleware'
 
 const router = express.Router()
 
@@ -36,5 +38,6 @@ router.post(
 
 router.post('/search-user-email', getUserByEmail)
 router.post('/search-user-last-name', getUserByLastName)
+router.get('/get-user', authMiddleWare, getUserById)
 
 export default router
