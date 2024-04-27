@@ -1,11 +1,10 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useEffect, useState,useContext  } from 'react'
+import React, { useEffect, useState } from 'react'
 import axios  from 'axios'
 import DashboardNav from '../DashboardNav'
 import Functionalities from '../Functionalities'
 import Card from './Card'
 import { ProjectsEmpty } from '../../../assets'
-import { UserContext } from '../../../App'
 import { useLocation } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';

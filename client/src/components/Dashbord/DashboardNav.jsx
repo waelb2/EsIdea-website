@@ -3,9 +3,9 @@ import React,{useRef, useState,useContext} from 'react'
 import {More, Search,blackClose, ChangePFP, ChangePassIcon, HelpIcon, FeedBackIcon, LogoutIcon} from '../../assets';
 import propTypes from 'prop-types';
 import { Link } from 'react-router-dom';
-import { UserContext } from '../../App';
+import useUser from '../../hooks/useUser';
 const DashboardNav = ({currentLoc,action}) => {
-    const {user} = useContext(UserContext);
+    const { user } = useUser();
     const userDetails = [
         {
             icon:ChangePFP,

@@ -1,14 +1,14 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useEffect, useState,useContext  } from 'react'
+import React, { useEffect, useState  } from 'react'
 import DashboardNav from '../DashboardNav'
 import Functionalities from '../Functionalities'
 import Card from './Card'
 import {RecentsEmpty } from '../../../assets'
-import { UserContext } from '../../../App'
 import EditProject from './EditProject'
+import useUser from '../../../hooks/useUser'
 const Recents = () => {
     //User
-    const {user} = useContext(UserContext);
+    const { user } = useUser()
     const [openedMore,setOpenedMore] = useState(-1);
     const [Projects,setProjects] = useState([
         {
