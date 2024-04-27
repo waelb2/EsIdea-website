@@ -1,9 +1,9 @@
-import express from "express"
-import { getMoudules } from "./moduleControllers"
+import express from 'express'
+import { getModules } from './moduleControllers'
+import { authMiddleWare } from '../auth/authMiddleware'
 
-const router =  express.Router()
+const router = express.Router()
 
-
-router.get("/getClubs", getMoudules)
+router.get('/getModules', authMiddleWare, getModules)
 
 export default router
