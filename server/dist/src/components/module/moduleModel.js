@@ -28,7 +28,7 @@ const mongoose_1 = __importStar(require("mongoose"));
 const moduleSchema = new mongoose_1.Schema({
     moduleName: {
         type: String,
-        required: [true, "Module name is required"]
+        required: [true, 'Module name is required']
     },
     description: {
         title: String,

@@ -14,9 +14,7 @@ const eventModel_1 = require("./eventModel");
 const getEvents = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const events = yield eventModel_1.Event.find({});
-        return res.status(200).json({
-            events
-        });
+        return res.status(200).json(events);
     }
     catch (error) {
         console.log(error);

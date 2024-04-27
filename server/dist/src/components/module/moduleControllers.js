@@ -9,18 +9,22 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
     });
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getMoudules = void 0;
+exports.getModules = void 0;
 const moduleModel_1 = require("./moduleModel");
-const getMoudules = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+const getModules = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const modules = yield moduleModel_1.Module.find({});
-        return res.status(200).json({
-            modules
+        const formattedModules = modules.map(module => {
+            return {
+                moduleName: module.moduleName,
+                _id: module._id
+            };
         });
+        return res.status(200).json(formattedModules);
     }
     catch (error) {
         console.log(error);
         return res.sendStatus(500);
     }
 });
-exports.getMoudules = getMoudules;
+exports.getModules = getModules;

@@ -17,7 +17,7 @@ const bcrypt_1 = __importDefault(require("bcrypt"));
 const passport_1 = __importDefault(require("passport"));
 const userModels_1 = require("../user/userModels");
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
-const nodemailer_1 = require("../../config/nodemailer");
+const nodeMailer_1 = require("../../config/nodeMailer");
 const crypto_1 = __importDefault(require("crypto"));
 const auth = (req, res) => {
     res.send('<a href="/auth/google">Authenticate with Google</a>');
@@ -48,7 +48,7 @@ const login_get = (req, res) => {
 exports.login_get = login_get;
 //!!!!!!!!!!!! This must be in User model method and the secret must be in .env file
 const createToken = (user) => {
-    return jsonwebtoken_1.default.sign({ userId: user.id, email: user.email }, 'esideasecret', {
+    return jsonwebtoken_1.default.sign({ userId: user.id, email: user.email }, process.env.JWT_SECRET, {
         expiresIn: 30 * 24 * 60 * 60
     });
 };
@@ -141,7 +141,7 @@ const forgetPassword = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
     const resetUrl = `http://localhost:5174/auth/resetPassword/${resetToken}`;
     const message = `Please use the link below to reset your password:\n ${resetUrl}\nThis link is valid only for 10 minutes.`;
     try {
-        yield (0, nodemailer_1.sendEmail)({
+        yield (0, nodeMailer_1.sendEmail)({
             email: user.email,
             subject: 'Esidea',
             message: message

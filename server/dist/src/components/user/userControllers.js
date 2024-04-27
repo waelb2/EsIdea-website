@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserByLastName = exports.getUserByEmail = exports.getUser = exports.createFeedback = exports.modifyProfilePicture = exports.upload = void 0;
+exports.getUserById = exports.getUserByLastName = exports.getUserByEmail = exports.getUser = exports.createFeedback = exports.modifyProfilePicture = exports.upload = void 0;
 const express_validator_1 = require("express-validator");
 const mongoose_1 = __importStar(require("mongoose"));
 const cloudConfig_1 = __importDefault(require("../../config/cloudConfig"));
@@ -112,6 +112,27 @@ const createFeedback = (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.createFeedback = createFeedback;
+const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId, email } = req.user;
+    try {
+        const user = yield userModels_1.User.findById(userId);
+        res.status(200).json({
+            user: {
+                firstName: user === null || user === void 0 ? void 0 : user.firstName,
+                lastName: user === null || user === void 0 ? void 0 : user.lastName,
+                email: user === null || user === void 0 ? void 0 : user.email,
+                profilePicUrl: user === null || user === void 0 ? void 0 : user.profilePicUrl
+            }
+        });
+    }
+    catch (error) {
+        console.log(error);
+        return res.status(500).json({
+            error: 'Internal server error'
+        });
+    }
+});
+exports.getUserById = getUserById;
 const getUserByEmail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { emailQuery } = req.body;
     try {

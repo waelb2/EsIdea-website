@@ -14,9 +14,7 @@ const clubModel_1 = require("./clubModel");
 const getClubs = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const clubs = yield clubModel_1.Club.find({});
-        return res.status(200).json({
-            clubs
-        });
+        return res.status(200).json(clubs);
     }
     catch (error) {
         console.log(error);

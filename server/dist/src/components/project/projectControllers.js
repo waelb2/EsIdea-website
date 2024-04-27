@@ -27,7 +27,7 @@ const cloudConfig_1 = __importDefault(require("../../config/cloudConfig"));
 const fs_1 = __importDefault(require("fs"));
 const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     //const {userId} = req.user
-    const userId = '65ef22333d0a83e5abef43e3';
+    const userId = '662bda8263ebf49a5dba18ba';
     let secureURL = '';
     try {
         if (req.file) {
@@ -254,7 +254,7 @@ const deleteProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 });
 exports.deleteProject = deleteProject;
 const getProjectByUserId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const userId = req.params.userId;
+    const { userId } = req.user;
     try {
         if (!userId) {
             return res.status(400).json({
@@ -340,7 +340,7 @@ const getProjectByUserId = (req, res) => __awaiter(void 0, void 0, void 0, funct
             };
             return formattedProject;
         });
-        res.status(201).json(projectStrings);
+        res.status(200).json(projectStrings);
     }
     catch (error) {
         console.error('Error deleting project:', error);
