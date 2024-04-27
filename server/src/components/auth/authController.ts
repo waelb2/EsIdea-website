@@ -4,7 +4,7 @@ import bcrypt from 'bcrypt'
 import passport from 'passport'
 import { User } from '../user/userModels'
 import jwt from 'jsonwebtoken'
-import { sendEmail } from '../../config/nodemailer'
+import { sendEmail } from '../../config/nodeMailer'
 import crypto from 'crypto'
 import { UserInterface } from '../user/userInterface'
 const auth = (req: Request, res: Response) => {
@@ -36,13 +36,16 @@ const login_get = (req: Request, res: Response) => {
 
 //!!!!!!!!!!!! This must be in User model method and the secret must be in .env file
 const createToken = (user: UserInterface) => {
-  return jwt.sign({ userId: user.id, email: user.email }, 'esideasecret', {
-    expiresIn: 30 * 24 * 60 * 60
-  })
+  return jwt.sign(
+    { userId: user.id, email: user.email },
+    process.env.JWT_SECRET as string,
+    {
+      expiresIn: 30 * 24 * 60 * 60
+    }
+  )
 }
 const login_post = async (req: Request, res: Response) => {
   const { email, password } = req.body
-
   try {
     const user = await User.findOne({ email: email }) // no validation !
     if (!user) {
