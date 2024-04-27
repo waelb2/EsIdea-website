@@ -3,9 +3,9 @@ import React,{useContext, useState} from 'react'
 import propTypes from 'prop-types'
 import { User, notification,blackClose, ChangePFP, ChangePassIcon, HelpIcon, FeedBackIcon, LogoutIcon } from '../../../assets'
 import { Link } from 'react-router-dom'
-import { UserContext } from '../../../App'
+import useUser from '../../../hooks/useUser'
 const AdminNavBar = ({location}) => {
-    const {user} = useContext(UserContext);
+    const { user } = useUser()
     const userDetails = [
         {
             icon:ChangePFP,
