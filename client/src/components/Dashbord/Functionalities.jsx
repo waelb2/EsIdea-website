@@ -2,8 +2,11 @@
 import React,{useState} from 'react'
 import CreateNewProject from './pages/CreateNewProject'
 import { add,Folder,BrainstormingMethodIcon,BrainwritingMethodIcon,Flipboard } from '../../assets';
+import UploadProject from './pages/UploadProject';
 const Functionalities = () => {
     const [AllMethodsVisible,setAllMethodVisible] = useState(false);
+    const [uploadProjectVisible,setUploadProjectVisible] = useState(false);
+
 
     const [currentPage,setCurrentPage] = useState(1);
     const nextPage=()=>{
@@ -29,7 +32,7 @@ const Functionalities = () => {
             icon:Folder,
             title:"",
             action: () => {
-                console.log("Hello world!");  
+               setUploadProjectVisible(true);  
             }
         },
         {
@@ -37,7 +40,7 @@ const Functionalities = () => {
             icon:BrainstormingMethodIcon,
             title:"Brainstorming",
             action: () => {
-                console.log("Hello world!");  
+                
             }
         },
         {
@@ -45,7 +48,7 @@ const Functionalities = () => {
             icon:BrainwritingMethodIcon,
             title:"Brainwriting",
             action: () => {
-                console.log("Hello world!"); 
+                 
             }
         },
         {
@@ -71,6 +74,9 @@ const Functionalities = () => {
                     )}
                 </div>
                 <CreateNewProject visible={AllMethodsVisible} currentPage={currentPage} closePopUp={closePopUp} nextPage={nextPage} prevPage={prevPage}/>
+                <UploadProject visible={uploadProjectVisible} closePopUp={()=>{
+                    setUploadProjectVisible(false);
+                }} />
             </div>
   )
 }

@@ -65,8 +65,9 @@ import dragdropfiles from './dragdropfiles.svg'
 import Restore from './Restore.svg'
 import RemoveRed from './RemoveRed.svg'
 import NotFoundPic from './NotFound.svg'
+import UploadProjectPic from './UploadProj.svg'
 export {
-    add,OpenProj,Colaborators,hidePassword,ResetPasswordImage,ExportProj,Publish,TrashBlack,MoveFavorite,Edit,chart1,Restore,RemoveRed,
+    add,OpenProj,Colaborators,hidePassword,ResetPasswordImage,ExportProj,Publish,TrashBlack,MoveFavorite,Edit,chart1,Restore,RemoveRed,UploadProjectPic,
     General,Users,Logs,ForgotPasswordImage,FeedBacks,Tags,chart2,chart3,ChangePFP,ChangePassIcon,LogoutIcon,HelpIcon,FeedBackIcon,DashboardImage,
     brainstorming,
     BrainstormingMethodIcon,NotFoundPic,
