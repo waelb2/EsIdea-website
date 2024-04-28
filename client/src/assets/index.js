@@ -64,11 +64,12 @@ import hidePassword from './hidePassword.png'
 import dragdropfiles from './dragdropfiles.svg'
 import Restore from './Restore.svg'
 import RemoveRed from './RemoveRed.svg'
+import NotFoundPic from './NotFound.svg'
 export {
     add,OpenProj,Colaborators,hidePassword,ResetPasswordImage,ExportProj,Publish,TrashBlack,MoveFavorite,Edit,chart1,Restore,RemoveRed,
     General,Users,Logs,ForgotPasswordImage,FeedBacks,Tags,chart2,chart3,ChangePFP,ChangePassIcon,LogoutIcon,HelpIcon,FeedBackIcon,DashboardImage,
     brainstorming,
-    BrainstormingMethodIcon,
+    BrainstormingMethodIcon,NotFoundPic,
     BrainwritingMethodIcon,
     chatbot,
     collaborative,

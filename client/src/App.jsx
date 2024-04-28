@@ -6,6 +6,7 @@ import Loader from './components/loader/Loader';
 import axios from 'axios';
 import RequireAuth from './components/auth/RequireAuth';
 import UnauthorizedPage from './components/auth/UnauthorizedPage';
+import NotFound from './components/NotFoundPage/NotFound';
 
 const App = () => {
   const [loading, setLoading] = useState(false);
@@ -67,7 +68,7 @@ const App = () => {
             </Route>
         </Route>
 
-        <Route path='*' element={<h1>Page Not Found</h1>}/>
+        <Route path='*' element={<NotFound/>}/>
       </Routes>
 
   </>
