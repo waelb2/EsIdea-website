@@ -173,22 +173,20 @@ const CreateNewProject = ({visible,closePopUp,currentPage,nextPage,prevPage}) =>
     // }
     return (
         <div onClick={closePopUp} className={`fixed top-0 left-0 bg-black bg-opacity-40 w-screen min-h-screen backdrop-blur z-50 duration-500  transition-opacity ease-in-out flex justify-center items-center  ${visible?"Pop-up-Active":"Pop-up-notActive"}`}>
-                <div onClick={(e)=>{e.stopPropagation();setActive("")}} className='bg-white max-w-full w-[37.5rem] min-h-[28.125rem] ss:min-h-[31.25rem]  max-h-full  rounded-2xl shadow-md  px-3 py-4 sm:py-7 sm:px-9 m-4'>
+                <div onClick={(e)=>{e.stopPropagation();setActive("")}} className='bg-white max-w-full w-[37.5rem]   rounded-2xl shadow-md  px-3 py-4 sm:py-7 sm:px-9 m-4'>
+                {/* min-h-[28.125rem] ss:min-h-[31.25rem]  max-h-full */}
+                <div className={`flex flex-col justify-center items-center`}>
 
-                <div className={`w-full h-full flex flex-col`}>
                         <div className={`w-full flex  ${currentPage === 1 ? "justify-end":"justify-between"}`}>
-
                             <img onClick={prevPage} className={`w-6 h-6 cursor-pointer ${currentPage > 1 ?"block":"hidden"}`} src={Back} alt="Back" />
-
                             <img onClick={closePopUp} className={`w-5 h-5 cursor-pointer`} src={blackClose} alt="Close" />
-
                         </div>
 
                         <div className={`w-full ${currentPage === 1 ?"flex flex-col items-center":"hidden"}`}>
                             <h1 className='font-bold text-2xl text-center mb-4'>
                                 Choose a method
                             </h1>
-                            <div className='flex w-full ss:w-[87%] self-center border-2 rounded-md ss:p-1 shadow-md mb-5 p-2'>
+                            <div className='flex w-full  self-center border-2 rounded-md ss:p-1 shadow-md mb-5 p-2'>
                                 <input  onChange={(e)=>{setInputValue(e.target.value)}} className='flex-grow flex-shrink w-full outline-none ml-2 text-sm' placeholder='Search' type="text" />
                                 <img className='w-5 h-5 ss:w-7 ss:h-7 ml-1' src={Search} alt="Search" />
                             </div>
@@ -201,26 +199,26 @@ const CreateNewProject = ({visible,closePopUp,currentPage,nextPage,prevPage}) =>
                             </div>
                         </div>
 
-                        <div className={`w-full ${currentPage === 2 ?"flex flex-col items-center":"hidden"}`}>
+                        <div className={`w-full ss:px-3 ${currentPage === 2 ?"flex flex-col items-center":"hidden"}`}>
                             <h1 className='font-bold text-2xl text-center mb-4'>
                                 New <span className='text-skyBlue'>{method}</span>
                             </h1>
 
-                            <div className='flex flex-col w-full ss:w-[90%] gap-1 mb-3'>
+                            <div className='flex flex-col w-full  gap-1 mb-3'>
                                 <label htmlFor="projectName" className='text-black font-semibold'>
                                     What shall we name your project
                                 </label>
                                 <input onChange={(e)=>{setProjectName(e.target.value)}} id='projectName' className='outline-none text-sm border border-grey rounded-md py-2 px-4' type="text" />
                             </div>
 
-                            <div className='flex flex-col w-full ss:w-[90%] gap-1 mb-3'>
+                            <div className='flex flex-col w-full  gap-1 mb-3'>
                                 <label htmlFor="projectDescription" className='text-black font-semibold'>
                                     Give your project a short description
                                 </label>
                                 <textarea onChange={(e)=>{setDescription(e.target.value)}} className='outline-none text-sm border border-grey rounded-md resize-none py-2 px-4' name="Description" id="projectDescription" cols="30" rows="4">
                                 </textarea>
                             </div>
-                            <div className='flex flex-col w-full ss:w-[90%] gap-1 mb-3'>
+                            <div className='flex flex-col w-full  gap-1 mb-3'>
                                 <h1 className='text-black font-semibold'>In which category do you wanna put your project </h1>
                                 <div className='border border-grey rounded-md py-3 px-4 mb-2 '>
                                     {tagsDisplayed.length !== 0 ?
@@ -243,14 +241,14 @@ const CreateNewProject = ({visible,closePopUp,currentPage,nextPage,prevPage}) =>
                             
                         </div>
 
-                        <div className={`w-full ${currentPage === 3 ?"flex flex-col items-center":"hidden"}`}>
+                        <div className={`w-full  ${currentPage === 3 ?"flex flex-col items-center":"hidden"}`}>
                             <h1 className='font-bold text-2xl text-center mb-4'>
                                 New <span className='text-skyBlue'>Brainstorming</span>
                             </h1>
                         
-                            <label className='text-black font-semibold ss:w-[90%] mb-2'  htmlFor="collaborator">Do you want to add some collaborator</label>
+                            <label className='text-black font-semibold self-start mb-2'  htmlFor="collaborator">Do you want to add some collaborator</label>
 
-                            <div className='w-full ss:w-[90%] self-center relative'>
+                            <div className='w-full  self-center relative'>
                                 <div className='flex w-full  self-center border-2 rounded-md ss:p-1 shadow-lg mb-5 p-2'>
                                     <input value={searchColl} onChange={(e)=>{setSearchColl(e.target.value)}} className='flex-grow w-full flex-shrink outline-none ml-2 text-sm' id='collaborator' placeholder='Search' type="text" />
                                     <img className='w-5 h-5 ss:w-7 ss:h-7 ml-1' src={Search} alt="Search" />
@@ -280,7 +278,7 @@ const CreateNewProject = ({visible,closePopUp,currentPage,nextPage,prevPage}) =>
                                 </div>
                             </div>
 
-                            <div className='w-full ss:w-[90%] self-center mb-2'>
+                            <div className='w-full  self-center mb-2'>
                                 {collaborators.length === 0 ? <div className='flex flex-col items-center justify-center max-h-64'>
                                         <img className='w-32 h-32' src={ProjectsEmpty} alt="empty" />
                                         <p className='text-base'>{"No collaborator :("}</p>
@@ -302,21 +300,21 @@ const CreateNewProject = ({visible,closePopUp,currentPage,nextPage,prevPage}) =>
                         </div>
 
 
-                        <div className={`w-full ${currentPage === 4 ?"flex flex-col items-center":"hidden"}`}>
+                        <div className={`w-full ss:px-3 ${currentPage === 4 ?"flex flex-col items-center":"hidden"}`}>
                             <h1 className='font-bold text-2xl text-center mb-4'>
                                 New <span className='text-skyBlue'>{method}</span>
                             </h1>
 
-                            <div className='flex flex-col w-full ss:w-[90%] gap-1 mb-3'>
+                            <div className='flex flex-col w-full gap-1 mb-3'>
                                 <label htmlFor="MainTopic" className='text-black font-semibold'>
                                     Give me the main topic of your ideation section
                                 </label>
                                 <input onChange={(e)=>{setMainTopic(e.target.value)}} id='MainTopic' className='outline-none text-sm border border-grey rounded-md py-2 px-4' type="text" />
                             </div>
-                            <div className='flex flex-col w-full ss:w-[90%] gap-1 mb-3'>
+                            <div className='flex flex-col w-full gap-1 mb-3'>
                                 <div className='flex justify-between items-center'>
                                     <label htmlFor='subTopic' className='text-black font-semibold'>Do you want to add sub topics</label>
-                                    <button onClick={handleAddNewSubTopic} className='bg-skyBlue py-1 px-2 rounded-lg text-realWhite'>Add new +</button>
+                                    <button onClick={handleAddNewSubTopic} className='bg-skyBlue py-1 px-2 rounded-lg text-realWhite text-nowrap'>Add new +</button>
                                 </div>
                                 <div className={`${addSubTopicState ? "block":"hidden"} flex justify-between items-center border rounded-md border-gray-700 p-2 gap-2`}>
                                                 <input autoFocus  value={subTopicInputValue} onKeyUp={(e)=>{e.key === 'Enter' && handleAddSubTopic()}} onChange={(e)=>{setSubTopicInputValue(e.target.value)}}  className='text-sm py-1 px-2 border border-gray-400 outline-none flex-grow rounded-sm' placeholder='Add sub topic here' type="text" />
@@ -339,11 +337,11 @@ const CreateNewProject = ({visible,closePopUp,currentPage,nextPage,prevPage}) =>
                             
                         </div>
 
-                        <div className={`w-full  ${currentPage === 5 ?"flex flex-col items-center":"hidden"}`}>
+                        <div className={`w-full ss:px-3  ${currentPage === 5 ?"flex flex-col items-center":"hidden"}`}>
                             <h1 className='font-bold text-2xl text-center mb-4'>
                                 New <span className='text-skyBlue'>{method}</span>
                             </h1>
-                            <div className='my-2 w-full ss:w-[90%]'>
+                            <div className='my-2 w-full'>
                                 <h1 className='text-black font-bold mb-2'>Upload a picture to use it as a banner for the project ( you can not use one )</h1>
                                 {!banner ? <div onDrop={handleDrop} onDragOver={handleDragOver} className='flex flex-col items-center justify-center gap-1 border-2 border-dashed border-skyBlue rounded-lg p-2'>
                                     <img src={dragdropfiles} alt="files" />
@@ -358,7 +356,7 @@ const CreateNewProject = ({visible,closePopUp,currentPage,nextPage,prevPage}) =>
                             </div> 
                             
                         </div>
-                        <div className={`w-[90%] self-center  ${currentPage>1 && currentPage <=5 ? "flex justify-end" : "hidden" }`}>
+                        <div className={`w-full ss:px-3 self-end  ${currentPage>1 && currentPage <=5 ? "flex justify-end" : "hidden" }`}>
                                 <button onClick={nextPage} className={`bg-skyBlue px-3 py-1 rounded-md text-white ${currentPage < 5 ?"inline":"hidden"}`}>Next</button>
                                 <button className={`bg-skyBlue px-3 py-1 rounded-md text-white ${currentPage < 5 ?"hidden":"inline"}`}>Create</button>
                         </div>

@@ -4,13 +4,24 @@ import {More, Search,blackClose, ChangePFP, ChangePassIcon, HelpIcon, FeedBackIc
 import propTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import useUser from '../../hooks/useUser';
+import ChangePfp from './ChangePfp';
 const DashboardNav = ({currentLoc,action}) => {
     const { user } = useUser();
+    const [changePfpVisible,setChangePfpVisible] = useState(false);
+    const closePopUp = ()=>{
+        setChangePfpVisible(false);
+    }
+    const openPopUp = ()=>{
+        setChangePfpVisible(true);
+    }
     const userDetails = [
         {
             icon:ChangePFP,
             title:"Change pfp",
-            path:""
+            path:"",
+            action:()=>{
+                openPopUp();
+            }
         },{
             icon:ChangePassIcon,
             title:"Change password",
@@ -18,15 +29,24 @@ const DashboardNav = ({currentLoc,action}) => {
         },{
             icon:HelpIcon,
             title:"Help",
-            path:""
+            path:"",
+            action:()=>{
+
+            }
         },{
             icon:FeedBackIcon,
             title:"Feedback",
-            path:"/"
+            path:"/",
+            action:()=>{
+
+            }
         },{
             icon:LogoutIcon,
             title:"Log out",
-            path:"http://localhost:3000/auth/logout"
+            path:"http://localhost:3000/auth/logout",
+            action:()=>{
+
+            }
         }
     ]
     const [toggleSearch,setToggleSearch] = useState(false);
@@ -54,7 +74,7 @@ const DashboardNav = ({currentLoc,action}) => {
                     <ul className='list-none flex justify-end items-start flex-1 flex-col'>
                         {userDetails.map((det,ind) =><div className='w-full' key={det.title}>
                             <li className={`w-full rounded-md transition-all hover:bg-lightGrey`}>
-                                <Link to={det.path} className='flex w-full items-center  p-2'>
+                                <Link onClick={det.action} to={det.path} className='flex w-full items-center  p-2'>
                                     <img className='mr-3 w-5 h-5 object-contain' src={det.icon} alt={det.title} />
                                     <p className='flex-grow'>{det.title}</p>
                                 </Link>
@@ -65,6 +85,7 @@ const DashboardNav = ({currentLoc,action}) => {
                 </div>
             </div>
         </div>
+        <ChangePfp visible={changePfpVisible} closePopUp={closePopUp}/>
     </nav>
   )
 }
