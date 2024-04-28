@@ -81,7 +81,7 @@ const Form = () => {
             </div>
 
             <div className='flex justify-center items-center mt-3'>
-                <button onClick={login} className={`bg-skyBlue w-[7.5rem] p-2 text-white  sm:w-[9.5rem] sm:p-2 rounded-3xl font-bold`}>Login
+                <button onClick={login} className={`bg-skyBlue w-[7.5rem] p-2 text-white  sm:w-[9.5rem] shadow-custom transition-shadow duration-500 hover:shadow-hover sm:p-2 rounded-3xl font-bold`}>Login
                 </button>
             </div>
 

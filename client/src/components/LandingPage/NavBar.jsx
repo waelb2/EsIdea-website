@@ -43,7 +43,7 @@ const NavBar = () => {
         </li>
         {/* Sign up link */}
         <li>
-          <button onClick={signUp} className='bg-skyBlue w-[120px] p-2 text-white  sm:w-[152px] sm:p-[10px] rounded-3xl font-bold '>Sign up</button>
+          <button onClick={signUp} className='bg-skyBlue w-[120px] p-2 text-white  sm:w-[152px] sm:p-[10px] shadow-custom hover:shadow-hover transition-shadow duration-500 rounded-3xl font-bold '>Sign up</button>
         </li>
       </ul>
       </nav>

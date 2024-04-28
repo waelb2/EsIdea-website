@@ -38,14 +38,16 @@ const App = () => {
         </Route> */}
 
         <Route path='/Admin' element={<RequireAuth allowedRoles={["admin"]}/>}>
-            <Route index={true} element={<Navigate to="/Admin/General"/>}/>
-            <Route path='General' element={<General/>}/>
-            <Route path='Tags' element={<Tags/>}/>
-            <Route path='FeedBacks' element={<FeedBacks/>}/>
-            <Route path='Users' element={<Users/>}/>
-            <Route path='Logs' element={<Logs/>}/>
+            <Route element={<AdminDashboard/>}>
+                <Route index={true} element={<Navigate to="/Admin/General"/>}/>
+                <Route path='General' element={<General/>}/>
+                <Route path='Tags' element={<Tags/>}/>
+                <Route path='FeedBacks' element={<FeedBacks/>}/>
+                <Route path='Users' element={<Users/>}/>
+                <Route path='Logs' element={<Logs/>}/>
+            </Route>
         </Route>
-        {/* <Route path='/Home' element={<RequireAuth allowedRoles={["user"]}/>}> */}
+        {/* <Route path='/Home' element={<RequireAuth allowedRoles={["user"]}/>}>
         <Route path='/Home' element={<Dashbord/>}>
             <Route index={true} element={<Navigate to="/Home/Projects"/>}/>
             <Route path='Projects' element={<Projects/>}/>
@@ -53,6 +55,16 @@ const App = () => {
             <Route path='Favorites' element={<Favorites/>}/>
             <Route path='Public' element={<Public/>}/>
             <Route path='Trash' element={<Trash/>}/>
+        </Route> */}
+        <Route path='/Home' element={<RequireAuth allowedRoles={["user"]}/>}>
+            <Route element={<Dashbord/>}>
+                <Route index={true} element={<Navigate to="/Home/Projects"/>}/>
+                <Route path='Projects' element={<Projects/>}/>
+                <Route path='Recents' element={<Recents/>}/>
+                <Route path='Favorites' element={<Favorites/>}/>
+                <Route path='Public' element={<Public/>}/>
+                <Route path='Trash' element={<Trash/>}/>
+            </Route>
         </Route>
 
         <Route path='*' element={<h1>Page Not Found</h1>}/>

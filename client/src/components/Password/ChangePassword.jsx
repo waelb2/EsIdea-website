@@ -102,15 +102,15 @@ const ResetPassword = () => {
   return (
     <div className="bg-white w-full overflow-hidden min-h-screen flex flex-col">
         <div className="sm:px-16 px-6 flex justify-center items-center">
-            <div className="xl:max-w-[1280px] w-full">
+            <div className="xl:max-w-[80rem] w-full">
                 <nav className='w-full flex justify-between items-center py-3'>
                     <Link to="/">
-                        <img className='w-[124px] h-[40px]' src={blackLogo} alt="ESIdea_logo" />
+                        <img className='w-[7.75rem] h-10' src={blackLogo} alt="ESIdea_logo" />
                     </Link>
                     <div className='flex gap-2 items-center'>
                     <img className='w-8 h-8 cursor-pointer' src={notification} alt="Notification" />
                     <img onClick={()=>{setToggle(prev => !prev)}} className='w-10 h-10 cursor-pointer rounded-full border-2 border-skyBlue p-0.5' src={user.profilePicUrl} alt="User" />
-                    <div className={`${!toggle ? "hidden":"flex border-[2px]"} p-4 bg-white absolute z-20 top-12 right-10 mx-4 my-2 min-w-[250px] rounded-xl sidebar flex-col`}>
+                    <div className={`${!toggle ? "hidden":"flex border-2"} p-4 bg-white absolute z-20 top-12 right-10 mx-4 my-2 min-w-[15.625rem] rounded-xl sidebar flex-col`}>
                     <img onClick={()=>{setToggle(prev => !prev)}} className='w-5 h-5 object-contain cursor-pointer fixed top-2 right-3' src={blackClose} alt="Close"/>
                     <div className='flex flex-col items-center mb-3'>
                         <img className='w-20 h-20 object-contain rounded-full border-2 border-skyBlue p-0.5' src={user.profilePicUrl} alt="UserPic" />
@@ -134,8 +134,8 @@ const ResetPassword = () => {
             </div>
         </div>
           <div className='sm:px-16 px-6 flex justify-center items-center h-full flex-grow'>
-                <div className='xl:max-w-[1280px] w-full h-full flex md:flex-row md:justify-center gap-6 flex-col items-center'>
-                    <div className='shadow-md rounded-lg px-7 py-8  max-w-[450px] w-full mt-5 md:mt-0 border-[2px] border-[rgba(0,0,0,0.1)] flex flex-col items-center gap-3' >
+                <div className='xl:max-w-[80rem] w-full h-full flex md:flex-row md:justify-center gap-6 flex-col items-center'>
+                    <div className='shadow-md rounded-lg px-7 py-8  max-w-[28.125rem] w-full mt-5 md:mt-0 border-2 border-[rgba(0,0,0,0.1)] flex flex-col items-center gap-3' >
                         <h1 className='font-bold text-2xl'>Change Password</h1>
                         <p className='text-sm'>Here you can change your password. Please type it twice to avoid any typos.</p>
                         <form className='w-full flex flex-col gap-4' action="">
@@ -144,27 +144,27 @@ const ResetPassword = () => {
                                     <label className='text-gray-500 font-normal text-sm mb-[3px]' htmlFor="oldPassword">Old Password :</label>
                                     <input onChange={(e)=>{setOldPassword(e.target.value)}}  className={`${oldPasswordError ? "border-red text-red":"border-gray-400"} border-2 rounded-xl h-10 p-4 outline-none text-[0.875rem]`} id='oldPassword' type={toggle3 ?"text":"password"} />
                                     
-                                    <img onClick={()=>{setToggle3(prev => !prev)}} className='w-[20px] h-[20px] absolute right-3 top-2/4  cursor-pointer' src={toggle3 ? Eye:hidePassword} alt="Show_password" />
+                                    <img onClick={()=>{setToggle3(prev => !prev)}} className='w-5 h-5 absolute right-3 top-2/4  cursor-pointer' src={toggle3 ? Eye:hidePassword} alt="Show_password" />
                                 </div>
                                 <div className='flex flex-col relative mb-2'>
                                     <label className='text-gray-500 font-normal text-sm mb-[3px]' htmlFor="password">New Password :</label>
                                     <input onChange={(e)=>{setPassword(e.target.value)}}  className={`${passwordError ? "border-red text-red":"border-gray-400"} border-2 rounded-xl h-10 p-4 outline-none text-[0.875rem]`} id='password' type={toggle1 ?"text":"password"} />
                                     
-                                    <img onClick={()=>{setToggle1(prev => !prev)}} className='w-[20px] h-[20px] absolute right-3 top-2/4  cursor-pointer' src={toggle1 ? Eye:hidePassword} alt="Show_password" />
+                                    <img onClick={()=>{setToggle1(prev => !prev)}} className='w-5 h-5 absolute right-3 top-2/4  cursor-pointer' src={toggle1 ? Eye:hidePassword} alt="Show_password" />
                                 </div>
                                 <div className='flex flex-col relative'>
                                     <label className='text-gray-500 font-normal text-sm mb-[3px]' htmlFor="PasswordConfirm">Confirm New Password :</label>
 
                                     <input onChange={(e)=>{setPasswordConfirm(e.target.value)}}  className={`${passwordConfirmError ? "border-red text-red":"border-gray-400"} border-2 rounded-xl h-10 p-4 outline-none text-[0.875rem]`} id='PasswordConfirm' type={toggle2 ?"text":"password"} />
                                     
-                                    <img onClick={()=>{setToggle2(prev => !prev)}} className='w-[20px] h-[20px] absolute right-3 top-2/4  cursor-pointer' src={toggle2 ? Eye:hidePassword} alt="Show_password" />
+                                    <img onClick={()=>{setToggle2(prev => !prev)}} className='w-5 h-5 absolute right-3 top-2/4  cursor-pointer' src={toggle2 ? Eye:hidePassword} alt="Show_password" />
                                 </div>
                                 {passwordConfirmError && <p className='text-red text-sm mt-1'>doesn&apos;t match New Password</p>}
                             </div>
                             <button onClick={changePass} className='self-center bg-skyBlue px-12 py-3 rounded-full shadow-custom hover:shadow-hover transition-shadow duration-500 text-white font-semibold'>Change</button>
                         </form>
                     </div>
-                    <img className='w-[450px] h-[450px] object-cover mt-3 md:mt-0 p-6 ' src={ResetPasswordImage} alt="ForgotPasswordImage" />
+                    <img className='w-[28.125rem] h-[28.125rem] object-cover mt-3 md:mt-0 p-6 ' src={ResetPasswordImage} alt="ForgotPasswordImage" />
                 </div>
           </div>
     </div>

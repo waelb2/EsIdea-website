@@ -31,7 +31,7 @@ const Navbar = () => {
         <Link to="/">
           <img className='w-[124px] h-[40px]' src={blackLogo} alt="ESIdea_logo" />
         </Link>
-        <button  onClick={signUp} className={`bg-skyBlue w-[120px] p-2 text-white  sm:w-[152px] sm:p-[10px] rounded-3xl font-bold text-center`}>Sign up</button>
+        <button  onClick={signUp} className={`bg-skyBlue w-[120px] p-2 text-white  sm:w-[152px] sm:p-[10px] rounded-3xl shadow-custom hover:shadow-hover transition-shadow duration-500 font-bold text-center`}>Sign up</button>
       </nav>
       <PopUp visible={popUpVisible} togglePopUp={togglePopUp} content={invalidMail}/>
     </>

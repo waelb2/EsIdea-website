@@ -61,7 +61,7 @@ const AddPassword = () => {
     }
   return (
     user.password == null && (<div className='w-screen flex h-screen justify-center items-center'>
-    <div className='shadow-md rounded-lg px-7 py-8  max-w-[450px] w-full mt-5 md:mt-0 border-[2px] border-[rgba(0,0,0,0.1)] flex flex-col items-center gap-3' >
+    <div className='shadow-md rounded-lg px-7 py-8  max-w-[28.125rem] w-full mt-5 md:mt-0 border-2 border-[rgba(0,0,0,0.1)] flex flex-col items-center gap-3' >
         <img className='w-96 h-10 mb-4' src={blackLogo} alt="logo" />
         <h1 className='font-bold text-2xl'>Add Password</h1>
         <p className='text-sm'>Add a password for secure login next time. Would you like to set it up now?</p>
@@ -72,7 +72,7 @@ const AddPassword = () => {
 
                                 <input onChange={(e)=>{setPassword(e.target.value)}}  className={`${passwordError ? "border-red text-red":"border-gray-400"} border-2 rounded-xl h-10 p-4 outline-none text-[0.875rem]`} id='password' type={toggle1 ?"text":"password"} />
                                 
-                                <img onClick={()=>{setToggle1(prev => !prev)}} className='w-[20px] h-[20px] absolute right-3 top-2/4  cursor-pointer' src={toggle1 ? Eye:hidePassword} alt="Show_password" />
+                                <img onClick={()=>{setToggle1(prev => !prev)}} className='w-5 h-5 absolute right-3 top-2/4  cursor-pointer' src={toggle1 ? Eye:hidePassword} alt="Show_password" />
                     </div>
             </div>
             <div className='flex justify-end items-center gap-3'>
