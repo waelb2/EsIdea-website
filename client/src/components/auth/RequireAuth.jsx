@@ -8,6 +8,10 @@ const RequireAuth = ({ allowedRoles }) => {
     // here we can also check for the user token, and redirect if not set
 
     return (
+        user == null ? 
+
+        <Navigate state={{from: location}} replace to="/login"/>
+        :
         allowedRoles.includes(user.role)
         ?
         <Outlet/>
