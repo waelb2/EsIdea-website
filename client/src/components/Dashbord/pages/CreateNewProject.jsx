@@ -178,21 +178,30 @@ const CreateNewProject = ({visible,closePopUp,currentPage,nextPage,prevPage}) =>
         )
     })
     const displayedMethods = methods.filter(method=>method.title.toLocaleLowerCase().includes(inputValue.toLocaleLowerCase()))
-        const projectData = {
-        projectTitle : projectName,
-        description,
-        ideationMethodName : method,
-        collaborators : collaborators.map(collaborator => collaborator.email),
-        mainTopic,
-        subTopics,
-        tags : formattedTags
+     
+    
+    // creating the project data object
 
-    }
-    const formData = new FormData()
-    formData.append('projectThumbnail',image)
+    const myForm = new FormData()
+    myForm.append('projectThumbnail',image)
 
+    myForm.append('projectTitle', projectName);
+    myForm.append('description', description);
+    myForm.append('ideationMethodName', method);
+    collaborators.forEach(collaborator => {
+        myForm.append('collaborators[]', collaborator.email);
+    });
+    myForm.append('mainTopic', mainTopic);
+    subTopics.forEach(subTopic => {
+        myForm.append('subTopics[]', subTopic);
+    });
+    formattedTags.forEach(tag => {
+        myForm.append('tags[]',JSON.stringify( tag));
+    });
+
+    
     const createProject = async ()=>{
-        axios.post('http://localhost:3000/project/create-project',projectData, {headers: {
+        axios.post('http://localhost:3000/project/create-project',myForm, {headers: {
     'Authorization': `Bearer ${userToken}`
   },
 }).then(response => {
