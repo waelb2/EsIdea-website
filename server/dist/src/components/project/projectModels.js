@@ -63,8 +63,7 @@ const projectSchema = new mongoose_1.Schema({
     },
     template: {
         type: mongoose_1.default.Types.ObjectId,
-        ref: 'Template',
-        required: [true, 'Project template is required']
+        ref: 'Template'
     },
     ideationMethod: {
         type: mongoose_1.default.Types.ObjectId,
@@ -131,7 +130,11 @@ const projectSchema = new mongoose_1.Schema({
             ref: 'Event'
         }
     ],
-    thumbnailUrl: String
+    thumbnailUrl: String,
+    creationDate: {
+        type: Date,
+        default: Date.now()
+    }
 });
 projectSchema.pre('save', function (next) {
     if (this.clubs.length === 0 &&

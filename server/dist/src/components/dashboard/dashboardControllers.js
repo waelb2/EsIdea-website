@@ -6,7 +6,7 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.dashboard = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const createToken = (user) => {
-    jsonwebtoken_1.default.sign({ userId: user.id, email: user.email }, process.env.JWT_SECRET, {
+    return jsonwebtoken_1.default.sign({ userId: user.id, email: user.email }, process.env.JWT_SECRET, {
         expiresIn: 30 * 24 * 60 * 60
     });
 };
@@ -18,8 +18,9 @@ const dashboard = (req, res) => {
         lastName: user.lastName,
         email: user.email,
         profilePicUrl: user.profilePicUrl,
-        role: user.role
+        role: user.role,
+        passwordIsSet: user.password ? true : false
     };
-    res.redirect(`http://localhost:5174/addPassword?user=${JSON.stringify(user)}&userToken=${token}`);
+    res.redirect(`http://localhost:5174/addPassword?user=${JSON.stringify(formattedUser)}&userToken=${token}`);
 };
 exports.dashboard = dashboard;

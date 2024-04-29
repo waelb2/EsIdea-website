@@ -40,8 +40,7 @@ const projectSchema = new Schema<ProjectInterface>({
   },
   template: {
     type: mongoose.Types.ObjectId,
-    ref: 'Template',
-    required: [true, 'Project template is required']
+    ref: 'Template'
   },
   ideationMethod: {
     type: mongoose.Types.ObjectId,
@@ -108,7 +107,11 @@ const projectSchema = new Schema<ProjectInterface>({
       ref: 'Event'
     }
   ],
-  thumbnailUrl: String
+  thumbnailUrl: String,
+  creationDate: {
+    type: Date,
+    default: Date.now()
+  }
 })
 
 projectSchema.pre('save', function (next) {

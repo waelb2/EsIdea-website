@@ -1,34 +1,32 @@
-import mongoose , {Schema, Document, mongo} from "mongoose";
-import { IdeaInterface } from "./ideaInterface";
-
+import mongoose, { Schema, Document, mongo } from 'mongoose'
+import { IdeaInterface } from './ideaInterface'
 
 const ideaSchema = new Schema<IdeaInterface>({
-  created_by: {
+  createdBy: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User', 
+    ref: 'User',
     required: true
   },
-  project_id: {
+  projectId: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Project', 
+    ref: 'Project',
     required: true
   },
   content: {
     type: String,
     required: true
   },
-  creation_date: {
+  creationDate: {
     type: Date,
-    default: Date.now
+    default: Date.now()
   },
   topic: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'Topic', 
+    ref: 'Topic',
     required: true
   }
-});
-
+})
 
 const Idea = mongoose.model<IdeaInterface>('Idea', ideaSchema)
 
-export {Idea }
+export { Idea }

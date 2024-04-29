@@ -25,8 +25,7 @@ import { model } from 'mongoose'
 import { AuthPayload } from '../auth/authInterface'
 
 const createProject = async (req: Request, res: Response) => {
-  //const {userId} = req.user
-  const userId = '662bda8263ebf49a5dba18ba'
+  const { userId } = req.user as AuthPayload
   let secureURL: string = ''
 
   try {
@@ -42,9 +41,7 @@ const createProject = async (req: Request, res: Response) => {
     const {
       projectTitle,
       description,
-      templateId,
-      ideationMethodId,
-      visibility,
+      ideationMethodName,
       collaborators,
       mainTopic,
       subTopics,
@@ -52,9 +49,7 @@ const createProject = async (req: Request, res: Response) => {
     }: {
       projectTitle: string
       description: string
-      templateId: string
-      ideationMethodId: string
-      visibility: string
+      ideationMethodName: string
       collaborators: string[] // needs an email validation
       mainTopic: string
       subTopics: string[]
@@ -65,7 +60,7 @@ const createProject = async (req: Request, res: Response) => {
         }
       ]
     } = req.body
-
+    console.log(projectTitle)
     // Getting and validating project metadata
 
     const coordinator: UserInterface | null = await User.findById(userId)
@@ -76,17 +71,10 @@ const createProject = async (req: Request, res: Response) => {
       })
     }
 
-    const template: TemplateInterface | null = await Template.findById(
-      templateId
-    )
-
-    if (!template) {
-      return res.status(404).json({
-        error: 'Template not found'
-      })
-    }
     const ideationMethod: IdeationMethodInterface | null =
-      await IdeationMethod.findById(ideationMethodId)
+      await IdeationMethod.findOne({
+        methodName: { $regex: ideationMethodName, $options: 'i' }
+      })
 
     if (!ideationMethod) {
       return res.status(404).json({
@@ -165,9 +153,7 @@ const createProject = async (req: Request, res: Response) => {
       title: projectTitle,
       description: description,
       coordinator: coordinator.id,
-      template: template.id,
       ideationMethod: ideationMethod.id,
-      visibility,
       mainTopic: parentTopic.id,
       subTopics: subTopicsIds,
       clubs: clubList,
@@ -203,6 +189,7 @@ const createProject = async (req: Request, res: Response) => {
 
       // Associating project with his coordinator
       coordinator.projects.push({ project, joinedAt: new Date() })
+      await coordinator.save()
 
       user?.projectInvitations.push(invitation)
       user?.save()
@@ -338,13 +325,12 @@ const getProjectByUserId = async (req: Request, res: Response) => {
         error: 'User ID must be provided'
       })
     }
-
     const user: UserInterface | null = await User.findById(userId)
       .populate({
         path: 'projects.project',
         populate: {
-          path: 'subTopics', // Populate the `subTopics` array for each project
-          model: 'Topic' // Specify the model for `subTopics` (adjust based on your schema)
+          path: 'subTopics',
+          model: 'Topic'
         }
       })
       .populate({
@@ -405,7 +391,12 @@ const getProjectByUserId = async (req: Request, res: Response) => {
         thumbnailUrl
       } = project
 
-      const formattedSubTopics = subTopics?.map(topic => topic.topicName)
+      const formattedSubTopics = subTopics?.map(topic => {
+        return {
+          topicId: topic._id,
+          topicName: topic.topicName
+        }
+      })
       const formattedCollaborators = collaborators?.map(collaborator => {
         if (collaborator.member) {
           const { firstName, lastName, email, profilePicUrl } =

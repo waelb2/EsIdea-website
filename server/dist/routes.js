@@ -13,6 +13,7 @@ const invitationRoutes_1 = __importDefault(require("./src/components/invitation/
 const clubRoutes_1 = __importDefault(require("./src/components/club/clubRoutes"));
 const moduleRoutes_1 = __importDefault(require("./src/components/module/moduleRoutes"));
 const eventRoutes_1 = __importDefault(require("./src/components/event/eventRoutes"));
+const ideaRoutes_1 = __importDefault(require("./src/components/idea/ideaRoutes"));
 const router = express_1.default.Router();
 router.use('/user', userRoutes_1.default);
 router.use('/home', homeRoutes_1.default);
@@ -23,4 +24,5 @@ router.use('/invitation', invitationRoutes_1.default);
 router.use('/club', clubRoutes_1.default);
 router.use('/module', moduleRoutes_1.default);
 router.use('/event', eventRoutes_1.default);
+router.use('/idea', ideaRoutes_1.default);
 exports.default = router;

@@ -13,7 +13,12 @@ const upload = multer({ dest: 'uploads/' })
 
 const router = express.Router()
 
-router.post('/create-project', upload.single('projectThumbnail'), createProject)
+router.post(
+  '/create-project',
+  upload.single('projectThumbnail'),
+  authMiddleWare,
+  createProject
+)
 router.patch('/update-project/:projectId', updateProject)
 router.delete('/delete-project/:projectId', deleteProject)
 router.get('/get-all-projects/:userId', authMiddleWare, getProjectByUserId)

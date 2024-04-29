@@ -15,7 +15,6 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.getProjectByUserId = exports.deleteProject = exports.updateProject = exports.createProject = void 0;
 const projectModels_1 = require("./projectModels");
 const userModels_1 = require("../user/userModels");
-const templateModel_1 = __importDefault(require("../template/templateModel"));
 const ideationMethodModel_1 = require("../idea/ideationMethodModel");
 const topicModel_1 = require("./topicModel");
 const clubModel_1 = require("../club/clubModel");
@@ -26,8 +25,7 @@ const sendInvitationEmail_1 = __importDefault(require("../../utils/sendInvitatio
 const cloudConfig_1 = __importDefault(require("../../config/cloudConfig"));
 const fs_1 = __importDefault(require("fs"));
 const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    //const {userId} = req.user
-    const userId = '662bda8263ebf49a5dba18ba';
+    const { userId } = req.user;
     let secureURL = '';
     try {
         if (req.file) {
@@ -38,7 +36,8 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             fs_1.default.unlinkSync(req.file.path);
         }
         let projectAssociation;
-        const { projectTitle, description, templateId, ideationMethodId, visibility, collaborators, mainTopic, subTopics, tags } = req.body;
+        const { projectTitle, description, ideationMethodName, collaborators, mainTopic, subTopics, tags } = req.body;
+        console.log(projectTitle);
         // Getting and validating project metadata
         const coordinator = yield userModels_1.User.findById(userId);
         if (!coordinator) {
@@ -46,13 +45,9 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 error: 'User not found'
             });
         }
-        const template = yield templateModel_1.default.findById(templateId);
-        if (!template) {
-            return res.status(404).json({
-                error: 'Template not found'
-            });
-        }
-        const ideationMethod = yield ideationMethodModel_1.IdeationMethod.findById(ideationMethodId);
+        const ideationMethod = yield ideationMethodModel_1.IdeationMethod.findOne({
+            methodName: { $regex: ideationMethodName, $options: 'i' }
+        });
         if (!ideationMethod) {
             return res.status(404).json({
                 error: 'Ideation method not found'
@@ -122,9 +117,7 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             title: projectTitle,
             description: description,
             coordinator: coordinator.id,
-            template: template.id,
             ideationMethod: ideationMethod.id,
-            visibility,
             mainTopic: parentTopic.id,
             subTopics: subTopicsIds,
             clubs: clubList,
@@ -153,6 +146,7 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             });
             // Associating project with his coordinator
             coordinator.projects.push({ project, joinedAt: new Date() });
+            yield coordinator.save();
             user === null || user === void 0 ? void 0 : user.projectInvitations.push(invitation);
             user === null || user === void 0 ? void 0 : user.save();
             //sending the invitation email
@@ -265,8 +259,8 @@ const getProjectByUserId = (req, res) => __awaiter(void 0, void 0, void 0, funct
             .populate({
             path: 'projects.project',
             populate: {
-                path: 'subTopics', // Populate the `subTopics` array for each project
-                model: 'Topic' // Specify the model for `subTopics` (adjust based on your schema)
+                path: 'subTopics',
+                model: 'Topic'
             }
         })
             .populate({
@@ -312,7 +306,12 @@ const getProjectByUserId = (req, res) => __awaiter(void 0, void 0, void 0, funct
         const projects = user.projects.map(project => project === null || project === void 0 ? void 0 : project.project);
         const projectStrings = projects.map(project => {
             const { title, description, visibility, collaboratorsCount, collaborators, mainTopic, subTopics, clubs, modules, events, thumbnailUrl } = project;
-            const formattedSubTopics = subTopics === null || subTopics === void 0 ? void 0 : subTopics.map(topic => topic.topicName);
+            const formattedSubTopics = subTopics === null || subTopics === void 0 ? void 0 : subTopics.map(topic => {
+                return {
+                    topicId: topic._id,
+                    topicName: topic.topicName
+                };
+            });
             const formattedCollaborators = collaborators === null || collaborators === void 0 ? void 0 : collaborators.map(collaborator => {
                 if (collaborator.member) {
                     const { firstName, lastName, email, profilePicUrl } = collaborator.member;
