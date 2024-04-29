@@ -53,14 +53,11 @@ const createProject = async (req: Request, res: Response) => {
       collaborators: string[] // needs an email validation
       mainTopic: string
       subTopics: string[]
-      tags: [
-        {
-          tagType: string
-          tagId: string
-        }
-      ]
+      tags: string[]
     } = req.body
-    console.log(projectTitle)
+    console.log('her')
+    console.log('here')
+    console.log(req.body)
     // Getting and validating project metadata
 
     const coordinator: UserInterface | null = await User.findById(userId)
@@ -100,7 +97,8 @@ const createProject = async (req: Request, res: Response) => {
     let moduleList: ModuleInterface[] = []
     let eventList: EventInterface[] = []
 
-    for (const tag of tags) {
+    const formattedTags = tags.map(tag => JSON.parse(tag))
+    for (const tag of formattedTags) {
       const tagId = tag.tagId
       const tagType = tag.tagType.toLowerCase()
 
