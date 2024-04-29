@@ -5,6 +5,8 @@ import { LoginPage,Dashbord,Projects,Recents,Favorites,Public,Trash, LandingPage
 import RequireAuth from './components/auth/RequireAuth';
 import UnauthorizedPage from './components/auth/UnauthorizedPage';
 import NotFound from './components/NotFoundPage/NotFound';
+import Test from './components/testSocket/Test';
+
 
 const App = () => {
   return (
@@ -19,6 +21,10 @@ const App = () => {
         <Route path='/auth/resetPassword/*' element={<ResetPassword/>}></Route>
         <Route path='/ChangePassword' element={<ChangePassword/>}></Route>
         <Route path='/unauthorized' element={<UnauthorizedPage/>}></Route>
+        <Route path='/test-real-time' element={<RequireAuth allowedRoles={['user']}/>}>
+          <Route index={true} element={<Test/>}></Route>
+        </Route>
+
 
         {/* <Route  path='/Admin' element={user?<AdminDashboard/>:<Navigate to="/login"/>}>
             <Route index={true} element={<Navigate to="/Admin/General"/>}/>
