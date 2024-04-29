@@ -2,17 +2,26 @@
 import React,{useState,useRef} from 'react'
 import propTypes from 'prop-types'
 import { blackClose } from '../../../assets'
-const EditProject = ({visible,closePopUp}) => {
+const EditProject = ({visible,closePopUp,idProject}) => {
+    const [image, setImage] = useState(null)
     const [projectName,setProjectName] = useState("");
     const [description,setDescription] = useState("");
     const [banner,setBanner] = useState(null);
     const handleDragOver = (event)=>{
         event.preventDefault();
     }
+    const handleUpload=(event)=>{
+        setBanner(URL.createObjectURL(event.target.files[0]))
+        setImage(event.target.files[0])
+    }
     const handleDrop=(event)=>{
         setBanner(URL.createObjectURL(event.dataTransfer.files[0]));
         event.preventDefault();
     }
+    const myForm = new FormData()
+    myForm.append('projectThumbnail',image)
+    myForm.append('projectTitle', projectName);
+    myForm.append('description', description);
     const browseRef = useRef();
   return (
     <div onClick={closePopUp} className={`fixed top-0 left-0 bg-black bg-opacity-40 w-screen min-h-screen backdrop-blur z-50 duration-500  transition-opacity ease-in-out flex justify-center items-center  ${visible?"Pop-up-Active":"Pop-up-notActive"}`}>
@@ -47,7 +56,7 @@ const EditProject = ({visible,closePopUp}) => {
                                         !banner ? <div onDrop={handleDrop} onDragOver={handleDragOver} className='flex flex-col items-center justify-center gap-1'>
                                             <h1 className='text-black'>Drag and Drop pic to upload</h1>
                                             <h1 className='text-black'>Or</h1>
-                                            <input  accept='image/*' onChange={(event)=>{setBanner(URL.createObjectURL(event.target.files[0]));}}  ref={browseRef} hidden type="file" />
+                                            <input  accept='image/*' onChange={handleUpload}  ref={browseRef} hidden type="file" />
                                             <button className='bg-skyBlue py-1 px-2 rounded-xl text-realWhite' onClick={()=>{browseRef.current.click()}}>Browse</button>
                                         </div>:
                                         <div className='flex flex-col items-center justify-center gap-1'>
@@ -70,7 +79,8 @@ const EditProject = ({visible,closePopUp}) => {
 }
 EditProject.propTypes={
     visible:propTypes.bool.isRequired,
-    closePopUp:propTypes.func.isRequired
+    closePopUp:propTypes.func.isRequired,
+    idProject:propTypes.string.isRequired
 }
 
 export default EditProject

@@ -22,7 +22,7 @@ const Dashbord = () => {
                 </projectContext.Provider>
             </div>
             <ScrollToTop container={DivContainer}/>
-            <EditProject visible={editProjectPopUp} closePopUp={()=>{setEditProjectPopUp(false)}}/>
+            <EditProject visible={editProjectPopUp} closePopUp={()=>{setEditProjectPopUp(false)}} idProject={idProject}/>
             <DisplayCollaborators visible={collaboratorsPopUp} closePopUp={()=>{setCollaboratorPopUp(false)}} collaborators={collaborators}/>
         </div>
   )

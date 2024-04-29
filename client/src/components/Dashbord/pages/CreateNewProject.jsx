@@ -144,6 +144,7 @@ const CreateNewProject = ({method,setMethod,visible,closePopUp,currentPage,nextP
     }
     const handleDrop=(event)=>{
         setBanner(URL.createObjectURL(event.dataTransfer.files[0]));
+        setImage(event.dataTransfer.files[0]);
         event.preventDefault();
     }
     const handleUpload=(event)=>{
