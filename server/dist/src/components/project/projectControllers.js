@@ -37,7 +37,9 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         }
         let projectAssociation;
         const { projectTitle, description, ideationMethodName, collaborators, mainTopic, subTopics, tags } = req.body;
-        console.log(projectTitle);
+        console.log('her');
+        console.log('here');
+        console.log(req.body);
         // Getting and validating project metadata
         const coordinator = yield userModels_1.User.findById(userId);
         if (!coordinator) {
@@ -68,7 +70,8 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         let clubList = [];
         let moduleList = [];
         let eventList = [];
-        for (const tag of tags) {
+        const formattedTags = tags.map(tag => JSON.parse(tag));
+        for (const tag of formattedTags) {
             const tagId = tag.tagId;
             const tagType = tag.tagType.toLowerCase();
             switch (tagType) {
