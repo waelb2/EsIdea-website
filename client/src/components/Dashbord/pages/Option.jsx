@@ -8,7 +8,8 @@ const Option = ({title,item,accesorKey}) => {
     const [selected,setSelected] = useState(false);
     const obj = {   
         tagType:title,
-        tagName:item[accesorKey]
+        tagName:item[accesorKey],
+        tagId : item._id
     }
     const handleClick = ()=>{
         if(!selected){

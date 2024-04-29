@@ -10,7 +10,6 @@ const Card = ({proj,index,openedMore,setOpenedMore,handleEditProjects}) => {
         icon:OpenProj,
         line:false,
         action:(ind)=>{
-            console.log(ind);
         }
     },
     {
@@ -27,7 +26,6 @@ const Card = ({proj,index,openedMore,setOpenedMore,handleEditProjects}) => {
         icon:MoveFavorite,
         line:false,
         action:(ind)=>{
-          console.log(ind);
         }
     },
     {
@@ -35,7 +33,6 @@ const Card = ({proj,index,openedMore,setOpenedMore,handleEditProjects}) => {
         icon:TrashBlack,
         line:false,
         action:(ind)=>{
-          console.log(ind);
         }
     },
     {
@@ -59,14 +56,13 @@ const Card = ({proj,index,openedMore,setOpenedMore,handleEditProjects}) => {
         icon:Colaborators,
         line:false,
         action:(ind)=>{
-          console.log(ind);
         }
     }
 ]
   return (
     <div className={`group flex flex-col max-h-64 w-full  rounded-xl   relative transition-shadow duration-400  hover:shadow-lg borderGrey`}>
         {/* <input className='absolute top-2 left-2 outline-none border-none scale-110 cursor-pointer hidden group-hover:inline ' type="checkbox" /> */}
-        <img className='h-32 object-cover rounded-t-xl' src={proj.ThumbnailUrl} alt="Project_Picture" />
+        <img className='h-32 object-contain rounded-t-xl' src={proj.ThumbnailUrl === "" ? "https://img.freepik.com/free-vector/startup-success-launch-business-project_107791-4758.jpg?t=st=1714342322~exp=1714345922~hmac=81d1a808f2b5abda57ed89b74489360abce54b3c9bdc7816ecd6a489f3339b35&w=1380": proj.ThumbnailUrl} alt="Project_Picture" />
         <div className=' flex flex-col gap-y-1 p-3 bg-lightGrey flex-grow'>
             <div className='flex justify-between items-center'>
                 <h1 className='text-[14px] font-semibold'>{proj.ProjectTitle}</h1>

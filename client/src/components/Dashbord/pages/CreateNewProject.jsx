@@ -8,11 +8,15 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useDebounce } from '../constants';
 import { ColorRing } from 'react-loader-spinner';
 import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
 export const DependenciesContext = createContext();
 const CreateNewProject = ({visible,closePopUp,currentPage,nextPage,prevPage}) => {
+        const navigate = useNavigate()
+        const [image, setImage] = useState(null)
         const [clubs,setClubs] = useState(null);
         const [modules,setModules] = useState(null);
         const [events,setEvents] = useState(null);
+        const userToken = localStorage.getItem('userToken')
         const getTags = async (tagPath,callback) =>{
                 try {
             const userToken = localStorage.getItem('userToken')
@@ -97,6 +101,10 @@ const CreateNewProject = ({visible,closePopUp,currentPage,nextPage,prevPage}) =>
         setBanner(URL.createObjectURL(event.dataTransfer.files[0]));
         event.preventDefault();
     }
+    const handleUpload=(event)=>{
+        setBanner(URL.createObjectURL(event.target.files[0]))
+        setImage(event.target.files[0])
+    }
     const browseRef = useRef();
     ////////////////////////////////
 
@@ -110,10 +118,11 @@ const CreateNewProject = ({visible,closePopUp,currentPage,nextPage,prevPage}) =>
     useEffect(()=>{
         const  loadCollaborators = ()=>{
             setLoading(true);
-            axios.get('https://jsonplaceholder.typicode.com/users')
+            axios.post('http://localhost:3000/user/search-user-email', {
+                emailQuery : debouncedSearch
+            })
             .then(response => {
-                const coll = response.data.filter(collaborator => collaborator.name.toLowerCase().includes(debouncedSearch.toLowerCase()));
-                setDisplayedCollaborators(coll);
+                setDisplayedCollaborators( response.data.matchedUsers);
                 setLoading(false);
             }).catch(err => console.log(err));
         }
@@ -160,17 +169,42 @@ const CreateNewProject = ({visible,closePopUp,currentPage,nextPage,prevPage}) =>
             }
         }
     ]
-    const displayedMethods = methods.filter(method=>method.title.toLocaleLowerCase().includes(inputValue.toLocaleLowerCase()))
-    //     const projectData = {
-    //     projectTitle : projectName,
-    //     description,
-    //     ideationMethod : method,
-    //     collaborators : collaborators.map(collaborator => collaborator.email),
-    //     mainTopic,
-    //     subTopics,
-    //     tag
 
-    // }
+    const formattedTags = tags.map(tag=>{
+        return (
+            {tagType : tag.tagType,
+            tagId : tag.tagId
+            }
+        )
+    })
+    const displayedMethods = methods.filter(method=>method.title.toLocaleLowerCase().includes(inputValue.toLocaleLowerCase()))
+        const projectData = {
+        projectTitle : projectName,
+        description,
+        ideationMethodName : method,
+        collaborators : collaborators.map(collaborator => collaborator.email),
+        mainTopic,
+        subTopics,
+        tags : formattedTags
+
+    }
+    const formData = new FormData()
+    formData.append('projectThumbnail',image)
+
+    const createProject = async ()=>{
+        axios.post('http://localhost:3000/project/create-project',projectData, {headers: {
+    'Authorization': `Bearer ${userToken}`
+  },
+}).then(response => {
+    console.log('Response:', response.data);
+  })
+  .catch(error => { 
+    console.error('Error:', error.response.data.error);
+    if (error.response && error.response.status === 401){
+       navigate('/login') 
+    }
+  });
+    }
     return (
         <div onClick={closePopUp} className={`fixed top-0 left-0 bg-black bg-opacity-40 w-screen min-h-screen backdrop-blur z-50 duration-500  transition-opacity ease-in-out flex justify-center items-center  ${visible?"Pop-up-Active":"Pop-up-notActive"}`}>
                 <div onClick={(e)=>{e.stopPropagation();setActive("")}} className='bg-white max-w-full w-[37.5rem]   rounded-2xl shadow-md  px-3 py-4 sm:py-7 sm:px-9 m-4'>
@@ -258,11 +292,11 @@ const CreateNewProject = ({visible,closePopUp,currentPage,nextPage,prevPage}) =>
                                     {loading? <div className='flex justify-center items-center'><ColorRing visible={true} height="50" width="50" ariaLabel="color-ring-loading" wrapperStyle={{}} wrapperClass="color-ring-wrapper" colors={['#3A86FF', '#3A86FF', '#3A86FF', '#3A86FF', '#3A86FF']}
                                     /></div> : displayedCollaborators.length !== 0 && debouncedSearch !== "" ? <div className='flex flex-col gap-1 max-h-44 overflow-y-auto scroll-smooth'>
                                     {
-                                        displayedCollaborators.map((collaborator)=><div  className='flex justify-between items-center border rounded-md border-black p-1' key={collaborator.name}>
+                                        displayedCollaborators.map((collaborator)=><div  className='flex justify-between items-center border rounded-md border-black p-2' key={collaborator.name}>
                                              <div className='flex gap-2'>
-                                                <img className='w-11 h-11' src={User} alt="user" />
+                                                <img className='w-11 h-11 rounded-full' src={collaborator.profilePicUrl} alt="user" />
                                                 <div className='flex flex-col justify-center'>
-                                                    <p className='font-medium text-sm'>{collaborator.name}</p>
+                                                    <p className='font-medium text-sm'>{collaborator.firstName + ' ' + collaborator.lastName}</p>
                                                     <p className='text-sm'>{collaborator.email}</p>
                                                 </div>
                                             </div>
@@ -284,12 +318,12 @@ const CreateNewProject = ({visible,closePopUp,currentPage,nextPage,prevPage}) =>
                                         <p className='text-base'>{"No collaborator :("}</p>
                                         <p className='text-center text-base'>Don’t worry you can add them by just searching there names.</p>
                                     </div>:<div className='flex flex-col gap-1 overflow-y-auto scroll-smooth max-h-56'>
-                                        {collaborators.map((collab,ind)=><div className='flex justify-between items-center border rounded-md border-black p-1 w-full' key={collab.name}>
+                                        {collaborators.map((collaborator,ind)=><div className='flex justify-between items-center border rounded-md border-black p-1 w-full' key={collaborator.email}>
                                             <div className='flex gap-2'>
-                                                <img className='w-11 h-11' src={User} alt="user" />
+                                                <img className='w-11 h-11 rounded-full' src={collaborator.profilePicUrl} alt="user" />
                                                 <div className='flex flex-col justify-center'>
-                                                    <p className='font-medium text-sm'>{collab.name}</p>
-                                                    <p className='text-sm'>{collab.email}</p>
+                                                    <p className='font-medium text-sm'>{collaborator.firstName + ' ' + collaborator.lastName}</p>
+                                                    <p className='text-sm'>{collaborator.email}</p>
                                                 </div>
                                             </div>
                                             <button onClick={()=>{handleRemoveCollaborator(ind)}} className='bg-red text-realWhite px-2 py-0.5 rounded-lg'>Remove</button>
@@ -347,7 +381,7 @@ const CreateNewProject = ({visible,closePopUp,currentPage,nextPage,prevPage}) =>
                                     <img src={dragdropfiles} alt="files" />
                                     <h1 className='text-black font-bold'>Drag and Drop pic to upload</h1>
                                     <h1 className='text-black font-semibold'>Or</h1>
-                                    <input accept='image/*' onChange={(event)=>{setBanner(URL.createObjectURL(event.target.files[0]));}}  ref={browseRef} hidden type="file" />
+                                    <input  onChange={handleUpload}  ref={browseRef} hidden type="file" />
                                     <button onClick={()=>{browseRef.current.click()}} className='bg-skyBlue py-1 px-2 rounded-xl text-realWhite'>Browse</button>
                                 </div>:<div className='flex flex-col gap-4 border-2 border-gray-600 rounded-md p-2 justify-center items-center flex-grow'>
                                         <img className='w-72 object-contain rounded-md' src={banner} alt="banner" />
@@ -358,7 +392,7 @@ const CreateNewProject = ({visible,closePopUp,currentPage,nextPage,prevPage}) =>
                         </div>
                         <div className={`w-full ss:px-3 self-end  ${currentPage>1 && currentPage <=5 ? "flex justify-end" : "hidden" }`}>
                                 <button onClick={nextPage} className={`bg-skyBlue px-3 py-1 rounded-md text-white ${currentPage < 5 ?"inline":"hidden"}`}>Next</button>
-                                <button className={`bg-skyBlue px-3 py-1 rounded-md text-white ${currentPage < 5 ?"hidden":"inline"}`}>Create</button>
+                                <button onClick={createProject} className={`bg-skyBlue px-3 py-1 rounded-md text-white ${currentPage < 5 ?"hidden":"inline"}`}>Create</button>
                         </div>
                 </div>
                 </div>

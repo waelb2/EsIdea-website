@@ -99,7 +99,6 @@ const Projects = () => {
                         Start creating and come back later!
                     </p>
                 </div>
-                <button className='bg-grey text-white px-6 py-1 rounded-2xl text-base font-medium'>Create my first project</button>
             </div>)}
         </div>
     </div>
