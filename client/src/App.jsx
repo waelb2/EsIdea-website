@@ -2,19 +2,11 @@
 import React, { useState,useEffect,useMemo } from 'react';
 import { Routes,Route, Navigate } from 'react-router-dom';
 import { LoginPage,Dashbord,Projects,Recents,Favorites,Public,Trash, LandingPage, AdminDashboard, General, Tags, Logs, Users, FeedBacks, ForgotPassword, ResetPassword, AddPassword, ChangePassword } from './components';
-import Loader from './components/loader/Loader';
-import axios from 'axios';
 import RequireAuth from './components/auth/RequireAuth';
 import UnauthorizedPage from './components/auth/UnauthorizedPage';
 import NotFound from './components/NotFoundPage/NotFound';
 
 const App = () => {
-  const [loading, setLoading] = useState(false);
-
-  if (loading) {
-    return <Loader/>;
-  }
-
   return (
   <>
       <Routes>

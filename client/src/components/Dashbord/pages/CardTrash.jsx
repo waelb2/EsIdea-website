@@ -17,24 +17,24 @@ const CardTrash = ({proj,index,openedMore,setOpenedMore}) => {
         }
     ]
   return (
-    <div className={`group flex flex-col max-h-64 w-full rounded-xl   relative transition-shadow duration-400 borderGrey hover:shadow-lg`}>
+    <div className={`group flex flex-col w-full  rounded-xl   relative transition-all duration-500   hover:shadow-lg borderGrey cursor-pointer`}>
         {/* <input  onChange={handleCheck} className='absolute top-2 left-2 outline-none border-none scale-110 cursor-pointer hidden group-hover:inline ' type="checkbox" /> */}
         <img className='h-32 object-cover rounded-t-xl' src={proj.ThumbnailUrl} alt="Project_Picture" />
-        <div className=' flex flex-col gap-y-1 p-3 bg-lightGrey flex-grow'>
+        <div className=' flex flex-col gap-y-1 p-3 bg-slate-100  rounded-b-xl flex-grow'>
             <div className='flex justify-between items-center'>
                 <h1 className='text-[14px] font-semibold'>{proj.ProjectTitle}</h1>
                 <p className='text-[12px] '>{proj.date}</p>
             </div>
-            <p className='text-[12px] font-normal'>
+            <p className='text-sm text-grey font-medium line-clamp-[4]'>
                 {proj.Description}
             </p>
         </div>
         <div onClick={(e)=>{e.stopPropagation()}}>
-          <img onClick={()=>{index !== openedMore ? setOpenedMore(index):setOpenedMore(-1)}} className='absolute bottom-3 right-2 w-4 h-4 hidden group-hover:inline cursor-pointer' src={More} alt='More'/>
-          <div className={`${index !== openedMore ?"hidden":"bg-lightBlue min-w-[10.625rem] absolute bottom-8 right-4 border p-3 rounded-lg border-black sidebar"}`}>
+          <img onClick={()=>{index !== openedMore ? setOpenedMore(index):setOpenedMore(-1)}} className='absolute bottom-2 right-2  w-6 h-6 duration-500 transition-all rounded-full p-1 hover:bg-slate-300 hidden group-hover:inline cursor-pointer' src={More} alt='More'/>
+          <div className={`${index !== openedMore ?"hidden":"bg-realWhite min-w-[10.625rem] absolute shadow-xl bottom-8 right-4 border p-3 rounded-lg border-black sidebar"}`}>
               <ul>
                   {projectTrashDetails.map(pd=><li key={pd.title}>
-                    <Link className={`flex px-2 py-1 items-center hover:bg-lightGrey  rounded-md transition-all`}>
+                    <Link className={`flex px-2 py-1 items-center hover:bg-[#d9e9f6]  rounded-md transition-all`}>
                       <img className='mr-2' src={pd.icon} alt={pd.title} />
                       <p>{pd.title}</p>
                     </Link>

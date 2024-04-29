@@ -8,15 +8,14 @@ import { ProjectsEmpty } from '../../../assets'
 import { useLocation } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
-import EditProject from './EditProject'
+import {MagnifyingGlass } from 'react-loader-spinner'
 const Projects = () => {
-    //User
-
     const {state} = useLocation();
     const [fromChangePassword,setFromChangePassword] = useState(false);
     // getProjects function 
-
+    const [loading,setLoading] = useState(true);
     const getProjects = async()=>{
+          setLoading(true);
          try {
         const userToken = localStorage.getItem('userToken') 
         const response = await axios.get(`http://localhost:3000/project/get-all-projects/}`, {
@@ -28,7 +27,8 @@ const Projects = () => {
         });
 
         if (response.statusText == 'OK') {
-          setProjects(response.data)
+          setProjects(response.data);
+          setLoading(false);
         } else {
             console.log(response)
             throw new Error ("Authentication has failed")
@@ -78,20 +78,24 @@ const Projects = () => {
         setDisplayedProjects([...arr]);
     },[inputValue,Projects])
 
-    const [editProjectPopUp,setEditProjectPopUp] = useState(false);
-
-    const handleEditProjects = (ind)=>{
-        console.log(Projects[ind]);
-        setEditProjectPopUp(true);
-    }
-
     return (
     <>
-    <div className='flex flex-col gap-y-4' onClick={()=>{setOpenedMore(-1)}}>
+    <div className='flex flex-col gap-y-4 h-full' onClick={()=>{setOpenedMore(-1)}}>
         <DashboardNav currentLoc='Projects' action={handleSearch}/>
         <Functionalities/>
         <div className={`${displayedProjects.length === 0 ?"flex flex-wrap":"grid grid-cols-1 ss:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6"} gap-[15px] mt-3 flex-grow ${displayedProjects.length === 0 && "items-center justify-center"}`}>
-            {(displayedProjects.length !== 0 ? displayedProjects.map((proj,ind)=><Card key={proj.projectId} proj={proj} index={ind} openedMore={openedMore} setOpenedMore={setOpenedMore} handleEditProjects={handleEditProjects} />): <div className='flex flex-col items-center justify-start gap-y-2'>
+            {(displayedProjects.length !== 0 ? displayedProjects.map((proj,ind)=><Card key={ind} proj={proj} index={ind} openedMore={openedMore} setOpenedMore={setOpenedMore} />): loading ? <div className='h-full w-full flex justify-center items-center'>
+            <MagnifyingGlass
+                visible={true}
+                height="80"
+                width="80"
+                ariaLabel="magnifying-glass-loading"
+                wrapperStyle={{}}
+                wrapperClass="magnifying-glass-wrapper"
+                glassColor="#c0efff"
+                color="#59AEF8"
+                />
+            </div>:<div className='flex flex-col items-center justify-start gap-y-2'>
                 <img className='w-[9.375rem] h-[9.375rem]' src={ProjectsEmpty} alt="Projects_Empty" />
                 <div>
                     <h1 className='text-grey font-semibold text-center'>This is your projects section ... but it’s empty</h1>
@@ -103,7 +107,6 @@ const Projects = () => {
         </div>
     </div>
     <ToastContainer />
-    <EditProject visible={editProjectPopUp} closePopUp={()=>{setEditProjectPopUp(false)}}/>
     </>
   )
 }
