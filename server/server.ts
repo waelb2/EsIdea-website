@@ -6,7 +6,7 @@ import { connectDB } from './src/config/db'
 import session from 'express-session'
 import bodyParser from 'body-parser'
 import cors from 'cors'
-
+import cookieParser from "cookie-parser" ;
 dotenv.config()
 
 // Configuring the host
@@ -17,7 +17,7 @@ const DB_URI = process.env.DATABASE_URI
 const app: Express = express()
 
 // app config
-
+app.use(cookieParser());
 app.use(
   session({
     secret: 'secret_key',

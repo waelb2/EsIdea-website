@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.authMiddleWare = exports.isLoggedIn = exports.role = exports.isAuthenticated = void 0;
+exports.authorize = exports.verifyToken = exports.authMiddleWare = exports.isLoggedIn = exports.role = exports.isAuthenticated = void 0;
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
@@ -70,3 +70,30 @@ const authMiddleWare = (req, res, next) => __awaiter(void 0, void 0, void 0, fun
     }
 });
 exports.authMiddleWare = authMiddleWare;
+function verifyToken(req, res, next) {
+    const token = req.cookies.token;
+    if (!token) {
+        return res.status(403).send('Token is not provided');
+    }
+    jsonwebtoken_1.default.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+        if (err) {
+            return res.status(401).send('Unauthorized');
+        }
+        req.user = decoded;
+        next();
+    });
+}
+exports.verifyToken = verifyToken;
+// Middleware to authorize access based on user role
+function authorize(roles) {
+    return (req, res, next) => {
+        const user = req.user;
+        if (user && roles.includes(user.role)) {
+            next();
+        }
+        else {
+            return res.status(403).send('Forbidden');
+        }
+    };
+}
+exports.authorize = authorize;

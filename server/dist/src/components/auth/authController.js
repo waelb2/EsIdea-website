@@ -48,7 +48,7 @@ const login_get = (req, res) => {
 exports.login_get = login_get;
 //!!!!!!!!!!!! This must be in User model method and the secret must be in .env file
 const createToken = (user) => {
-    return jsonwebtoken_1.default.sign({ userId: user.id, email: user.email }, process.env.JWT_SECRET, {
+    return jsonwebtoken_1.default.sign({ userId: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET, {
         expiresIn: 30 * 24 * 60 * 60
     });
 };
@@ -86,7 +86,7 @@ const addPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         const updateResult = yield userModels_1.User.findOneAndUpdate({ email: email }, { $set: { password: hashedPassword } }, { runValidators: true, new: true });
         if (!updateResult) {
             // !!!!!!!!!!!Any error could happen here not just not found so better to say error updating the user's password
-            return res.status(404).json({ message: 'User not found' });
+            return res.status(404).json({ message: "Error updating the user's password" });
         }
         return res.status(200).json({ message: 'Password Added Successfully' });
     }

@@ -1,6 +1,8 @@
 import express, { Router } from "express";
 
 import { login_get, login_post,auth ,authenticate, authenticateCallback,failure, logout,addPassword,updatePassword,forgetPassword,resetPassword} from "./authController";
+import { authorize, verifyToken } from "./authMiddleware";
+import { UserRole } from "../user/userModels";
 
 const router: Router = express.Router();
 
@@ -25,7 +27,7 @@ router.get('/google/callback', authenticateCallback,
 //////////////////////////////// login ///////////////////////////////
 
 router.get("/",auth);
-router.get('/login',login_get);
+router.get('/login',verifyToken,authorize([UserRole.ADMIN]),login_get);
 router.post('/login',login_post);
 router.post('/addPassword',addPassword); 
 router.post('/updatePassword',updatePassword);

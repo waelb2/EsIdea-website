@@ -2,6 +2,8 @@ import { Request, Response, NextFunction } from 'express'
 import jwt, { JwtPayload } from 'jsonwebtoken'
 import dotenv from 'dotenv'
 import { AuthPayload } from './authInterface'
+import { UserRole } from '../user/userModels'
+import { UserInterface } from '../user/userInterface'
 dotenv.config()
 
 export const isAuthenticated = (
@@ -31,7 +33,7 @@ export const isAuthenticated = (
   }
 }
 
-export const role = (req: Request, res: Response, next: NextFunction) => {}
+export const role = (req: Request, res: Response, next: NextFunction) => { }
 
 export const isLoggedIn = (
   req: Request,
@@ -73,4 +75,33 @@ export const authMiddleWare = async (
       error: 'Unauthorized'
     })
   }
+}
+
+
+export function verifyToken(req: Request, res: Response, next: NextFunction,) {
+  const token = req.cookies.token as string;
+  if (!token) {
+    return res.status(403).send('Token is not provided');
+  }
+  jwt.verify(token, process.env.JWT_SECRET as string, (err: any, decoded: any) => {
+    if (err) {
+      return res.status(401).send('Unauthorized');
+    }
+    req.user = decoded;
+    next();
+  });
+}
+
+// Middleware to authorize access based on user role
+export function authorize(roles: UserRole[]) {
+  return (req: Request,
+    res: Response,
+    next: NextFunction) => {
+    const user = req.user! as UserInterface;
+    if (user && roles.includes(user.role as UserRole)) {
+      next();
+    } else {
+      return res.status(403).send('Forbidden');
+    }
+  };
 }

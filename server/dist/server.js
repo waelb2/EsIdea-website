@@ -20,6 +20,7 @@ const db_1 = require("./src/config/db");
 const express_session_1 = __importDefault(require("express-session"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
+const cookie_parser_1 = __importDefault(require("cookie-parser"));
 dotenv_1.default.config();
 // Configuring the host
 const HOST = process.env.HOST;
@@ -27,6 +28,7 @@ const PORT = process.env.PORT || 3000;
 const DB_URI = process.env.DATABASE_URI;
 const app = (0, express_1.default)();
 // app config
+app.use((0, cookie_parser_1.default)());
 app.use((0, express_session_1.default)({
     secret: 'secret_key',
     resave: false,

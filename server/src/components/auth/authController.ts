@@ -37,7 +37,7 @@ const login_get = (req: Request, res: Response) => {
 //!!!!!!!!!!!! This must be in User model method and the secret must be in .env file
 const createToken = (user: UserInterface) => {
   return jwt.sign(
-    { userId: user.id, email: user.email },
+    { userId: user.id, email: user.email,role:user.role },
     process.env.JWT_SECRET as string,
     {
       expiresIn: 30 * 24 * 60 * 60
@@ -86,7 +86,7 @@ const addPassword = async (req: Request, res: Response) => {
     )
     if (!updateResult) {
       // !!!!!!!!!!!Any error could happen here not just not found so better to say error updating the user's password
-      return res.status(404).json({ message: 'User not found' })
+      return res.status(404).json({ message: "Error updating the user's password" })
     }
     return res.status(200).json({ message: 'Password Added Successfully' })
   } catch (e) {
@@ -242,6 +242,7 @@ export {
   authenticateCallback,
   logout,
   failure,
+  
   addPassword,
   updatePassword,
   forgetPassword,
