@@ -20,12 +20,21 @@ const db_1 = require("./src/config/db");
 const express_session_1 = __importDefault(require("express-session"));
 const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
+const http_1 = __importDefault(require("http"));
+const socket_io_1 = require("socket.io");
 dotenv_1.default.config();
 // Configuring the host
 const HOST = process.env.HOST;
 const PORT = process.env.PORT || 3000;
 const DB_URI = process.env.DATABASE_URI;
 const app = (0, express_1.default)();
+const server = http_1.default.createServer(app);
+const io = new socket_io_1.Server(server, {
+    cors: {
+        origin: 'http://localhost:5174',
+        methods: ['GET', 'POST']
+    }
+});
 // app config
 app.use((0, express_session_1.default)({
     secret: 'secret_key',
@@ -46,11 +55,38 @@ app.use(body_parser_1.default.urlencoded({ extended: true }));
 // routes
 const routes_1 = __importDefault(require("./routes"));
 app.use(routes_1.default);
+const connectedUsers = {};
+io.on('connection', socket => {
+    console.log('New client connected');
+    // Handle joining a project room
+    socket.on('joinRoom', projectId => {
+        socket.join(projectId);
+        console.log(`User joined project: ${projectId}`);
+        console.log(connectedUsers);
+    });
+    socket.on('userData', userData => {
+        connectedUsers[socket.id] = userData;
+        // Broadcast updated user list to all clients
+        io.emit('connectedUsers', Object.values(connectedUsers));
+    });
+    // Handle receiving a new idea
+    socket.on('newIdea', data => {
+        const { idea, projectId } = data;
+        socket.broadcast.to(projectId).emit('newIdea', idea);
+        console.log(`New idea broadcasted to room: ${projectId}`);
+    });
+    // Handle disconnections
+    socket.on('disconnect', () => {
+        delete connectedUsers[socket.id];
+        io.emit('connectedUsers', Object.values(connectedUsers));
+        console.log('Client disconnected');
+    });
+});
 const start = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield (0, db_1.connectDB)(String(process.env.DATABASE_URI));
         console.log('DATABASE CONNECTED');
-        app.listen(PORT, () => {
+        server.listen(PORT, () => {
             console.log(`Server starting at http://localhost:${PORT}`);
         });
     }

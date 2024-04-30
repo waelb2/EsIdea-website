@@ -6,7 +6,8 @@ import { connectDB } from './src/config/db'
 import session from 'express-session'
 import bodyParser from 'body-parser'
 import cors from 'cors'
-
+import http from 'http'
+import { Server as SocketServer } from 'socket.io'
 dotenv.config()
 
 // Configuring the host
@@ -15,6 +16,14 @@ const PORT = process.env.PORT || 3000
 const DB_URI = process.env.DATABASE_URI
 
 const app: Express = express()
+
+const server = http.createServer(app)
+const io = new SocketServer(server, {
+  cors: {
+    origin: 'http://localhost:5174',
+    methods: ['GET', 'POST']
+  }
+})
 
 // app config
 
@@ -46,12 +55,50 @@ import routes from './routes'
 
 app.use(routes)
 
+interface ConnectedUsers {
+  [key: string]: { profilePicUrl: string }
+}
+
+const connectedUsers: ConnectedUsers = {}
+io.on('connection', socket => {
+  console.log('New client connected')
+
+  // Handle joining a project room
+  socket.on('joinRoom', projectId => {
+    socket.join(projectId)
+    console.log(`User joined project: ${projectId}`)
+    console.log(connectedUsers)
+  })
+
+  socket.on('userData', userData => {
+    connectedUsers[socket.id] = userData
+    // Broadcast updated user list to all clients
+    io.emit('connectedUsers', Object.values(connectedUsers))
+  })
+
+  // Handle receiving a new idea
+
+  socket.on('newIdea', data => {
+    const { idea, projectId } = data
+    socket.broadcast.to(projectId).emit('newIdea', idea)
+
+    console.log(`New idea broadcasted to room: ${projectId}`)
+  })
+
+  // Handle disconnections
+  socket.on('disconnect', () => {
+    delete connectedUsers[socket.id]
+    io.emit('connectedUsers', Object.values(connectedUsers))
+    console.log('Client disconnected')
+  })
+})
+
 const start = async () => {
   try {
     await connectDB(String(process.env.DATABASE_URI))
     console.log('DATABASE CONNECTED')
 
-    app.listen(PORT, () => {
+    server.listen(PORT, () => {
       console.log(`Server starting at http://localhost:${PORT}`)
     })
   } catch (error) {

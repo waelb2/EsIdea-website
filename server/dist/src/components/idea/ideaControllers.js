@@ -23,9 +23,24 @@ const getIdeasByProject = (req, res) => __awaiter(void 0, void 0, void 0, functi
             });
         }
         const ideas = yield ideaModels_1.Idea.find({
-            project_id: projectId
+            projectId
+        })
+            .populate('topic')
+            .populate('createdBy');
+        const formattedIdeas = ideas.map(idea => {
+            const author = {
+                name: idea.createdBy.lastName + ' ' + idea.createdBy.firstName,
+                email: idea.createdBy.email,
+                profilePicUrl: idea.createdBy.profilePicUrl
+            };
+            return {
+                createdBy: author,
+                topic: idea.topic.topicName,
+                content: idea.content,
+                creationDate: idea.creationDate
+            };
         });
-        res.status(201).json(ideas);
+        res.status(201).json(formattedIdeas);
     }
     catch (error) {
         console.log(error);
@@ -37,8 +52,7 @@ const getIdeasByProject = (req, res) => __awaiter(void 0, void 0, void 0, functi
 exports.getIdeasByProject = getIdeasByProject;
 const postIdea = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const userId = '662d1119ace155f48b676a7d';
-        // const { userId } = req.user as AuthPayload
+        const { userId } = req.user;
         const user = yield userModels_1.User.findById(userId);
         if (!user) {
             return res.status(404).json({
@@ -52,11 +66,13 @@ const postIdea = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 error: `Project with id : ${projectId} does not exist`
             });
         }
-        project.populate('collaborators.member');
+        ;
+        (yield project.populate('collaborators.member')).populate('coordinator');
         const collaboratorIds = project.collaborators.map(collaborator => {
             const objectId = collaborator.member._id;
             return objectId.toString();
         });
+        collaboratorIds.push(project.coordinator._id.toString());
         const foundUsers = collaboratorIds.filter(collaboratorId => collaboratorId === userId);
         if (foundUsers.length === 0) {
             return res.status(401).json({
@@ -76,6 +92,7 @@ const postIdea = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             content,
             creationDate: new Date()
         });
+        createdIdea.populate('topic');
         if (!createdIdea) {
             return res.status(500).json({
                 error: 'Error posting the idea'
@@ -83,9 +100,18 @@ const postIdea = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         }
         project.ideas.push(createdIdea);
         project.save();
-        res.status(201).json({
-            msg: 'Idea posted successfully'
-        });
+        const author = {
+            name: user.lastName + ' ' + user.firstName,
+            email: user.email,
+            profilePicUrl: user.profilePicUrl
+        };
+        const formattedIdea = {
+            createdBy: author,
+            topic: createdIdea.topic.topicName,
+            content: createdIdea.content,
+            creationDate: createdIdea.creationDate
+        };
+        res.status(201).json(formattedIdea);
     }
     catch (error) {
         console.log(error);

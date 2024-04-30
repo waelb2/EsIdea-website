@@ -5,6 +5,7 @@ import { AuthPayload } from '../auth/authInterface'
 import { User } from '../user/userModels'
 import { Project } from '../project/projectModels'
 import { Topic } from '../project/topicModel'
+import { auth } from '../auth/authController'
 
 export const getIdeasByProject = async (req: Request, res: Response) => {
   try {
@@ -15,9 +16,26 @@ export const getIdeasByProject = async (req: Request, res: Response) => {
       })
     }
     const ideas: IdeaInterface[] = await Idea.find({
-      project_id: projectId
+      projectId
     })
-    res.status(201).json(ideas)
+      .populate('topic')
+      .populate('createdBy')
+
+    const formattedIdeas = ideas.map(idea => {
+      const author = {
+        name: idea.createdBy.lastName + ' ' + idea.createdBy.firstName,
+        email: idea.createdBy.email,
+        profilePicUrl: idea.createdBy.profilePicUrl
+      }
+      return {
+        createdBy: author,
+        topic: idea.topic.topicName,
+        content: idea.content,
+        creationDate: idea.creationDate
+      }
+    })
+
+    res.status(201).json(formattedIdeas)
   } catch (error) {
     console.log(error)
     return res.status(500).json({
@@ -27,8 +45,7 @@ export const getIdeasByProject = async (req: Request, res: Response) => {
 }
 export const postIdea = async (req: Request, res: Response) => {
   try {
-    const userId = '662d1119ace155f48b676a7d'
-    // const { userId } = req.user as AuthPayload
+    const { userId } = req.user as AuthPayload
     const user = await User.findById(userId)
     if (!user) {
       return res.status(404).json({
@@ -48,12 +65,14 @@ export const postIdea = async (req: Request, res: Response) => {
         error: `Project with id : ${projectId} does not exist`
       })
     }
+    ;(await project.populate('collaborators.member')).populate('coordinator')
 
-    project.populate('collaborators.member')
     const collaboratorIds = project.collaborators.map(collaborator => {
       const objectId = collaborator.member._id
       return objectId.toString()
     })
+
+    collaboratorIds.push(project.coordinator._id.toString())
 
     const foundUsers = collaboratorIds.filter(
       collaboratorId => collaboratorId === userId
@@ -77,6 +96,7 @@ export const postIdea = async (req: Request, res: Response) => {
       content,
       creationDate: new Date()
     })
+    createdIdea.populate('topic')
 
     if (!createdIdea) {
       return res.status(500).json({
@@ -86,9 +106,19 @@ export const postIdea = async (req: Request, res: Response) => {
 
     project.ideas.push(createdIdea)
     project.save()
-    res.status(201).json({
-      msg: 'Idea posted successfully'
-    })
+
+    const author = {
+      name: user.lastName + ' ' + user.firstName,
+      email: user.email,
+      profilePicUrl: user.profilePicUrl
+    }
+    const formattedIdea = {
+      createdBy: author,
+      topic: createdIdea.topic.topicName,
+      content: createdIdea.content,
+      creationDate: createdIdea.creationDate
+    }
+    res.status(201).json(formattedIdea)
   } catch (error) {
     console.log(error)
     return res.status(500).json({

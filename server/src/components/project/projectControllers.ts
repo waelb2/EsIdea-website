@@ -55,9 +55,7 @@ const createProject = async (req: Request, res: Response) => {
       subTopics: string[]
       tags: string[]
     } = req.body
-    console.log('her')
-    console.log('here')
-    console.log(req.body)
+
     // Getting and validating project metadata
 
     const coordinator: UserInterface | null = await User.findById(userId)
