@@ -12,7 +12,6 @@ import Flipboard from './Flipboard.svg';
 import Folder from './Folder.svg';
 import google from './google.svg';
 import loginPic from './loginPic.svg';
-import logo from './logo.png';
 import More from './More.svg';
 import ProjectIcon from './ProjectIcon.svg';
 import ProjectsEmpty from './ProjectsEmpty.svg';
@@ -83,7 +82,6 @@ export {
     Folder,
     google,
     loginPic,
-    logo,
     More,
     ProjectIcon,
     ProjectsEmpty,

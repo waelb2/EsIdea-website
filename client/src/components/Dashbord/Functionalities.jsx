@@ -2,8 +2,9 @@
 import React,{useState} from 'react'
 import CreateNewProject from './pages/CreateNewProject'
 import { add,Folder,BrainstormingMethodIcon,BrainwritingMethodIcon,Flipboard } from '../../assets';
+import propTypes from 'prop-types'
 import UploadProject from './pages/UploadProject';
-const Functionalities = () => {
+const Functionalities = ({loadProjects}) => {
     const [createProjectVisible,setCreateProjectVisible] = useState(false);
     const [uploadProjectVisible,setUploadProjectVisible] = useState(false);
     const [currentPage,setCurrentPage] = useState(1);
@@ -64,7 +65,7 @@ const Functionalities = () => {
     const [method,setMethod] = useState("");
     return (
             <div className='flex flex-col gap-y-1'>
-                <div onClick={()=>{setCreateProjectVisible(true)}} className={`self-end font-light text-xs text-primary hover:underline ${!createProjectVisible && "cursor-pointer"}`}>
+                <div onClick={()=>{setCreateProjectVisible(true);setCurrentPage(1)}} className={`self-end font-light text-xs text-primary hover:underline ${!createProjectVisible && "cursor-pointer"}`}>
                     Show all methodes
                 </div>
                 <div className='flex gap-6 overflow-x-auto'>
@@ -75,11 +76,14 @@ const Functionalities = () => {
                         </div>)
                     )}
                 </div>
-                <CreateNewProject method={method} setMethod={setMethod} visible={createProjectVisible} currentPage={currentPage} closePopUp={closePopUp} nextPage={nextPage} prevPage={prevPage}/>
+                <CreateNewProject method={method} setMethod={setMethod} visible={createProjectVisible} currentPage={currentPage} loadProjects={loadProjects} closePopUp={closePopUp} nextPage={nextPage} prevPage={prevPage}/>
                 <UploadProject visible={uploadProjectVisible} closePopUp={()=>{
                     setUploadProjectVisible(false);
                 }} />
             </div>
   )
+}
+Functionalities.propTypes = {
+    loadProjects:propTypes.func.isRequired
 }
 export default Functionalities

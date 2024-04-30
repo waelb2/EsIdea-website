@@ -1,6 +1,6 @@
 // eslint-disable-next-line no-unused-vars
 import React from 'react'; // Importing React library
-import { logo } from '../../assets'; // Importing the logo image
+import {whiteLogo } from '../../assets'; // Importing the logo image
 import { RiArrowRightFill } from 'react-icons/ri'; // Importing the RiArrowRightFill icon from react-icons
 
 // Defining a functional component named Footer
@@ -12,7 +12,7 @@ const Footer = () => {
       <div className='w-full flex flex-col justify-center items-center bg-[#3A86FF] py-4 text-center'>
         {/* Heading */}
         <div className='flex flex-col gap-2'>
-          <p className='text-[#FEFEFE] opacity-65 text-xl '>Brainstorm a Brighter Tomorrow</p>
+          <p className='text-realWhite text-xl '>Brainstorm a Brighter Tomorrow</p>
           <p className='text-[#FCFFFF] text-2xl sm:text-4xl font-bold'>Beautiful Projects are waiting</p>
           <p className='text-[#FCFFFF] text-2xl sm:text-4xl font-bold'>for Teams.</p>
         </div>
@@ -26,7 +26,7 @@ const Footer = () => {
       {/* Second section of the footer */}
       <div className='flex flex-col justify-center items-center bg-[#55555E] py-4 text-center'>
         {/* Logo */}
-        <img className='mt-1' src={logo} alt="Logo" />
+        <img className='w-32 h-10 mt-1' src={whiteLogo} alt="ESIdea_logo" />
         {/* Made by text */}
         <p className='text-white font-semibold mt-5'>Made by ❤️ for ESI community</p>
         {/* Footer text */}

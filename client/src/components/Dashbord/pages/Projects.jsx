@@ -82,8 +82,8 @@ const Projects = () => {
     <>
     <div className='flex flex-col gap-y-4 h-full' onClick={()=>{setOpenedMore(-1)}}>
         <DashboardNav currentLoc='Projects' action={handleSearch}/>
-        <Functionalities/>
-        <div className={`${displayedProjects.length === 0 ?"flex flex-wrap":"grid grid-cols-1 ss:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6"} gap-[15px] mt-3  ${displayedProjects.length === 0 && "items-center justify-center"}`}>
+        <Functionalities loadProjects={getProjects}/>
+        <div className={`${displayedProjects.length === 0 ?"flex flex-wrap":"grid grid-cols-1 ss:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6"} ${loading && "flex-grow"} gap-[15px] mt-3  ${displayedProjects.length === 0 && "items-center justify-center"}`}>
             {(displayedProjects.length !== 0 ? displayedProjects.map((proj,ind)=><Card key={ind} proj={proj} index={ind} openedMore={openedMore} setOpenedMore={setOpenedMore} />): loading ? <div className='h-full w-full flex justify-center items-center'>
             <MagnifyingGlass
                 visible={true}

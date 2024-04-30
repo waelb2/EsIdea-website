@@ -1,6 +1,9 @@
 import { google,BackgroundLandingPage} from '../../assets';
 // Defining a functional component named LandingPageFirstSection
 const LandingPageFirstSection = () => {
+  const signUp = ()=>{
+    window.open("http://localhost:3000/auth/google","_self")
+  }
   return (
     // Container for the first section of the landing page
     <div className='flex flex-col justify-center items-center my-16 bg-[length:105%_65%] bg-no-repeat bg-right-bottom' style={{backgroundImage: `url(${BackgroundLandingPage})`}}>
@@ -10,7 +13,7 @@ const LandingPageFirstSection = () => {
       <p className='text-4xl font-extrabold md:text-6xl'>Collaborative </p>
       <p className='text-4xl font-extrabold md:text-6xl mb-14'>Idea Collection </p>
       {/* Button for continuing with Google */}
-      <div className='mt-12 p-5 bg-white rounded-full'>
+      <div onClick={signUp} className='mt-12 p-5 bg-white rounded-full'>
         <button className='flex justify-center items-center bg-skyBlue px-10 py-3 rounded-full shadow-custom hover:shadow-hover duration-500'>
           <img className='h-6 mr-2' src={google} alt="Google logo" />
           <p className='text-white font-bold'>Continue with Google</p>

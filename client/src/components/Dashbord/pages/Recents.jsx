@@ -4,11 +4,7 @@ import DashboardNav from '../DashboardNav'
 import Functionalities from '../Functionalities'
 import Card from './Card'
 import {RecentsEmpty } from '../../../assets'
-import EditProject from './EditProject'
-import useUser from '../../../hooks/useUser'
 const Recents = () => {
-    //User
-    const { user } = useUser()
     const [openedMore,setOpenedMore] = useState(-1);
     const [Projects,setProjects] = useState([
         {
@@ -41,19 +37,12 @@ const Recents = () => {
         setDisplayedProjects([...arr]);
     },[inputValue,Projects])
 
-    const [editProjectPopUp,setEditProjectPopUp] = useState(false);
-
-    const handleEditProjects = (ind)=>{
-        console.log(Projects[ind]);
-        setEditProjectPopUp(true);
-    }
-
     return (
     <div className='flex flex-col gap-y-4' onClick={()=>{setOpenedMore(-1)}}>
         <DashboardNav currentLoc='Recents' action={handleSearch}/>
         <Functionalities/>
         <div className={`${displayedProjects.length === 0 ?"flex flex-wrap":"grid grid-cols-1 ss:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6"} gap-[15px] mt-3 flex-grow ${displayedProjects.length === 0 && "items-center justify-center"}`}>
-            {(displayedProjects.length !== 0 ? displayedProjects.map((proj,ind)=><Card key={proj.projectId} proj={proj} index={ind} openedMore={openedMore} setOpenedMore={setOpenedMore} handleEditProjects={handleEditProjects} />): <div className='flex flex-col items-center justify-start gap-y-2'>
+            {(displayedProjects.length !== 0 ? displayedProjects.map((proj,ind)=><Card key={proj.projectId} proj={proj} index={ind} openedMore={openedMore} setOpenedMore={setOpenedMore}  />): <div className='flex flex-col items-center justify-start gap-y-2'>
                 <img className='w-[9.375rem] h-[9.375rem]' src={RecentsEmpty} alt="Projects_Empty" />
                 <div>
                     <h1 className='text-grey font-semibold text-center'>No Recent Maps</h1>
@@ -62,7 +51,6 @@ const Recents = () => {
                 </div>
             </div>)}
         </div>
-        <EditProject visible={editProjectPopUp} closePopUp={()=>{setEditProjectPopUp(false)}}/>
     </div>
   )
 }

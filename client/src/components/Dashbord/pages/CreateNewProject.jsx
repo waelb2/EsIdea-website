@@ -10,7 +10,7 @@ import { ColorRing } from 'react-loader-spinner';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 export const DependenciesContext = createContext();
-const CreateNewProject = ({method,setMethod,visible,closePopUp,currentPage,nextPage,prevPage}) => {
+const CreateNewProject = ({method,setMethod,visible,closePopUp,currentPage,nextPage,prevPage,loadProjects}) => {
     const navigate = useNavigate()
     const [image, setImage] = useState(null)
     const [clubs,setClubs] = useState(null);
@@ -191,7 +191,7 @@ const CreateNewProject = ({method,setMethod,visible,closePopUp,currentPage,nextP
                 progress: undefined,
                 theme: "colored",
                 });
-            console.log('Response:', response.data);
+                loadProjects();
         })
         .catch(error => { 
             console.error('Error:', error.response.data.error);
@@ -439,6 +439,7 @@ CreateNewProject.propTypes = {
     closePopUp:propTypes.func.isRequired,
     nextPage:propTypes.func.isRequired,
     prevPage:propTypes.func.isRequired,
-    currentPage:propTypes.number.isRequired
+    currentPage:propTypes.number.isRequired,
+    loadProjects:propTypes.func.isRequired
 }
 export default CreateNewProject
