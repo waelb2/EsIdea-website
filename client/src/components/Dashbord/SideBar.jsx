@@ -14,7 +14,7 @@ const SideBar = () => {
             </div>
             <ul className='flex flex-col gap-3'>
                 {NavLinks.map( nav => (
-                    <li onClick={()=>{toggle && setToggle(false)}} className={`${pathname === nav.path ? "bg-skyBlue" : null} w-56 rounded-lg cursor-pointer`} key={nav.title}>
+                    <li onClick={()=>{toggle && setToggle(false)}} className={`${pathname === nav.path ? "bg-primary" : null} w-56 rounded-lg cursor-pointer`} key={nav.title}>
                         <Link className='text-white flex items-center gap-3 p-2' to={`${nav.path}`}>
                             <img className='object-contain w-6 h-6' src={nav.icon} alt={`${nav.title}_icon`} />
                             <p className='font-medium text-sm'>{nav.title}</p>

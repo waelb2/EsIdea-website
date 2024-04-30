@@ -379,7 +379,7 @@ const CreateNewProject = ({method,setMethod,visible,closePopUp,currentPage,nextP
                             </div>
                             <div className='flex flex-col w-full gap-1 mb-3'>
                                 <div className='flex justify-between items-center'>
-                                    <label htmlFor='subTopic' className='text-black font-semibold'>Do you want to add sub topics</label>
+                                    <h1 className='text-black font-semibold'>Do you want to add sub topics</h1>
                                     <button onClick={handleAddNewSubTopic} className='bg-skyBlue py-1 px-2 rounded-lg text-realWhite text-nowrap'>Add new +</button>
                                 </div>
                                 <div className={`${addSubTopicState ? "block":"hidden"} flex justify-between items-center border rounded-md border-gray-700 p-2 gap-2`}>

@@ -5,6 +5,7 @@ import { Colaborators, Edit, ExportProj, More, MoveFavorite, OpenProj, Publish, 
 import { projectContext } from '../Dashbord';
 
 const Card = ({proj,index,openedMore,setOpenedMore}) => {
+  console.log(proj)
   const {setprojectToEdit,setEditProjectPopUp,setCollaborators,setCollaboratorPopUp} = useContext(projectContext);
   const projectDetails = [
     {

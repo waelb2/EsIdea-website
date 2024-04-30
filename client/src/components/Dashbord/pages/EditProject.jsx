@@ -42,10 +42,10 @@ const EditProject = ({visible,closePopUp,projectToEdit}) => {
                                 <input value={projectToEdit.ProjectTitle} onChange={(e)=>{setProjectName(e.target.value)}} id='projectTitle' className='outline-none text-sm border-[1px] border-grey rounded-md py-2 px-4' type="text" placeholder='Project title' />
                             </div>
                             <div className='flex flex-col w-full ss:w-[90%] gap-1 mb-3'>
-                                <label htmlFor="projectDescription" className='text-black font-semibold'>
+                                <label htmlFor="projectDescriptionEdit" className='text-black font-semibold'>
                                     Give us a new description
                                 </label>
-                                <textarea value={projectToEdit.Description} placeholder='Description' onChange={(e)=>{setDescription(e.target.value)}} className='outline-none text-sm border-[1px] border-grey rounded-md resize-none py-2 px-4' name="Description" id="projectDescription" cols="30" rows="3">
+                                <textarea value={projectToEdit.Description} placeholder='Description' onChange={(e)=>{setDescription(e.target.value)}} className='outline-none text-sm border-[1px] border-grey rounded-md resize-none py-2 px-4' name="Description" id="projectDescriptionEdit" cols="30" rows="3">
                                     
                                 </textarea>
                             </div>
