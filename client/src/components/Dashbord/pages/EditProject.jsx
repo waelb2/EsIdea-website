@@ -2,11 +2,12 @@
 import React,{useState,useRef} from 'react'
 import propTypes from 'prop-types'
 import { blackClose } from '../../../assets'
-const EditProject = ({visible,closePopUp,idProject}) => {
+const EditProject = ({visible,closePopUp,projectToEdit}) => {
     const [image, setImage] = useState(null)
     const [projectName,setProjectName] = useState("");
     const [description,setDescription] = useState("");
-    const [banner,setBanner] = useState(null);
+    const [banner,setBanner] = useState(projectToEdit.ThumbnailUrl
+    );
     const handleDragOver = (event)=>{
         event.preventDefault();
     }
@@ -38,13 +39,14 @@ const EditProject = ({visible,closePopUp,idProject}) => {
                                 <label htmlFor="projectTitle" className='text-black font-semibold'>
                                     Give us a new title
                                 </label>
-                                <input onChange={(e)=>{setProjectName(e.target.value)}} id='projectTitle' className='outline-none text-sm border-[1px] border-grey rounded-md py-2 px-4' type="text" placeholder='Project title' />
+                                <input value={projectToEdit.ProjectTitle} onChange={(e)=>{setProjectName(e.target.value)}} id='projectTitle' className='outline-none text-sm border-[1px] border-grey rounded-md py-2 px-4' type="text" placeholder='Project title' />
                             </div>
                             <div className='flex flex-col w-full ss:w-[90%] gap-1 mb-3'>
                                 <label htmlFor="projectDescription" className='text-black font-semibold'>
                                     Give us a new description
                                 </label>
-                                <textarea placeholder='Description' onChange={(e)=>{setDescription(e.target.value)}} className='outline-none text-sm border-[1px] border-grey rounded-md resize-none py-2 px-4' name="Description" id="projectDescription" cols="30" rows="3">
+                                <textarea value={projectToEdit.Description} placeholder='Description' onChange={(e)=>{setDescription(e.target.value)}} className='outline-none text-sm border-[1px] border-grey rounded-md resize-none py-2 px-4' name="Description" id="projectDescription" cols="30" rows="3">
+                                    
                                 </textarea>
                             </div>
                             <div className='flex flex-col w-full ss:w-[90%] gap-1 mb-3'>
@@ -61,7 +63,7 @@ const EditProject = ({visible,closePopUp,idProject}) => {
                                         </div>:
                                         <div className='flex flex-col items-center justify-center gap-1'>
                                             <h1 className='text-black'>Banner selected:</h1>
-                                            <img className='rounded-md object-contain' src={banner} alt="banner" />
+                                            <img className='rounded-md object-contain w-28' src={banner} alt="banner" />
                                             <button onClick={()=>{setBanner(null)}} className='bg-red text-realWhite py-1 px-2 rounded-lg'>Cancel</button>
                                         </div>
                                     }
@@ -80,7 +82,7 @@ const EditProject = ({visible,closePopUp,idProject}) => {
 EditProject.propTypes={
     visible:propTypes.bool.isRequired,
     closePopUp:propTypes.func.isRequired,
-    idProject:propTypes.string.isRequired
+    projectToEdit:propTypes.object.isRequired
 }
 
 export default EditProject

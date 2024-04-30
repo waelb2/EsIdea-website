@@ -15,7 +15,6 @@ const Functionalities = () => {
     }
     const closePopUp = ()=>{
         setCreateProjectVisible(false);
-        setTimeout(()=>{setCurrentPage(1);},1000);
     }
     const functionality = [
         {

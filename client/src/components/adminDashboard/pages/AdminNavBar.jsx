@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import React,{useContext, useState} from 'react'
 import propTypes from 'prop-types'
-import { User, notification,blackClose, ChangePFP, ChangePassIcon, HelpIcon, FeedBackIcon, LogoutIcon } from '../../../assets'
+import {notification,blackClose, ChangePFP, ChangePassIcon, HelpIcon, FeedBackIcon, LogoutIcon } from '../../../assets'
 import { Link } from 'react-router-dom'
 import useUser from '../../../hooks/useUser'
 const AdminNavBar = ({location}) => {
@@ -36,7 +36,7 @@ const AdminNavBar = ({location}) => {
         <div className='flex gap-2 items-center'>
             <img className='w-8 h-8 cursor-pointer' src={notification} alt="Notification" />
             <img onClick={()=>{setToggle(prev => !prev)}} className='w-10 h-10 cursor-pointer rounded-full border-2 border-skyBlue p-0.5' src={user.profilePicUrl} alt="User" />
-            <div className={`${!toggle ? "hidden":"flex border-[2px]"} p-4 bg-realWhite shadow-xl absolute z-20 top-16 right-6 mx-4 my-2 min-w-[250px] rounded-xl sidebar flex-col`}>
+            <div className={`${!toggle ? "hidden":"flex border-[2px]"} p-4 bg-realWhite shadow-xl absolute z-20 top-16 right-6 mx-4 my-2 min-w-[250px] rounded-xl slideDown overflow-hidden flex-col`}>
                     <img onClick={()=>{setToggle(prev => !prev)}} className='w-5 h-5 object-contain cursor-pointer fixed top-2 right-3' src={blackClose} alt="Close"/>
                     <div className='flex flex-col items-center mb-3'>
                         <img className='w-20 h-20 object-contain rounded-full border-2 border-skyBlue p-0.5' src={user.profilePicUrl} alt="UserPic" />

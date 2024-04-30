@@ -17,7 +17,7 @@ const CardTrash = ({proj,index,openedMore,setOpenedMore}) => {
         }
     ]
   return (
-    <div className={`group flex flex-col w-full  rounded-xl   relative transition-all duration-500   hover:shadow-lg borderGrey cursor-pointer`}>
+    <div className={`group flex flex-col w-full  rounded-xl   relative transition-all duration-500   hover:shadow-lg bg-slate-100 border-2 cursor-pointer`}>
         {/* <input  onChange={handleCheck} className='absolute top-2 left-2 outline-none border-none scale-110 cursor-pointer hidden group-hover:inline ' type="checkbox" /> */}
         <img className='h-32 object-cover rounded-t-xl' src={proj.ThumbnailUrl} alt="Project_Picture" />
         <div className=' flex flex-col gap-y-1 p-3 bg-slate-100  rounded-b-xl flex-grow'>
@@ -31,7 +31,7 @@ const CardTrash = ({proj,index,openedMore,setOpenedMore}) => {
         </div>
         <div onClick={(e)=>{e.stopPropagation()}}>
           <img onClick={()=>{index !== openedMore ? setOpenedMore(index):setOpenedMore(-1)}} className='absolute bottom-2 right-2  w-6 h-6 duration-500 transition-all rounded-full p-1 hover:bg-slate-300 hidden group-hover:inline cursor-pointer' src={More} alt='More'/>
-          <div className={`${index !== openedMore ?"hidden":"bg-realWhite min-w-[10.625rem] absolute shadow-xl bottom-8 right-4 border p-3 rounded-lg border-black sidebar"}`}>
+          <div className={`${index !== openedMore ?"hidden":"bg-realWhite min-w-[10.625rem] absolute shadow-xl bottom-8 right-4 border p-3 rounded-lg border-black slide_down"} overflow-hidden`}>
               <ul>
                   {projectTrashDetails.map(pd=><li key={pd.title}>
                     <Link className={`flex px-2 py-1 items-center hover:bg-[#d9e9f6]  rounded-md transition-all`}>

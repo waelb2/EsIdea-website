@@ -180,6 +180,17 @@ const CreateNewProject = ({method,setMethod,visible,closePopUp,currentPage,nextP
             'Authorization': `Bearer ${userToken}`
         },
         }).then(response => {
+            closePopUp()
+            toast.success('Project Created succesfuly.', {
+                position: "top-center",
+                autoClose: 8000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: false,
+                draggable: false,
+                progress: undefined,
+                theme: "colored",
+                });
             console.log('Response:', response.data);
         })
         .catch(error => { 
@@ -194,7 +205,7 @@ const CreateNewProject = ({method,setMethod,visible,closePopUp,currentPage,nextP
             position: "top-center",
             autoClose: 5000,
             hideProgressBar: false,
-            closeOnClick: true,
+            closeOnClick: false,
             pauseOnHover: false,
             draggable: false,
             progress: undefined,
@@ -315,7 +326,7 @@ const CreateNewProject = ({method,setMethod,visible,closePopUp,currentPage,nextP
                                     {
                                         displayedCollaborators.map((collaborator)=><div  className='flex justify-between items-center border rounded-md border-black p-2' key={collaborator.name}>
                                              <div className='flex gap-2'>
-                                                <img className='w-11 h-11 rounded-full' src={collaborator.profilePicUrl !== "" ? collaborator.profilePicUrl : User} alt="user" />
+                                                <img className='w-11 h-11 rounded-full' src={collaborator.profilePicUrl  ? collaborator.profilePicUrl : User} alt="user" />
                                                 <div className='flex flex-col justify-center'>
                                                     <p className='font-medium text-sm'>{collaborator.firstName + ' ' + collaborator.lastName}</p>
                                                     <p className='text-sm'>{collaborator.email}</p>
@@ -341,7 +352,7 @@ const CreateNewProject = ({method,setMethod,visible,closePopUp,currentPage,nextP
                                     </div>:<div className='flex flex-col gap-1 overflow-y-auto scroll-smooth max-h-56'>
                                         {collaborators.map((collaborator,ind)=><div className='flex justify-between items-center border rounded-md border-black p-1 w-full' key={collaborator.email}>
                                             <div className='flex gap-2'>
-                                                <img className='w-11 h-11 rounded-full' src={collaborator.profilePicUrl !== "" ? collaborator.profilePicUrl : User} alt="user" />
+                                                <img className='w-11 h-11 rounded-full' src={collaborator.profilePicUrl  ? collaborator.profilePicUrl : User} alt="user" />
                                                 <div className='flex flex-col justify-center'>
                                                     <p className='font-medium text-sm'>{collaborator.firstName + ' ' + collaborator.lastName}</p>
                                                     <p className='text-sm'>{collaborator.email}</p>

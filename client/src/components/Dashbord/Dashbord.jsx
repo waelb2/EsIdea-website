@@ -9,9 +9,9 @@ export const projectContext = createContext();
 const Dashbord = () => {
     const [editProjectPopUp,setEditProjectPopUp] = useState(false);
     const [collaboratorsPopUp,setCollaboratorPopUp] = useState(false);
-    const [idProject,setIdProjects] = useState('');
+    const [projectToEdit,setprojectToEdit] = useState({});
     const [collaborators,setCollaborators] = useState([]);
-    const editProjectDependencies = {setEditProjectPopUp,setIdProjects,setCollaborators,setCollaboratorPopUp}
+    const editProjectDependencies = {setEditProjectPopUp,setprojectToEdit,setCollaborators,setCollaboratorPopUp}
     const DivContainer = useRef();
     return (
         <div className='w-full h-screen flex justify-between'>
@@ -22,7 +22,7 @@ const Dashbord = () => {
                 </projectContext.Provider>
             </div>
             <ScrollToTop container={DivContainer}/>
-            <EditProject visible={editProjectPopUp} closePopUp={()=>{setEditProjectPopUp(false)}} idProject={idProject}/>
+            <EditProject visible={editProjectPopUp} closePopUp={()=>{setEditProjectPopUp(false)}} projectToEdit={projectToEdit}/>
             <DisplayCollaborators visible={collaboratorsPopUp} closePopUp={()=>{setCollaboratorPopUp(false)}} collaborators={collaborators}/>
         </div>
   )
