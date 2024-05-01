@@ -4,7 +4,7 @@ import {Eye, hidePassword} from '../../assets';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import useUser from '../../hooks/useUser';
-
+import { ToastContainer, toast } from 'react-toastify';
 const Form = () => {
     const { setUser } = useUser();
     const navigate = useNavigate();
@@ -52,7 +52,16 @@ const Form = () => {
               navigate(user.role === 'admin' ? "/Admin" : "/Home");
             })
             .catch((error) => {
-              console.log(error.message);
+                toast.error(error.message, {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: false,
+                    draggable: false,
+                    progress: undefined,
+                    theme: "colored",
+                    });
             });
         }
       };
@@ -88,6 +97,7 @@ const Form = () => {
             <p className='text-center mt-4 text-[0.875rem]'>
             Don’t have an account? <span className='text-skyBlue hover:underline inline'>Sign up</span>
             </p>
+            <ToastContainer/>
     </form>
   )
 }
