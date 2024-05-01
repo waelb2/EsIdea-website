@@ -8,8 +8,8 @@ const SideBar = () => {
     const [toggle,setToggle] = useState(false);
     return (
         <aside className={`${toggle ? "left-0":"-left-64"} w-64 h-screen bg-darkBlue px-4 py-5 absolute md:sticky md:left-0 transition-all duration-500 z-10 flex-shrink-0`}>
-            <div className={`flex items-center ${toggle ? "justify-between":"justify-center"} mb-9`}>
-                <img className='w-32 h-10' src={whiteLogo} alt="ESIdea_logo" />
+            <div className={`flex items-center justify-between md:justify-center mb-9`}>
+                <img className='w-32 h-10 md:self-center' src={whiteLogo} alt="ESIdea_logo" />
                 <img onClick={()=>{setToggle(false)}} className='w-4 h-4 object-contain cursor-pointer block md:hidden' src={close} alt="close_icon" />
             </div>
             <ul className='flex flex-col gap-3'>
