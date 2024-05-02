@@ -1,26 +1,21 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useContext, useEffect, useState } from 'react'
-import axios  from 'axios'
 import DashboardNav from '../DashboardNav'
 import Functionalities from '../Functionalities'
 import Card from './Card'
 import { ProjectsEmpty } from '../../../assets'
 import { useLocation } from 'react-router-dom'
-import { ToastContainer, toast } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css';
 import {MagnifyingGlass } from 'react-loader-spinner'
 import { projectContext } from '../Dashbord'
-
 const Projects = () => {
+    const {allProjects,loading,displayMessageToUser} = useContext(projectContext)
     const {state} = useLocation();
     const [fromChangePassword,setFromChangePassword] = useState(false);
-    // getProjects function 
-    const [loading,setLoading] = useState(true);
-    const {getProjects} = useContext(projectContext)
-
+    const [projects,setProjects] = useState([]);
     useEffect(()=>{
-        getProjects(setProjects, setLoading)
-    },[])
+        const filteredProjects = allProjects.filter(project => !project.isTrashed)
+        setProjects(filteredProjects);
+    },[allProjects])
     useEffect(()=>{
         if(state){
           // eslint-disable-next-line no-prototype-builtins
@@ -31,23 +26,17 @@ const Projects = () => {
       },[state])
       useEffect(()=>{
         if(fromChangePassword){
-          toast.success('Password changed successfully.', {
-            position: "top-center",
-            autoClose: 8000,
-            hideProgressBar: false,
-            closeOnClick: true,
-            pauseOnHover: false,
-            draggable: false,
-            progress: undefined,
-            theme: "colored",
-            });
+            displayMessageToUser("success","Password changed successfully.")
         }
     },[fromChangePassword])
 
     const [openedMore,setOpenedMore] = useState(-1);
-    const [Projects,setProjects] = useState([
-    ]);
     const [displayedProjects,setDisplayedProjects] = useState([]);
+    const handleMoveToTrash = (index) =>{
+        const arr = displayedProjects.filter((_,ind)=>ind !== index)
+        setDisplayedProjects(arr);
+        displayMessageToUser("success","Project moved to trash.")
+    }
 
     const [inputValue,setInputValue] = useState("");
 
@@ -55,17 +44,17 @@ const Projects = () => {
         setInputValue(e.target.value);
     }
     useEffect(()=>{
-        const arr = Projects.filter((proj)=>proj.ProjectTitle.toLowerCase().includes(inputValue.toLowerCase()));
+        const arr = projects.filter((proj)=>proj.ProjectTitle.toLowerCase().includes(inputValue.toLowerCase()));
         setDisplayedProjects([...arr]);
-    },[inputValue,Projects])
+    },[inputValue,projects])
 
     return (
     <>
     <div className='flex flex-col gap-y-4 h-full' onClick={()=>{setOpenedMore(-1)}}>
         <DashboardNav currentLoc='Projects' action={handleSearch}/>
-        <Functionalities loadProjects={getProjects}/>
+        <Functionalities/>
         <div className={`${displayedProjects.length === 0 ?"flex flex-wrap":"grid grid-cols-1 ss:grid-cols-2 lg:grid-cols-3 xl:grid-cols-6"} ${loading && "flex-grow"} gap-[15px] mt-3  ${displayedProjects.length === 0 && "items-center justify-center"}`}>
-            {(displayedProjects.length !== 0 ? displayedProjects.map((proj,ind)=><Card key={ind} proj={proj} index={ind} openedMore={openedMore} setOpenedMore={setOpenedMore} />): loading ? <div className='h-full w-full flex justify-center items-center'>
+            {(displayedProjects.length !== 0 ? displayedProjects.map((proj,ind)=><Card key={ind} proj={proj} index={ind} openedMore={openedMore} setOpenedMore={setOpenedMore} handleMoveToTrash={handleMoveToTrash} />): loading ? <div className='h-full w-full flex justify-center items-center'>
             <MagnifyingGlass
                 visible={true}
                 height="80"
@@ -87,7 +76,6 @@ const Projects = () => {
             </div>)}
         </div>
     </div>
-    <ToastContainer />
     </>
   )
 }

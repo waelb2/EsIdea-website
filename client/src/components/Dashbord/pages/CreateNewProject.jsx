@@ -3,14 +3,15 @@ import React, { createContext, useEffect, useRef, useState } from 'react'
 import { BrainstormingMethodIcon, BrainwritingMethodIcon, Search, blackClose,Back, ProjectsEmpty, dragdropfiles, User } from '../../../assets';
 import propTypes from 'prop-types';
 import Select from './Select'
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { useDebounce } from '../constants';
 import { ColorRing } from 'react-loader-spinner';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { projectContext } from '../Dashbord';
 export const DependenciesContext = createContext();
-const CreateNewProject = ({method,setMethod,visible,closePopUp,currentPage,nextPage,prevPage,loadProjects}) => {
+const CreateNewProject = ({method,setMethod,visible,closePopUp,currentPage,nextPage,prevPage}) => {
+    const {getProjects,displayMessageToUser} = useContext(projectContext)
     const navigate = useNavigate()
     const [image, setImage] = useState(null)
     const [clubs,setClubs] = useState(null);
@@ -53,6 +54,7 @@ const CreateNewProject = ({method,setMethod,visible,closePopUp,currentPage,nextP
             }
         }
     ]
+    const createButtonRef = useRef();
     const displayedMethods = methods.filter(method=>method.title.toLocaleLowerCase().includes(inputValue.toLocaleLowerCase()))
     const formattedTags = tags.map(tag=>{
         return (
@@ -112,16 +114,7 @@ const CreateNewProject = ({method,setMethod,visible,closePopUp,currentPage,nextP
             setSubTopicInputValue("");
             setAddSubTopicState(false);
         }else{
-            toast.error('You can\'t add empty sub topic!', {
-                position: "top-center",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: false,
-                draggable: false,
-                progress: undefined,
-                theme: "colored",
-                });
+            displayMessageToUser("error","You can't add empty sub topic!");
         }
     }
     const handleRemoveSubTopic = (ind)=>{
@@ -176,22 +169,14 @@ const CreateNewProject = ({method,setMethod,visible,closePopUp,currentPage,nextP
         });
     }
     const createProject = async ()=>{
+        createButtonRef.current.disabled = true;
         axios.post('http://localhost:3000/project/create-project',myForm, {headers: {
             'Authorization': `Bearer ${userToken}`
         },
         }).then(response => {
-            closePopUp()
-            toast.success('Project Created succesfuly.', {
-                position: "top-center",
-                autoClose: 8000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: false,
-                draggable: false,
-                progress: undefined,
-                theme: "colored",
-                });
-                loadProjects();
+            closePopUp();
+            displayMessageToUser("success","Project Created succesfuly.")
+            getProjects();
         })
         .catch(error => { 
             console.error('Error:', error.response.data.error);
@@ -201,16 +186,7 @@ const CreateNewProject = ({method,setMethod,visible,closePopUp,currentPage,nextP
         });
     }
     const displayError = ()=>{
-        toast.error('Please fill all fields!', {
-            position: "top-center",
-            autoClose: 5000,
-            hideProgressBar: false,
-            closeOnClick: false,
-            pauseOnHover: false,
-            draggable: false,
-            progress: undefined,
-            theme: "colored",
-            });
+        displayMessageToUser("error","Please fill all fields!")
     }
     const handleNext=()=>{
         switch(currentPage){
@@ -424,11 +400,10 @@ const CreateNewProject = ({method,setMethod,visible,closePopUp,currentPage,nextP
                         </div>
                         <div className={`w-full ss:px-3 self-end  ${currentPage>1 && currentPage <=5 ? "flex justify-end" : "hidden" }`}>
                                 <button onClick={handleNext} className={`bg-skyBlue px-3 py-1 rounded-md text-white ${currentPage < 5 ?"inline":"hidden"}`}>Next</button>
-                                <button onClick={createProject} className={`bg-skyBlue px-3 py-1 rounded-md text-white ${currentPage < 5 ?"hidden":"inline"}`}>Create</button>
+                                <button ref={createButtonRef} onClick={createProject} className={`bg-skyBlue px-3 py-1 rounded-md text-white ${currentPage < 5 ?"hidden":"inline"}`}>Create</button>
                         </div>
                 </div>
                 </div>
-                <ToastContainer/>
         </div>
   )
 }
@@ -439,7 +414,5 @@ CreateNewProject.propTypes = {
     closePopUp:propTypes.func.isRequired,
     nextPage:propTypes.func.isRequired,
     prevPage:propTypes.func.isRequired,
-    currentPage:propTypes.number.isRequired,
-    loadProjects:propTypes.func.isRequired
-}
+    currentPage:propTypes.number.isRequired}
 export default CreateNewProject

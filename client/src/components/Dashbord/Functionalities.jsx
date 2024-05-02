@@ -2,9 +2,8 @@
 import React,{useState} from 'react'
 import CreateNewProject from './pages/CreateNewProject'
 import { add,Folder,BrainstormingMethodIcon,BrainwritingMethodIcon,Flipboard } from '../../assets';
-import propTypes from 'prop-types'
 import UploadProject from './pages/UploadProject';
-const Functionalities = ({loadProjects}) => {
+const Functionalities = () => {
     const [createProjectVisible,setCreateProjectVisible] = useState(false);
     const [uploadProjectVisible,setUploadProjectVisible] = useState(false);
     const [currentPage,setCurrentPage] = useState(1);
@@ -76,14 +75,11 @@ const Functionalities = ({loadProjects}) => {
                         </div>)
                     )}
                 </div>
-                <CreateNewProject method={method} setMethod={setMethod} visible={createProjectVisible} currentPage={currentPage} loadProjects={loadProjects} closePopUp={closePopUp} nextPage={nextPage} prevPage={prevPage}/>
+                <CreateNewProject method={method} setMethod={setMethod} visible={createProjectVisible} currentPage={currentPage} closePopUp={closePopUp} nextPage={nextPage} prevPage={prevPage}/>
                 <UploadProject visible={uploadProjectVisible} closePopUp={()=>{
                     setUploadProjectVisible(false);
                 }} />
             </div>
   )
-}
-Functionalities.propTypes = {
-    loadProjects:propTypes.func.isRequired
 }
 export default Functionalities

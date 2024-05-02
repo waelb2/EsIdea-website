@@ -4,7 +4,9 @@ import DashboardNav from '../DashboardNav'
 import Functionalities from '../Functionalities'
 import Card from './Card'
 import {RecentsEmpty } from '../../../assets'
+import { useOutletContext } from 'react-router-dom'
 const Recents = () => {
+    const {allProjects,loading,getProjects} = useOutletContext();
     const [openedMore,setOpenedMore] = useState(-1);
     const [Projects,setProjects] = useState([
         {

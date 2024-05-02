@@ -6,7 +6,7 @@ import { projectContext } from '../Dashbord';
 import { useNavigate } from 'react-router-dom';
 import axios  from 'axios';
 
-const Card = ({proj,index,openedMore,setOpenedMore}) => {
+const Card = ({proj,index,openedMore,setOpenedMore,handleMoveToTrash}) => {
   const navigate = useNavigate()
   const dataOptions  = { 
   year: 'numeric', 
@@ -20,11 +20,13 @@ const Card = ({proj,index,openedMore,setOpenedMore}) => {
   const userToken = localStorage.getItem('userToken')
 
   const moveToTrash = async (projectId)=>{
+      handleMoveToTrash(index);
+      setOpenedMore(-1);
       axios.delete(` http://localhost:3000/project/trash-project/${projectId}`, {headers: {
             'Authorization': `Bearer ${userToken}`
         },
         }).then(response => {
-          console.log(response.data) 
+          
         })
         .catch(error => { 
             console.error('Error:', error.response.data.error);
@@ -127,6 +129,7 @@ Card.propTypes = {
     proj:PropTypes.object,
     index:PropTypes.number.isRequired,
     openedMore:PropTypes.number.isRequired,
-    setOpenedMore:PropTypes.func.isRequired
+    setOpenedMore:PropTypes.func.isRequired,
+    handleMoveToTrash: PropTypes.func
 };
 export default Card
