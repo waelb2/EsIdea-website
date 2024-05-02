@@ -37,9 +37,6 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         }
         let projectAssociation;
         const { projectTitle, description, ideationMethodName, collaborators, mainTopic, subTopics, tags } = req.body;
-        console.log('her');
-        console.log('here');
-        console.log(req.body);
         // Getting and validating project metadata
         const coordinator = yield userModels_1.User.findById(userId);
         if (!coordinator) {
