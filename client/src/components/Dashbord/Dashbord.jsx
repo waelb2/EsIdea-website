@@ -69,20 +69,18 @@ const Dashbord = () => {
     },[])
     const projectDependencies = {setEditProjectPopUp,setprojectToEdit,setCollaborators,setCollaboratorPopUp,allProjects,loading,getProjects,displayMessageToUser}
     return (
+      <projectContext.Provider value={projectDependencies}>
         <div className='w-full h-screen flex justify-between'>
             <SideBar/>
             <div ref={DivContainer} className='flex-grow bg-realWhite px-10 pt-8 flex flex-col gap-y-4 overflow-y-auto relative'>
-                <projectContext.Provider value={projectDependencies}>
                     <Outlet/>
-                </projectContext.Provider>
             </div>
             <ScrollToTop container={DivContainer}/>
-
             <EditProject visible={editProjectPopUp} closePopUp={()=>{setEditProjectPopUp(false)}} projectToEdit={projectToEdit}/>
-
             <DisplayCollaborators visible={collaboratorsPopUp} closePopUp={()=>{setCollaboratorPopUp(false)}} collaborators={collaborators}/>
             <ToastContainer />
         </div>
+        </projectContext.Provider>
   )
 }
 

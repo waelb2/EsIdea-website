@@ -214,7 +214,9 @@ const createProject = async (req: Request, res: Response) => {
   }
 }
 const updateProject = async (req: Request, res: Response) => {
-  const userId = '65ef22333d0a83e5abef440e'
+
+  const {userId} = req.user as AuthPayload
+
   const { projectId } = req.params
   let secureURL: string = ''
 
@@ -226,7 +228,6 @@ const updateProject = async (req: Request, res: Response) => {
       secureURL = cloudImage.secure_url
       fs.unlinkSync(req.file.path)
     }
-
     if (!projectId) {
       return res.status(400).json({
         error: 'Project ID must be provided'
@@ -248,12 +249,12 @@ const updateProject = async (req: Request, res: Response) => {
 
     const {
       title,
-      description,
-      status
-    }: { title: string; description: string; status: ProjectStatus } = req.body
+      description
+    }: { title: string; description: string; } = req.body
+
+    console.log(req.body)
     project.title = title
     project.description = description
-    project.status = status
     project.thumbnailUrl = secureURL
 
     await project.save()

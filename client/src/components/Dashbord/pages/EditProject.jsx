@@ -1,11 +1,20 @@
 // eslint-disable-next-line no-unused-vars
-import React,{useState,useRef} from 'react'
+import React,{useState,useRef, useContext, useEffect} from 'react'
 import propTypes from 'prop-types'
 import { blackClose } from '../../../assets'
+import axios from 'axios'
+import { projectContext } from '../Dashbord'
+import { useNavigate } from 'react-router-dom'
 const EditProject = ({visible,closePopUp,projectToEdit}) => {
+    const navigate = useNavigate();
+    const {displayMessageToUser,getProjects} = useContext(projectContext)
     const [image, setImage] = useState(null)
     const [projectName,setProjectName] = useState("");
     const [description,setDescription] = useState("");
+    useEffect(()=>{
+        setProjectName(projectToEdit.projectTitle);
+        setDescription(projectToEdit.Description);
+    },[projectToEdit.projectTitle,projectToEdit.Description])
     const [banner,setBanner] = useState(projectToEdit.ThumbnailUrl
     );
     const handleDragOver = (event)=>{
@@ -20,10 +29,27 @@ const EditProject = ({visible,closePopUp,projectToEdit}) => {
         event.preventDefault();
     }
     const myForm = new FormData()
-    myForm.append('projectThumbnail',image)
-    myForm.append('projectTitle', projectName);
-    myForm.append('description', description);
+    myForm.append('thumbnailUrl',image)
+    myForm.append('title', "wael");
+    myForm.append('description', "description");
     const browseRef = useRef();
+    const userToken = localStorage.getItem('userToken')
+    const editProject = ()=>{
+        axios.patch(`http://localhost:3000/project/update-project/${projectToEdit.projectId}`,myForm, {headers: {
+            'Authorization': `Bearer ${userToken}`
+        },
+        }).then(response => {
+            closePopUp();
+            displayMessageToUser("success","Project updated succesfully.")
+            getProjects();
+        })
+        .catch(error => {
+            console.error('Error:', error.response.data.error);
+            if (error.response && error.response.status === 401){
+                navigate('/login') 
+            }
+        });
+    }
   return (
     <div onClick={closePopUp} className={`fixed top-0 left-0 bg-black bg-opacity-40 w-screen min-h-screen backdrop-blur z-50 duration-500  transition-opacity ease-in-out flex justify-center items-center  ${visible?"Pop-up-Active":"Pop-up-notActive"}`}>
                 <div onClick={(e)=>{e.stopPropagation()}} className='bg-white max-w-full w-[600px] min-h-[450px] ss:min-h-[500px]  max-h-full  rounded-2xl shadow-md  px-3 py-4 sm:py-7 sm:px-9 m-4'>
@@ -39,13 +65,13 @@ const EditProject = ({visible,closePopUp,projectToEdit}) => {
                                 <label htmlFor="projectTitle" className='text-black font-semibold'>
                                     Give us a new title
                                 </label>
-                                <input value={projectToEdit.ProjectTitle} onChange={(e)=>{setProjectName(e.target.value)}} id='projectTitle' className='outline-none text-sm border-[1px] border-grey rounded-md py-2 px-4' type="text" placeholder='Project title' />
+                                <input value={projectName} onChange={(e)=>{setProjectName(e.target.value)}} id='projectTitle' className='outline-none text-sm border-[1px] border-grey rounded-md py-2 px-4' type="text" placeholder='Project title' />
                             </div>
                             <div className='flex flex-col w-full ss:w-[90%] gap-1 mb-3'>
                                 <label htmlFor="projectDescriptionEdit" className='text-black font-semibold'>
                                     Give us a new description
                                 </label>
-                                <textarea value={projectToEdit.Description} placeholder='Description' onChange={(e)=>{setDescription(e.target.value)}} className='outline-none text-sm border-[1px] border-grey rounded-md resize-none py-2 px-4' name="Description" id="projectDescriptionEdit" cols="30" rows="3">
+                                <textarea value={description} placeholder='Description' onChange={(e)=>{setDescription(e.target.value)}} className='outline-none text-sm border-[1px] border-grey rounded-md resize-none py-2 px-4' name="Description" id="projectDescriptionEdit" cols="30" rows="3">
                                     
                                 </textarea>
                             </div>
@@ -72,7 +98,7 @@ const EditProject = ({visible,closePopUp,projectToEdit}) => {
 
                         </div>
                         <div className={`w-[90%] self-center flex justify-end`}>
-                                <button className={`bg-skyBlue px-3 py-1 rounded-md text-white`}>Save</button>
+                                <button onClick={editProject} className={`bg-skyBlue px-3 py-1 rounded-md text-white`}>Save</button>
                         </div>
                     </div>
                 </div>

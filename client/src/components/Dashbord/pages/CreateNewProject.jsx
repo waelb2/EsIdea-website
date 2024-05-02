@@ -175,7 +175,7 @@ const CreateNewProject = ({method,setMethod,visible,closePopUp,currentPage,nextP
         },
         }).then(response => {
             closePopUp();
-            displayMessageToUser("success","Project Created succesfuly.")
+            displayMessageToUser("success","Project Created succesfully.")
             getProjects();
         })
         .catch(error => { 

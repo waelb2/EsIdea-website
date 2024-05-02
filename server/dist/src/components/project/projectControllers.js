@@ -168,7 +168,7 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 });
 exports.createProject = createProject;
 const updateProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const userId = '65ef22333d0a83e5abef440e';
+    const { userId } = req.user;
     const { projectId } = req.params;
     let secureURL = '';
     try {
@@ -195,10 +195,10 @@ const updateProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 error: 'Unauthorized - Only project coordinator can update the project'
             });
         }
-        const { title, description, status } = req.body;
+        const { title, description } = req.body;
+        console.log(req.body);
         project.title = title;
         project.description = description;
-        project.status = status;
         project.thumbnailUrl = secureURL;
         yield project.save();
         res.status(200).json({ message: 'Project updated successfully' });
