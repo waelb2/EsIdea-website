@@ -27,14 +27,8 @@ exports.projectAssociation = exports.ProjectVisibility = exports.ProjectStatus =
 const mongoose_1 = __importStar(require("mongoose"));
 var ProjectStatus;
 (function (ProjectStatus) {
-    ProjectStatus["Draft"] = "draft";
     ProjectStatus["InProgress"] = "in_progress";
     ProjectStatus["Completed"] = "completed";
-    ProjectStatus["OnHold"] = "on_hold";
-    ProjectStatus["Cancelled"] = "cancelled";
-    ProjectStatus["UnderReview"] = "under_review";
-    ProjectStatus["Approved"] = "approved";
-    ProjectStatus["Rejected"] = "rejected";
 })(ProjectStatus || (exports.ProjectStatus = ProjectStatus = {}));
 var ProjectVisibility;
 (function (ProjectVisibility) {
@@ -74,7 +68,7 @@ const projectSchema = new mongoose_1.Schema({
         type: String,
         required: [true, 'Project status is required'],
         enum: Object.values(ProjectStatus),
-        default: ProjectStatus.Draft
+        default: ProjectStatus.InProgress
     },
     visibility: {
         type: String,

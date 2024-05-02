@@ -148,7 +148,11 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 expiresAt: expirationDate
             });
             // Associating project with his coordinator
-            coordinator.projects.push({ project, joinedAt: new Date() });
+            coordinator.projects.push({
+                project,
+                joinedAt: new Date(),
+                isTrashed: false
+            });
             yield coordinator.save();
             user === null || user === void 0 ? void 0 : user.projectInvitations.push(invitation);
             user === null || user === void 0 ? void 0 : user.save();
