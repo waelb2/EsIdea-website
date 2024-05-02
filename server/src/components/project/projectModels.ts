@@ -3,14 +3,8 @@ import { TopicInterface } from './topicInterface'
 import { ProjectInterface } from './projectInterface'
 
 enum ProjectStatus {
-  Draft = 'draft',
   InProgress = 'in_progress',
-  Completed = 'completed',
-  OnHold = 'on_hold',
-  Cancelled = 'cancelled',
-  UnderReview = 'under_review',
-  Approved = 'approved',
-  Rejected = 'rejected'
+  Completed = 'completed'
 }
 
 enum ProjectVisibility {
@@ -51,7 +45,7 @@ const projectSchema = new Schema<ProjectInterface>({
     type: String,
     required: [true, 'Project status is required'],
     enum: Object.values(ProjectStatus),
-    default: ProjectStatus.Draft
+    default: ProjectStatus.InProgress
   },
   visibility: {
     type: String,

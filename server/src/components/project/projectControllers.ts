@@ -186,7 +186,11 @@ const createProject = async (req: Request, res: Response) => {
       })
 
       // Associating project with his coordinator
-      coordinator.projects.push({ project, joinedAt: new Date() })
+      coordinator.projects.push({
+        project,
+        joinedAt: new Date(),
+        isTrashed: false
+      })
       await coordinator.save()
 
       user?.projectInvitations.push(invitation)
