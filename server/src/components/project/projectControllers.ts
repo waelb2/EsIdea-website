@@ -36,7 +36,6 @@ const createProject = async (req: Request, res: Response) => {
       secureURL = cloudImage.secure_url
       fs.unlinkSync(req.file.path)
     }
-    let projectAssociation: string
 
     const {
       projectTitle,
@@ -55,9 +54,7 @@ const createProject = async (req: Request, res: Response) => {
       subTopics: string[]
       tags: string[]
     } = req.body
-    console.log('her')
-    console.log('here')
-    console.log(req.body)
+
     // Getting and validating project metadata
 
     const coordinator: UserInterface | null = await User.findById(userId)
@@ -219,8 +216,17 @@ const createProject = async (req: Request, res: Response) => {
 const updateProject = async (req: Request, res: Response) => {
   const userId = '65ef22333d0a83e5abef440e'
   const { projectId } = req.params
+  let secureURL: string = ''
 
   try {
+    if (req.file) {
+      const cloudImage = await cloudinary.uploader.upload(req.file.path, {
+        folder: 'projectThumbnails'
+      })
+      secureURL = cloudImage.secure_url
+      fs.unlinkSync(req.file.path)
+    }
+
     if (!projectId) {
       return res.status(400).json({
         error: 'Project ID must be provided'
@@ -248,6 +254,7 @@ const updateProject = async (req: Request, res: Response) => {
     project.title = title
     project.description = description
     project.status = status
+    project.thumbnailUrl = secureURL
 
     await project.save()
     res.status(200).json({ message: 'Project updated successfully' })
