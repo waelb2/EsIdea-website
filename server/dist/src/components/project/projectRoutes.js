@@ -13,4 +13,6 @@ router.post('/create-project', upload.single('projectThumbnail'), authMiddleware
 router.patch('/update-project/:projectId', projectControllers_1.updateProject);
 router.delete('/delete-project/:projectId', projectControllers_1.deleteProject);
 router.get('/get-all-projects/:userId', authMiddleware_1.authMiddleWare, projectControllers_1.getProjectByUserId);
+router.delete('/trash-project/:projectId', projectControllers_1.trashProject);
+router.post('/restore-project/', projectControllers_1.restoreProject);
 exports.default = router;

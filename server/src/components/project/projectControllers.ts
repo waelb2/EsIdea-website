@@ -305,8 +305,8 @@ const deleteProject = async (req: Request, res: Response) => {
     project.save()
 
     const updatedProjectsList = collaborator.projects.filter(
-      collaboratorProject => console.log(collaboratorProject)
-      //collaboratorProject.project._id.toString() !== projectId
+      collaboratorProject =>
+        collaboratorProject.project._id.toString() !== projectId
     )
 
     // deleting the project from user projects list
@@ -319,6 +319,125 @@ const deleteProject = async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Internal Server Error' })
   }
 }
+
+const trashProject = async (req: Request, res: Response) => {
+  const userId = '662d1119ace155f48b676a7d'
+  const { projectId } = req.params
+
+  try {
+    if (!projectId) {
+      return res.status(400).json({
+        error: 'Project ID must be provided'
+      })
+    }
+    if (!userId) {
+      return res.status(400).json({
+        error: 'User ID must be provided'
+      })
+    }
+
+    const collaborator = await User.findById(userId)
+
+    if (!collaborator) {
+      return res.status(404).json({
+        error: 'User not found'
+      })
+    }
+
+    const project = await Project.findById(projectId)
+
+    if (!project) {
+      return res.status(404).json({
+        error: 'Project not found'
+      })
+    }
+
+    const collaborators = project.collaborators.filter(
+      collaborator => collaborator.member._id.toString() === userId
+    )
+    if (collaborators.length < 0) {
+      return res.status(400).json({
+        error: 'This user is not a collaborator in this project'
+      })
+    }
+
+    const projectIndex = collaborator.projects.findIndex(
+      project => project.project.toString() === projectId
+    )
+    if (projectIndex === -1) {
+      return res.status(404).json({
+        error: "Project not found in the user's project list"
+      })
+    }
+    collaborator.projects[projectIndex].isTrashed = true
+    await collaborator.save()
+
+    res.status(200).json({ message: 'Project trashed successfully' })
+  } catch (error) {
+    console.error('Error deleting project:', error)
+    res.status(500).json({ error: 'Internal Server Error' })
+  }
+}
+
+const restoreProject = async (req: Request, res: Response) => {
+  const userId = '662d1119ace155f48b676a7d'
+  const { projectId } = req.body
+
+  try {
+    if (!projectId) {
+      return res.status(400).json({
+        error: 'Project ID must be provided'
+      })
+    }
+    if (!userId) {
+      return res.status(400).json({
+        error: 'User ID must be provided'
+      })
+    }
+
+    const collaborator = await User.findById(userId)
+
+    if (!collaborator) {
+      return res.status(404).json({
+        error: 'User not found'
+      })
+    }
+
+    const project = await Project.findById(projectId)
+
+    if (!project) {
+      return res.status(404).json({
+        error: 'Project not found'
+      })
+    }
+
+    const collaborators = project.collaborators.filter(
+      collaborator => collaborator.member._id.toString() === userId
+    )
+    if (collaborators.length < 0) {
+      return res.status(400).json({
+        error: 'This user is not a collaborator in this project'
+      })
+    }
+
+    const projectIndex = collaborator.projects.findIndex(
+      project => project.project.toString() === projectId
+    )
+    if (projectIndex === -1) {
+      return res.status(404).json({
+        error: "Project not found in the user's project list"
+      })
+    }
+    collaborator.projects[projectIndex].isTrashed = false
+    await collaborator.save()
+
+    res.status(200).json({ message: 'Project restored successfully' })
+  } catch (error) {
+    console.error('Error restoring project:', error)
+    res.status(500).json({ error: 'Internal Server Error' })
+  }
+}
+
 const getProjectByUserId = async (req: Request, res: Response) => {
   const { userId } = req.user as AuthPayload
   try {
@@ -436,4 +555,11 @@ const getProjectByUserId = async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Internal Server Error' })
   }
 }
-export { createProject, updateProject, deleteProject, getProjectByUserId }
+export {
+  createProject,
+  updateProject,
+  deleteProject,
+  getProjectByUserId,
+  trashProject,
+  restoreProject
+}

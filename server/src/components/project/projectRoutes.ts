@@ -3,7 +3,9 @@ import {
   createProject,
   updateProject,
   deleteProject,
-  getProjectByUserId
+  getProjectByUserId,
+  trashProject,
+  restoreProject
 } from './projectControllers'
 
 import multer from 'multer'
@@ -22,5 +24,7 @@ router.post(
 router.patch('/update-project/:projectId', updateProject)
 router.delete('/delete-project/:projectId', deleteProject)
 router.get('/get-all-projects/:userId', authMiddleWare, getProjectByUserId)
+router.delete('/trash-project/:projectId', trashProject)
+router.post('/restore-project/', restoreProject)
 
 export default router
