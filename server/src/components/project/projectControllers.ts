@@ -321,7 +321,7 @@ const deleteProject = async (req: Request, res: Response) => {
 }
 
 const trashProject = async (req: Request, res: Response) => {
-  const userId = '662d1119ace155f48b676a7d'
+  const { userId } = req.user as AuthPayload
   const { projectId } = req.params
 
   try {
@@ -496,7 +496,7 @@ const getProjectByUserId = async (req: Request, res: Response) => {
       })
     }
 
-    const projects = user.projects.map(project => project?.project)
+    const projects = user.projects.map(project => project)
     const projectStrings = projects.map(project => {
       const {
         title,
@@ -510,7 +510,7 @@ const getProjectByUserId = async (req: Request, res: Response) => {
         modules,
         events,
         thumbnailUrl
-      } = project
+      } = project.project
 
       const formattedSubTopics = subTopics?.map(topic => {
         return {
@@ -532,9 +532,17 @@ const getProjectByUserId = async (req: Request, res: Response) => {
 
         return null
       })
+      const coordinator = {
+        firstName: user.firstName,
+        lastName: user.lastName,
+        email: user.email,
+        profilePicUrl: user.profilePicUrl
+      }
       const formattedProject = {
+        projectId: project.project.id,
         ProjectTitle: title,
         Description: description,
+        coordinator,
         Visibility: visibility,
         CollaboratorsCount: collaboratorsCount.toString(),
         collaborators: formattedCollaborators,
@@ -543,7 +551,9 @@ const getProjectByUserId = async (req: Request, res: Response) => {
         Clubs: clubs.map(club => club.clubName),
         Modules: modules.map(module => module.moduleName),
         Events: events.map(event => event.eventName),
-        ThumbnailUrl: thumbnailUrl
+        ThumbnailUrl: thumbnailUrl,
+        isTrashed: project.isTrashed,
+        joinedDate: project.joinedAt
       }
 
       return formattedProject

@@ -5,14 +5,38 @@ import { Outlet} from 'react-router-dom';
 import ScrollToTop from './pages/ScrollToTop'
 import EditProject from './pages/EditProject';
 import DisplayCollaborators from './pages/DisplayCollaborators';
+import axios from 'axios';
 export const projectContext = createContext();
 const Dashbord = () => {
     const [editProjectPopUp,setEditProjectPopUp] = useState(false);
     const [collaboratorsPopUp,setCollaboratorPopUp] = useState(false);
     const [projectToEdit,setprojectToEdit] = useState({});
     const [collaborators,setCollaborators] = useState([]);
-    const editProjectDependencies = {setEditProjectPopUp,setprojectToEdit,setCollaborators,setCollaboratorPopUp}
     const DivContainer = useRef();
+    const getProjects = async(setProjects, setLoading)=>{
+          setLoading(true);
+         try {
+        const userToken = localStorage.getItem('userToken') 
+        const response = await axios.get(`http://localhost:3000/project/get-all-projects/}`, {
+          headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+             'Authorization': `Bearer ${userToken}`
+          },
+        });
+
+        if (response.statusText == 'OK') {
+          setProjects(response.data);
+          setLoading(false)
+        } else {
+            console.log(response)
+            throw new Error ("Authentication has failed")
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    }
+    const editProjectDependencies = {setEditProjectPopUp,setprojectToEdit,setCollaborators,setCollaboratorPopUp, getProjects}
     return (
         <div className='w-full h-screen flex justify-between'>
             <SideBar/>

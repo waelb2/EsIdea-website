@@ -24,7 +24,7 @@ router.post(
 router.patch('/update-project/:projectId', updateProject)
 router.delete('/delete-project/:projectId', deleteProject)
 router.get('/get-all-projects/:userId', authMiddleWare, getProjectByUserId)
-router.delete('/trash-project/:projectId', trashProject)
+router.delete('/trash-project/:projectId', authMiddleWare, trashProject)
 router.post('/restore-project/', restoreProject)
 
 export default router

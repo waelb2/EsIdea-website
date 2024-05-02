@@ -3,9 +3,36 @@ import React, { useContext, useState } from 'react'
 import PropTypes from 'prop-types'
 import { Colaborators, Edit, ExportProj, More, MoveFavorite, OpenProj, Publish, TrashBlack } from '../../../assets'
 import { projectContext } from '../Dashbord';
+import { useNavigate } from 'react-router-dom';
+import axios  from 'axios';
 
 const Card = ({proj,index,openedMore,setOpenedMore}) => {
-  console.log(proj)
+  const navigate = useNavigate()
+  const dataOptions  = { 
+  year: 'numeric', 
+  month: 'long', 
+  day: 'numeric', 
+  hour: 'numeric', 
+  minute: 'numeric', 
+  second: 'numeric', 
+  timeZoneName: 'short' 
+}
+  const userToken = localStorage.getItem('userToken')
+
+  const moveToTrash = async (projectId)=>{
+      axios.delete(` http://localhost:3000/project/trash-project/${projectId}`, {headers: {
+            'Authorization': `Bearer ${userToken}`
+        },
+        }).then(response => {
+          console.log(response.data) 
+        })
+        .catch(error => { 
+            console.error('Error:', error.response.data.error);
+            if (error.response && error.response.status === 401){
+            navigate('/login') 
+            }
+        });
+  }
   const {setprojectToEdit,setEditProjectPopUp,setCollaborators,setCollaboratorPopUp} = useContext(projectContext);
   const projectDetails = [
     {
@@ -36,6 +63,7 @@ const Card = ({proj,index,openedMore,setOpenedMore}) => {
         icon:TrashBlack,
         line:false,
         action:()=>{
+          moveToTrash(proj.projectId)
         }
     },
     {
@@ -72,7 +100,7 @@ const Card = ({proj,index,openedMore,setOpenedMore}) => {
         <div className='flex flex-col gap-y-1 p-3 bg-slate-100  rounded-b-xl flex-grow'>
             <div className='flex justify-between items-center'>
                 <h1 className='text-[14px] font-semibold'>{proj.ProjectTitle}</h1>
-                <p className='text-[12px] '>{new Date().toLocaleDateString()}</p>
+                <p className='text-[12px] '>{new Date(proj.joinedDate).toLocaleDateString(dataOptions)}</p>
             </div>
             <p className='text-sm text-grey font-medium line-clamp-[4]'>
                 {proj.Description}

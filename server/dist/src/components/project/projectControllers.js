@@ -253,7 +253,7 @@ const deleteProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 });
 exports.deleteProject = deleteProject;
 const trashProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const userId = '662d1119ace155f48b676a7d';
+    const { userId } = req.user;
     const { projectId } = req.params;
     try {
         if (!projectId) {
@@ -404,9 +404,9 @@ const getProjectByUserId = (req, res) => __awaiter(void 0, void 0, void 0, funct
                 error: 'User not found'
             });
         }
-        const projects = user.projects.map(project => project === null || project === void 0 ? void 0 : project.project);
+        const projects = user.projects.map(project => project);
         const projectStrings = projects.map(project => {
-            const { title, description, visibility, collaboratorsCount, collaborators, mainTopic, subTopics, clubs, modules, events, thumbnailUrl } = project;
+            const { title, description, visibility, collaboratorsCount, collaborators, mainTopic, subTopics, clubs, modules, events, thumbnailUrl } = project.project;
             const formattedSubTopics = subTopics === null || subTopics === void 0 ? void 0 : subTopics.map(topic => {
                 return {
                     topicId: topic._id,
@@ -425,9 +425,17 @@ const getProjectByUserId = (req, res) => __awaiter(void 0, void 0, void 0, funct
                 }
                 return null;
             });
+            const coordinator = {
+                firstName: user.firstName,
+                lastName: user.lastName,
+                email: user.email,
+                profilePicUrl: user.profilePicUrl
+            };
             const formattedProject = {
+                projectId: project.project.id,
                 ProjectTitle: title,
                 Description: description,
+                coordinator,
                 Visibility: visibility,
                 CollaboratorsCount: collaboratorsCount.toString(),
                 collaborators: formattedCollaborators,
@@ -436,7 +444,9 @@ const getProjectByUserId = (req, res) => __awaiter(void 0, void 0, void 0, funct
                 Clubs: clubs.map(club => club.clubName),
                 Modules: modules.map(module => module.moduleName),
                 Events: events.map(event => event.eventName),
-                ThumbnailUrl: thumbnailUrl
+                ThumbnailUrl: thumbnailUrl,
+                isTrashed: project.isTrashed,
+                joinedDate: project.joinedAt
             };
             return formattedProject;
         });

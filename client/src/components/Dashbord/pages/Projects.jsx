@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import axios  from 'axios'
 import DashboardNav from '../DashboardNav'
 import Functionalities from '../Functionalities'
@@ -9,36 +9,17 @@ import { useLocation } from 'react-router-dom'
 import { ToastContainer, toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css';
 import {MagnifyingGlass } from 'react-loader-spinner'
+import { projectContext } from '../Dashbord'
+
 const Projects = () => {
     const {state} = useLocation();
     const [fromChangePassword,setFromChangePassword] = useState(false);
     // getProjects function 
     const [loading,setLoading] = useState(true);
-    const getProjects = async()=>{
-          setLoading(true);
-         try {
-        const userToken = localStorage.getItem('userToken') 
-        const response = await axios.get(`http://localhost:3000/project/get-all-projects/}`, {
-          headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
-             'Authorization': `Bearer ${userToken}`
-          },
-        });
+    const {getProjects} = useContext(projectContext)
 
-        if (response.statusText == 'OK') {
-          setProjects(response.data);
-          setLoading(false);
-        } else {
-            console.log(response)
-            throw new Error ("Authentication has failed")
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    }
     useEffect(()=>{
-        getProjects()
+        getProjects(setProjects, setLoading)
     },[])
     useEffect(()=>{
         if(state){
