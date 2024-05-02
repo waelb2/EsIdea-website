@@ -35,7 +35,6 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             secureURL = cloudImage.secure_url;
             fs_1.default.unlinkSync(req.file.path);
         }
-        let projectAssociation;
         const { projectTitle, description, ideationMethodName, collaborators, mainTopic, subTopics, tags } = req.body;
         // Getting and validating project metadata
         const coordinator = yield userModels_1.User.findById(userId);
@@ -171,7 +170,15 @@ exports.createProject = createProject;
 const updateProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const userId = '65ef22333d0a83e5abef440e';
     const { projectId } = req.params;
+    let secureURL = '';
     try {
+        if (req.file) {
+            const cloudImage = yield cloudConfig_1.default.uploader.upload(req.file.path, {
+                folder: 'projectThumbnails'
+            });
+            secureURL = cloudImage.secure_url;
+            fs_1.default.unlinkSync(req.file.path);
+        }
         if (!projectId) {
             return res.status(400).json({
                 error: 'Project ID must be provided'
@@ -192,6 +199,7 @@ const updateProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         project.title = title;
         project.description = description;
         project.status = status;
+        project.thumbnailUrl = secureURL;
         yield project.save();
         res.status(200).json({ message: 'Project updated successfully' });
     }
