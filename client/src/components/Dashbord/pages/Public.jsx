@@ -27,7 +27,9 @@ const Public = () => {
         const arr = Projects.filter((proj)=>proj.ProjectTitle.toLowerCase().includes(inputValue.toLowerCase()));
         setDisplayedProjects([...arr]);
     },[inputValue,Projects])
-
+    useEffect(()=>{
+        document.title = "Public";
+    },[])
     return (
     <div className='flex flex-col gap-y-4 h-full' onClick={()=>{setOpenedMore(-1)}}>
         <DashboardNav currentLoc='Public' action={handleSearch}/>
