@@ -102,7 +102,7 @@ const Card = ({proj,index,openedMore,setOpenedMore,handleMoveToTrash}) => {
     if(userIsCoordinator){
         navigate(`/admin${proj.IdeationMethod}?ProjectTitle=${proj.ProjectTitle}&MainTopic=${proj.MainTopic}`)
     }else{
-      navigate(`/${proj.IdeationMethod}?projectTitle=${proj.ProjectTitle}&MainTopic=${proj.MainTopic}`)
+      navigate(`/${proj.IdeationMethod}?ProjectTitle=${proj.ProjectTitle}&MainTopic=${proj.MainTopic}`)
     }
   }
   return (

@@ -15,6 +15,8 @@ import Brain from '../../assets/Brain.png';
 import Attach from '../../assets/Attach.png';
 import Send from '../../assets/Send.png';
 import CountdownTimerBW from '../Contdown Timer/CountdownTimerBW';
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import useUser from '../../hooks/useUser';
 
 const BrainWriting = () => {
   const initialMinutes = 0;
@@ -28,12 +30,13 @@ const BrainWriting = () => {
   const [selectedColor, setSelectedColor] = useState('#000000');
   const [showComment, setShowComment] = useState(false);
   const [countdownEnded, setCountdownEnded] = useState(false);
+  const user = useUser();
   const [userArray, setUserArray] = useState([
-    { lastName: 'User1', imageUrl: '/images/avatar-with-background.png' },
-    { lastName: 'User2', imageUrl: '/images/avatar-with-background.png' },
-    { lastName: 'User3', imageUrl: '/images/avatar-with-background.png' },
-    { lastName: 'User4', imageUrl: '/images/avatar-with-background.png' },
-    { lastName: 'User5', imageUrl: '/images/avatar-with-background.png' },
+    { lastName: user.user.firstName, imageUrl: user.user.profilePicUrl },
+    { lastName: user.user.firstName, imageUrl: user.user.profilePicUrl },
+    { lastName: user.user.firstName, imageUrl: user.user.profilePicUrl },
+    { lastName: user.user.firstName, imageUrl: user.user.profilePicUrl },
+    { lastName: user.user.firstName, imageUrl: user.user.profilePicUrl },
   ]);
 
   const [activeUserIndex, setActiveUserIndex] = useState(0);
@@ -97,15 +100,17 @@ const BrainWriting = () => {
   useEffect(() => {
     if(rounds === 0) setCountdownEnded(true);
   }, [rounds])
-
+  const [searchParams,setSearchParams] = useSearchParams();
+    const ProjectTitle = searchParams.get("ProjectTitle");
+    const MainTopic = searchParams.get("MainTopic");
+    const navigate = useNavigate();
   return (
     <div className="h-screen bg-[#F1F6FB] relative py-36">
       <div className="flex justify-between items-center py-4 px-5 fixed top-0 left-0 right-0">
         <div className="bg-white border border-black flex justify-between items-center px-2 w-56 h-10 rounded-full shadow-[0_4px_4px_rgba(0,0,0,0.2)]">
-          <a href="#">
-            <img src={Back} />
-          </a>
-          <p className="font-medium">Project title</p>
+          
+          <img className='cursor-pointer' onClick={()=>{navigate(-1)}} src={Back} />
+          <p className="font-medium">{ProjectTitle}</p>
           <img src={Line} className="h-6" />
           <img src={Download} />
         </div>
@@ -127,7 +132,7 @@ const BrainWriting = () => {
       </div>
 
       <div className="text-center w-80 absolute left-1/2 transform -translate-x-1/2 top-8">
-        <p className="text-3xl font-medium">The theme</p>
+        <p className="text-3xl font-medium">{MainTopic}</p>
         <p className="">Use the prompt bellow to add your ideas about this theme</p>
       </div>
 

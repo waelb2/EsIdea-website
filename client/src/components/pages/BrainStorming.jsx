@@ -6,7 +6,6 @@ import CountdownTimerBS from '../CountdownTimerBS/CountdownTimerBS'
 import Back from '../../assets/Back.png'
 import Line from '../../assets/Line 3.png'
 import Download from '../../assets/Download from the Cloud.png'
-import User from '../../assets/user.png'
 import Group from '../../assets/group.png'
 import Bold from '../../assets/Bold.png'
 import Italic from '../../assets/Italic.png'
@@ -16,6 +15,8 @@ import Line1 from '../../assets/Line 1.png'
 import Brain from '../../assets/Brain.png'
 import Attach from '../../assets/Attach.png'
 import Send from '../../assets/Send.png'
+import { useNavigate, useSearchParams } from 'react-router-dom';
+import useUser from '../../hooks/useUser';
 
 
 const BrainStorming = () => {
@@ -107,14 +108,17 @@ const BrainStorming = () => {
   //   });
   // };
 
-
-
+  const [searchParams,setSearchParams] = useSearchParams();
+    const ProjectTitle = searchParams.get("ProjectTitle");
+    const user = useUser();
+    const MainTopic = searchParams.get("MainTopic");
+    const navigate = useNavigate();
   return (
     <div className='bg-[#F1F6FB] relative py-36 min-h-screen'>
       <div className='flex justify-between items-center py-4 px-5 fixed top-0 left-0 right-0'>
         <div className='bg-white border border-black flex justify-between items-center px-2 w-56 h-10 rounded-full shadow-[0_4px_4px_rgba(0,0,0,0.2)]'>
-          <a href="#"><img src={Back}/></a>
-          <p className='font-medium'>Project title</p>
+          <img className='cursor-pointer' onClick={()=>{navigate(-1)}} src={Back}/>
+          <p className='font-medium'>{ProjectTitle}</p>
           <img src={Line} className='h-6'/>
           <img src={Download}/>
         </div>
@@ -124,13 +128,13 @@ const BrainStorming = () => {
           </div>
           <div className='flex bg-white border border-black items-center justify-around w-44 px-3 h-10 rounded-full shadow-[0_4px_4px_rgba(0,0,0,0.2)]'>
             <img src={Group} className='h-6'/>
-            <img src={User} className='h-10'/>
+            <img className='rounded-full h-6' src={user.user.profilePicUrl}/>
           </div>
         </div>
       </div>
 
       <div className='text-center w-80 absolute left-1/2 transform -translate-x-1/2 top-8'>
-        <p className='text-3xl font-medium'>The theme</p>
+        <p className='text-3xl font-medium'>{MainTopic}</p>
         <p className=''>Use the prompt bellow to add your ideas about this theme</p>
       </div>
 
