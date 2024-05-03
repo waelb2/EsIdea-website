@@ -4,7 +4,7 @@ import { BrainstormingMethodIcon, BrainwritingMethodIcon, Search, blackClose,Bac
 import propTypes from 'prop-types';
 import Select from './Select'
 import { useDebounce } from '../constants';
-import { ColorRing } from 'react-loader-spinner';
+import { ColorRing, ThreeDots } from 'react-loader-spinner';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
@@ -63,6 +63,7 @@ const CreateNewProject = ({method,setMethod,visible,closePopUp,currentPage,nextP
             }
         )
     })
+    const [createProjectState,setcreateProjectState] = useState(false);
     // creating the project data object
     const myForm = new FormData()
     myForm.append('projectThumbnail',image)
@@ -170,6 +171,7 @@ const CreateNewProject = ({method,setMethod,visible,closePopUp,currentPage,nextP
     }
     const createProject = async ()=>{
         createButtonRef.current.disabled = true;
+        setcreateProjectState(true);
         axios.post('http://localhost:3000/project/create-project',myForm, {headers: {
             'Authorization': `Bearer ${userToken}`
         },
@@ -177,6 +179,7 @@ const CreateNewProject = ({method,setMethod,visible,closePopUp,currentPage,nextP
             closePopUp();
             displayMessageToUser("success","Project Created succesfully.")
             getProjects();
+            setcreateProjectState(false);
         })
         .catch(error => { 
             console.error('Error:', error.response.data.error);
@@ -234,7 +237,7 @@ const CreateNewProject = ({method,setMethod,visible,closePopUp,currentPage,nextP
                             </div>
 
                             <div className='flex flex-wrap gap-3 justify-center  ss:px-9 ss:justify-start overflow-y-auto scroll-smooth py-2'>
-                                {displayedMethods.map((method)=>(<div onClick={method.action} className='bg-lightGrey w-[9rem] h-[7rem] rounded-md flex flex-col items-center justify-center cursor-pointer transition-shadow duration-300 hover:shadow-md' key={method.Id}>
+                                {displayedMethods.map((method)=>(<div onClick={method.action} className='bg-lightGrey w-[9rem] h-[7rem] rounded-md flex flex-col items-center justify-center cursor-pointer border-2 border-transparent transition-all duration-500 hover:border-slate-400' key={method.Id}>
                                     <img className='w-16 h-16' src={method.icon} alt={method.title} />
                                     <p className='text-black text-sm font-medium'>{method.title}</p>
                                 </div>))}
@@ -400,7 +403,8 @@ const CreateNewProject = ({method,setMethod,visible,closePopUp,currentPage,nextP
                         </div>
                         <div className={`w-full ss:px-3 self-end  ${currentPage>1 && currentPage <=5 ? "flex justify-end" : "hidden" }`}>
                                 <button onClick={handleNext} className={`bg-skyBlue px-3 py-1 rounded-md text-white ${currentPage < 5 ?"inline":"hidden"}`}>Next</button>
-                                <button ref={createButtonRef} onClick={createProject} className={`bg-skyBlue px-3 py-1 rounded-md text-white ${currentPage < 5 ?"hidden":"inline"}`}>Create</button>
+                                <button ref={createButtonRef} onClick={createProject} className={`bg-skyBlue text-center px-3 py-1 rounded-md text-white ${currentPage < 5 ?"hidden":"inline"}`}>{createProjectState ? <ThreeDots visible={true} height="20" width="40" color="#fff" radius="9" ariaLabel="three-dots-loading" wrapperStyle={{}} wrapperClass=""/>
+                                :"Create"}</button>
                         </div>
                 </div>
                 </div>

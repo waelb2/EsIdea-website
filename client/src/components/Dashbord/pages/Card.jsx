@@ -35,7 +35,7 @@ const Card = ({proj,index,openedMore,setOpenedMore,handleMoveToTrash}) => {
             }
         });
   }
-  const {setprojectToEdit,setEditProjectPopUp,setCollaborators,setCollaboratorPopUp} = useContext(projectContext);
+  const {setprojectToEdit,setEditProjectPopUp,setCollaborators,setCoordinator,setCollaboratorPopUp} = useContext(projectContext);
   const projectDetails = [
     {
         title:"Open",
@@ -80,7 +80,7 @@ const Card = ({proj,index,openedMore,setOpenedMore,handleMoveToTrash}) => {
         icon:ExportProj,
         line:true,
         action:(ind)=>{
-          console.log(ind);
+          
         }
     },
     {
@@ -89,6 +89,7 @@ const Card = ({proj,index,openedMore,setOpenedMore,handleMoveToTrash}) => {
         line:false,
         action:()=>{
           setCollaborators(proj.collaborators);
+          setCoordinator(proj.coordinator)
           setCollaboratorPopUp(true);
           setOpenedMore(-1);
         }

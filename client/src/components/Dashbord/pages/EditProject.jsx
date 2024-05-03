@@ -12,9 +12,9 @@ const EditProject = ({visible,closePopUp,projectToEdit}) => {
     const [projectName,setProjectName] = useState("");
     const [description,setDescription] = useState("");
     useEffect(()=>{
-        setProjectName(projectToEdit.projectTitle);
+        setProjectName(projectToEdit.ProjectTitle);
         setDescription(projectToEdit.Description);
-    },[projectToEdit.projectTitle,projectToEdit.Description])
+    },[projectToEdit])
     const [banner,setBanner] = useState(projectToEdit.ThumbnailUrl
     );
     const handleDragOver = (event)=>{
@@ -84,7 +84,7 @@ const EditProject = ({visible,closePopUp,projectToEdit}) => {
                                         !banner ? <div onDrop={handleDrop} onDragOver={handleDragOver} className='flex flex-col items-center justify-center gap-1'>
                                             <h1 className='text-black'>Drag and Drop pic to upload</h1>
                                             <h1 className='text-black'>Or</h1>
-                                            <input  accept='image/*' onChange={handleUpload}  ref={browseRef} hidden type="file" />
+                                            <input accept='image/*' onChange={handleUpload} ref={browseRef} hidden type="file" />
                                             <button className='bg-skyBlue py-1 px-2 rounded-xl text-realWhite' onClick={()=>{browseRef.current.click()}}>Browse</button>
                                         </div>:
                                         <div className='flex flex-col items-center justify-center gap-1'>

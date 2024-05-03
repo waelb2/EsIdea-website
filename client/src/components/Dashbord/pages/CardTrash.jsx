@@ -1,19 +1,60 @@
 // eslint-disable-next-line no-unused-vars
-import React from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import { More, RemoveRed, Restore } from '../../../assets'
-import { Link } from 'react-router-dom'
+import {useNavigate } from 'react-router-dom'
+import axios from 'axios'
+import { projectContext } from '../Dashbord'
 const CardTrash = ({proj,index,openedMore,setOpenedMore}) => {
+  const navigate = useNavigate();
+  const {displayMessageToUser} = useContext(projectContext)
+  const userToken = localStorage.getItem('userToken');
+  const deleteProject = ()=>{
+    axios.delete(`http://localhost:3000/project/delete-project/${proj.projectId}`, {headers: {
+            'Authorization': `Bearer ${userToken}`
+        },
+        }).then(response => {
+            displayMessageToUser("success","Project removed succesfully.");
+        })
+        .catch(error => { 
+            console.error('Error:', error.response.data.error);
+            if (error.response && error.response.status === 401){
+            navigate('/login') 
+            }
+        });
+  }
+  const restoreProject = ()=>{
+    axios.post(`http://localhost:3000/project/restore-project/${proj.projectId}`, {headers: {
+            'Authorization': `Bearer ${userToken}`
+        },
+        }).then(response => {
+            displayMessageToUser("success","Project restored succesfully.");
+        })
+        .catch(error => { 
+            console.error('Error:', error.response.data.error);
+            if (error.response && error.response.status === 401){
+            navigate('/login') 
+            }
+        });
+  }
     const projectTrashDetails = [
         {
             title:"Restore",
             icon:Restore,
-            line:false
+            line:false,
+            action:()=>{
+              restoreProject();
+              setOpenedMore(-1);
+            }
         },
         {
             title:"Remove",
             icon:RemoveRed,
-            line:false
+            line:false,
+            action:()=>{
+              deleteProject();
+              setOpenedMore(-1);
+            }
         }
     ]
   return (
@@ -31,13 +72,13 @@ const CardTrash = ({proj,index,openedMore,setOpenedMore}) => {
         </div>
         <div onClick={(e)=>{e.stopPropagation()}}>
           <img onClick={()=>{index !== openedMore ? setOpenedMore(index):setOpenedMore(-1)}} className='absolute bottom-2 right-2  w-6 h-6 duration-500 transition-all rounded-full p-1 hover:bg-slate-300 hidden group-hover:inline cursor-pointer' src={More} alt='More'/>
-          <div className={`${index !== openedMore ?"hidden":"bg-realWhite min-w-[10.625rem] absolute shadow-xl bottom-8 right-4 border p-3 rounded-lg border-black slide_down"} overflow-hidden`}>
+          <div className={`${index !== openedMore ?"hidden":"bg-realWhite min-w-[10.625rem] absolute shadow-xl bottom-8 right-4 border p-3 rounded-lg border-black slideTop"} overflow-hidden`}>
               <ul>
                   {projectTrashDetails.map(pd=><li key={pd.title}>
-                    <Link className={`flex px-2 py-1 items-center hover:bg-[#d9e9f6]  rounded-md transition-all`}>
+                    <button onClick={pd.action} className={`flex px-2 py-1 items-center w-full hover:bg-[#d9e9f6]  rounded-md transition-all`}>
                       <img className='mr-2' src={pd.icon} alt={pd.title} />
                       <p>{pd.title}</p>
-                    </Link>
+                    </button>
                     {pd.line && <hr className='border-t-2 border-gray-300 my-0.5'/>}
                   </li>)}
               </ul>

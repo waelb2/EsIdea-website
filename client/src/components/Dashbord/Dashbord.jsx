@@ -13,6 +13,7 @@ const Dashbord = () => {
     const [collaboratorsPopUp,setCollaboratorPopUp] = useState(false);
     const [projectToEdit,setprojectToEdit] = useState({});
     const [collaborators,setCollaborators] = useState([]);
+    const [coordinator,setCoordinator] = useState({});
     const DivContainer = useRef();
     const [allProjects,setAllProjects] = useState([]);
     const [loading,setLoading] = useState(true);
@@ -67,7 +68,7 @@ const Dashbord = () => {
     useEffect(()=>{
       getProjects();
     },[])
-    const projectDependencies = {setEditProjectPopUp,setprojectToEdit,setCollaborators,setCollaboratorPopUp,allProjects,loading,getProjects,displayMessageToUser}
+    const projectDependencies = {setEditProjectPopUp,setprojectToEdit,setCollaborators,setCollaboratorPopUp,allProjects,loading,getProjects,displayMessageToUser,setCoordinator}
     return (
       <projectContext.Provider value={projectDependencies}>
         <div className='w-full h-screen flex justify-between'>
@@ -77,7 +78,9 @@ const Dashbord = () => {
             </div>
             <ScrollToTop container={DivContainer}/>
             <EditProject visible={editProjectPopUp} closePopUp={()=>{setEditProjectPopUp(false)}} projectToEdit={projectToEdit}/>
-            <DisplayCollaborators visible={collaboratorsPopUp} closePopUp={()=>{setCollaboratorPopUp(false)}} collaborators={collaborators}/>
+
+            <DisplayCollaborators visible={collaboratorsPopUp} closePopUp={()=>{setCollaboratorPopUp(false)}} coordinator={coordinator} collaborators={collaborators}/>
+
             <ToastContainer />
         </div>
         </projectContext.Provider>

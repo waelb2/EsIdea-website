@@ -69,7 +69,7 @@ const Functionalities = () => {
                 </div>
                 <div className='flex gap-6 overflow-x-auto'>
                     {functionality.map((util,index)=>
-                        (<div onClick={util.action} className={`${index === 0 ?"bg-primary border hover:border-black":"bg-lightGrey hover:borderGrey"} transition-all w-[9rem] h-[7rem] flex flex-col items-center justify-center rounded-lg cursor-pointer flex-shrink-0`} key={util.Id} >
+                        (<div onClick={util.action} className={`${index === 0 ?"bg-primary":"bg-lightGrey"} border-2 hover:border-slate-400 border-transparent duration-500 transition-all w-[9rem] h-[7rem] flex flex-col items-center justify-center rounded-lg cursor-pointer flex-shrink-0`} key={util.Id} >
                                 <img className='w-16 h-16' src={util.icon} alt={util.title}/>
                                 {util.title && <p className='text-black text-sm font-medium'>{util.title}</p>}
                         </div>)
