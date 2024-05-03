@@ -4,14 +4,19 @@ import Enlarge from '../../assets/Enlarge.png'
 import Compress from '../../assets/Compress.png'
 import CombinePopUp from '../Combine/CombinePopUp';
 
-const IdeaEvaluationAdmin = ({ideas , toggleCommentPopup , toggleCombinePopUp , toggleExtendPopUp}) => {
+const IdeaEvaluationAdmin = ({ideas , toggleCommentPopup , toggleCombinePopUp , toggleExtendPopUp, selectedIdeas, setSelectedIdeas}) => {
 
   const [clicked, setClicked] = useState(false);
   const [count, setCount] = useState(0);
 
   const handleClick = () => {
     setClicked(!clicked);
-  }
+    if (!clicked) {
+      setSelectedIdeas(prevSelectedIdeas => [...prevSelectedIdeas, ...ideas]);
+    } else {
+      setSelectedIdeas(prevSelectedIdeas => prevSelectedIdeas.filter(idea => !ideas.includes(idea)));
+    }
+  };
 
   const handleIncrement = () => {
       setCount(prevCount => {
@@ -30,7 +35,7 @@ const IdeaEvaluationAdmin = ({ideas , toggleCommentPopup , toggleCombinePopUp , 
         <div className='flex items-center justify-between'>
             <p className='font-medium'>User thinks :</p>
             <div className='flex items-center justify-center w-9 opacity-0 group-hover:opacity-100 transition-opacity'>
-              <img src={Enlarge} alt="Enlarge" className='cursor-pointer' onClick={toggleCombinePopUp}/>
+              <img src={Enlarge} alt="Enlarge" className='cursor-pointer' onClick={() => toggleCombinePopUp(selectedIdeas)}/> 
               <img src={Compress} alt="Compress" className='cursor-pointer' onClick={toggleExtendPopUp}/>
             </div>
         </div>

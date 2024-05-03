@@ -1,4 +1,4 @@
-import React , {useState , useRef} from 'react'
+import React , {useState} from 'react'
 import UserIdea from '../idea generation phase/UserIdea'
 import IdeaEvaluationAdmin from '../IdeaEvolutionAdmin/IdeaEvolutionAdmin'
 import IdeaComment from '../Idea Comment/IdeaComment'
@@ -29,13 +29,12 @@ const AdminBrainStorming = () => {
   const [isItalic, setIsItalic] = useState(false);
   const [showColorPicker, setShowColorPicker] = useState(false);
   const [selectedColor, setSelectedColor] = useState('#000000'); 
-  const [selectedFile, setSelectedFile] = useState(null);
-  const fileInputRef = useRef(null);
   const [showComment, setShowComment] = useState(false);
   const [showCombinePopUp, setShowCombinePopUp] = useState(false);
   const [showExtendPopUp, setShowExtendPopUp] = useState(false)
   const [countdownEnded, setCountdownEnded] = useState(false);
   const [countdownTime, setCountdownTime] = useState(30);
+  const [selectedIdeas, setSelectedIdeas] = useState([]);
 
 
   const handleSend = () => {
@@ -47,11 +46,9 @@ const AdminBrainStorming = () => {
           isBold,
           isItalic,
           color: selectedColor,
-          file: selectedFile
         }
       ]);
       setTextInput('');
-      setSelectedFile(null);
     }
   };
 
@@ -82,11 +79,6 @@ const AdminBrainStorming = () => {
     }
   };
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0]; 
-    setSelectedFile(file);
-  };
-
   const handleDeleteAll = () => {
     setUserThoughts([]);
   };
@@ -96,7 +88,13 @@ const AdminBrainStorming = () => {
   };
 
   const toggleCombinePopUp = () => {
-    setShowCombinePopUp(prev => !prev);
+    if (selectedIdeas.length >= 2) {
+      setShowCombinePopUp(true);
+    }
+  };
+  
+  const handleCancel = () => {
+    setShowCombinePopUp(false);
   };
 
   const toggleExtendPopUp = () => {
@@ -118,6 +116,12 @@ const AdminBrainStorming = () => {
     }
     return pairs;
   };
+
+  const handleCombinedIdeaSend = (combinedIdeaText) => {
+    setUserThoughts([{ text: combinedIdeaText, isBold: false, isItalic: false, color: '#000000', file: null }]);
+  };
+  
+
   const [searchParams,setSearchParams] = useSearchParams();
     const ProjectTitle = searchParams.get("ProjectTitle");
     const MainTopic = searchParams.get("MainTopic");
@@ -157,7 +161,7 @@ const AdminBrainStorming = () => {
         <label htmlFor="color-picker">
           <img src={Color} className='w-6 cursor-pointer'/>
         </label>
-        <input type='color' id='color-picker' value={selectedColor} onChange={(e) => handleColorChange(e.target.value)} className='hidden '/>
+        <input type='color' id='color-picker' value={selectedColor} onChange={(e) => handleColorChange(e.target.value)} className='hidden'/>
 
         <img src={Line1} className='w-6'/>
         <img src={Clear} className='w-6 cursor-pointer' onClick={clearIdeas}/>
@@ -176,15 +180,8 @@ const AdminBrainStorming = () => {
                  style={{ fontWeight: isBold ? 'bold' : 'normal', fontStyle: isItalic ? 'italic' : 'normal' , color: selectedColor }}
               />
               <div className='flex items-center '>
-                <img src={Attach} className='w-8' onClick={() => fileInputRef.current.click()} />
-                <input
-                  type="file"
-                  onChange={handleFileChange}
-                  className="hidden"
-                  ref={fileInputRef}
-                />
                 <div 
-                  className='flex items-center justify-center rounded-full bg-[#59AEF8] p-2'
+                  className='flex items-center justify-center rounded-full bg-[#59AEF8] p-2 cursor-pointer'
                   onClick={handleSend}
                 >
                   <img src={Send} className='w-8'/>
@@ -203,12 +200,12 @@ const AdminBrainStorming = () => {
            
            
             {userThoughts.length > 0 && (
-              <div className="flex flex-wrap justify-between px-12 h-[55vh] w-5/6 ml-24 overflow-x-hidden overflow-y-scroll scrollbar-thin scrollbar-webkit" style={{ wordWrap: 'break-word' }}>
+              <div className="flex flex-wrap justify-start px-12 h-[55vh] w-5/6 ml-24 overflow-x-hidden overflow-y-scroll scrollbar-thin scrollbar-webkit" style={{ wordWrap: 'break-word' }}>
                 {groupUserThoughts().map((pair, index) => (
                   <div key={index} className="w-[30%]">
                     {countdownEnded ? (
                       <div className="w-full">
-                        <IdeaEvaluationAdmin ideas={pair} toggleCommentPopup={toggleCommentPopup} toggleCombinePopUp={toggleCombinePopUp} toggleExtendPopUp={toggleExtendPopUp} />
+                        <IdeaEvaluationAdmin ideas={pair} toggleCommentPopup={toggleCommentPopup} toggleCombinePopUp={toggleCombinePopUp} toggleExtendPopUp={toggleExtendPopUp} selectedIdeas={selectedIdeas} setSelectedIdeas={setSelectedIdeas}/>
                       </div>
                     ) : (
                       <div className="w-full">
@@ -218,7 +215,7 @@ const AdminBrainStorming = () => {
                   </div>
                 ))}
                 {showComment && <IdeaComment onClose={toggleCommentPopup} />}
-                {showCombinePopUp && <CombinePopUp onClose={toggleCombinePopUp} />}
+                {showCombinePopUp && ( <CombinePopUp onClose={() => setShowCombinePopUp(false)} selectedIdeas={selectedIdeas} onSend={handleCombinedIdeaSend} setUserThoughts={setUserThoughts}/>)}
                 {showExtendPopUp && <Extend onClose={toggleExtendPopUp} />}
               </div>
             )}
