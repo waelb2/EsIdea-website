@@ -504,6 +504,13 @@ const getProjectByUserId = async (req: Request, res: Response) => {
           model: 'IdeationMethod'
         }
       })
+      .populate({
+        path: 'projects.project',
+        populate: {
+          path: 'coordinator',
+          model: 'User'
+        }
+      })
 
     if (!user) {
       return res.status(404).json({
@@ -548,10 +555,10 @@ const getProjectByUserId = async (req: Request, res: Response) => {
         return null
       })
       const coordinator = {
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        profilePicUrl: user.profilePicUrl
+        firstName: project.project.coordinator.firstName,
+        lastName: project.project.coordinator.lastName,
+        email: project.project.coordinator.email,
+        profilePicUrl: project.project.coordinator.profilePicUrl
       }
       const formattedProject = {
         projectId: project.project.id,
