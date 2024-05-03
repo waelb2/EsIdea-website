@@ -12,6 +12,8 @@ import Line1 from '../../assets/Line 1.png'
 import Brain from '../../assets/Brain.png'
 import Attach from '../../assets/Attach.png'
 import Send from '../../assets/Send.png'
+import { useSearchParams } from 'react-router-dom'
+import useUser from '../../hooks/useUser'
 
 const AdminBrainWriting = () => {
 
@@ -45,15 +47,16 @@ const AdminBrainWriting = () => {
     const clearIdeas = () => {
       setUserThoughts([]);
     };
-  
+    const [searchParams,setSearchParams] = useSearchParams();
+    const ProjectTitle = searchParams.get("ProjectTitle");
+    const user = useUser();
+    const MainTopic = searchParams.get("MainTopic");
     return (
-
-      
     <div className='h-screen bg-[#F1F6FB] relative py-36'>
         <div className='flex justify-between items-center py-4 px-5 fixed top-0 left-0 right-0'>
           <div className='bg-white border border-black flex justify-between items-center px-2 w-56 h-10 rounded-full shadow-[0_4px_4px_rgba(0,0,0,0.2)]'>
             <a href="#"><img src={Back}/></a>
-            <p className='font-medium'>Project title</p>
+            <p className='font-medium'>{ProjectTitle}</p>
             <img src={Line} className='h-6'/>
             <img src={Download}/>
           </div>
@@ -65,8 +68,8 @@ const AdminBrainWriting = () => {
 
         <div className='flex flex-col items-end absolute right-0'>
           <div className='flex items-center bg-white h-8 w-14 border border-black rounded-l-full pl-4'>
-            <img src={Avatar}/>
-            <p className='ml-2 hidden '>User</p>
+            <img className='rounded-full h-6' src={user.user.profilePicUrl}/>
+            <p className='ml-2 hidden'>{`${user.user.firstName}`}</p>
           </div>
 
           <div className='flex items-center bg-white h-8 w-14 border border-black rounded-l-full pl-4'>
@@ -93,7 +96,7 @@ const AdminBrainWriting = () => {
         </div>
   
         <div className='text-center w-80 absolute left-1/2 transform -translate-x-1/2 top-8'>
-          <p className='text-3xl font-medium'>The theme</p>
+          <p className='text-3xl font-medium'>{MainTopic}</p>
           <p className=''>Use the prompt bellow to add your ideas about this theme</p>
         </div>
   

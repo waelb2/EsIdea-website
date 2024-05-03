@@ -1,4 +1,4 @@
-import React , {useState , useRef , useEffect} from 'react'
+import React , {useState , useRef} from 'react'
 import UserIdea from '../idea generation phase/UserIdea';
 import IdeaEvaluation from '../idea generation phase/IdeaEvaluation';
 import IdeaComment from '../Idea Comment/IdeaComment';

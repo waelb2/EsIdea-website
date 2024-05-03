@@ -403,6 +403,13 @@ const getProjectByUserId = (req, res) => __awaiter(void 0, void 0, void 0, funct
                 path: 'modules',
                 model: 'Module'
             }
+        })
+            .populate({
+            path: 'projects.project',
+            populate: {
+                path: 'ideationMethod',
+                model: 'IdeationMethod'
+            }
         });
         if (!user) {
             return res.status(404).json({
@@ -438,6 +445,7 @@ const getProjectByUserId = (req, res) => __awaiter(void 0, void 0, void 0, funct
             };
             const formattedProject = {
                 projectId: project.project.id,
+                IdeationMethod: project.project.ideationMethod.methodName,
                 ProjectTitle: title,
                 Description: description,
                 coordinator,
