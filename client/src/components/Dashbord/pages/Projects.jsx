@@ -48,6 +48,10 @@ const Projects = () => {
         setDisplayedProjects([...arr]);
     },[inputValue,projects])
 
+    useEffect(()=>{
+        document.title = "Projects";
+    },[])
+
     return (
     <>
     <div className='flex flex-col gap-y-4 h-full' onClick={()=>{setOpenedMore(-1)}}>
