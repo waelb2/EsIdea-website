@@ -37,5 +37,28 @@ module.exports = {
       xl: "1700px",
     },
   },
-  plugins: [require('tailwind-scrollbar'),],
+  plugins: [require('tailwind-scrollbar'),function({addUtilities}){
+    const newUtilities = {
+      ".scrollbar-thin" : {
+        scrollbarWidth : "thin",
+        scrollbarColor : "rgba(31 29 29 0.5) white"
+      },
+      ".scrollbar-webkit":{
+        "&::-webkit-scrolbar" : {
+          width: "8px"
+        },
+        "&::-webkit-scrollbar-track" : {
+          backgournd: "white"
+        },
+        "&::-webkit-scrollbar-track" : {
+          
+          backgourndColor: "rgb(31 41 55 0.5)",
+          borderRadius: "20px",
+          border: "1px solid white"
+        },          
+      }
+    }
+
+    addUtilities(newUtilities, ["responsive" , "hover"])
+  }],
 };

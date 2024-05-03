@@ -1,5 +1,5 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useContext, useState } from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import { Colaborators, Edit, ExportProj, More, MoveFavorite, OpenProj, Publish, TrashBlack } from '../../../assets'
 import { projectContext } from '../Dashbord';
@@ -7,6 +7,7 @@ import { useNavigate } from 'react-router-dom';
 import axios  from 'axios';
 
 const Card = ({proj,index,openedMore,setOpenedMore,handleMoveToTrash}) => {
+  console.log(proj)
   const navigate = useNavigate()
   const dataOptions  = { 
   year: 'numeric', 
@@ -97,7 +98,7 @@ const Card = ({proj,index,openedMore,setOpenedMore,handleMoveToTrash}) => {
 ]
 
   return (
-    <div className={`group flex flex-col w-full  rounded-xl   relative transition-all duration-500   hover:shadow-lg border-2 border-gray-200 cursor-pointer`}>
+    <div  className={`group flex flex-col w-full  rounded-xl   relative transition-all duration-500   hover:shadow-lg border-2 border-gray-200 cursor-pointer`}>
         {/* <input className='absolute top-2 left-2 outline-none border-none scale-110 cursor-pointer hidden group-hover:inline ' type="checkbox" /> */}
         <img className='h-32 object-cover rounded-t-xl' src={proj.ThumbnailUrl === "" ? "https://img.freepik.com/free-vector/startup-success-launch-business-project_107791-4758.jpg?t=st=1714342322~exp=1714345922~hmac=81d1a808f2b5abda57ed89b74489360abce54b3c9bdc7816ecd6a489f3339b35&w=1380": proj.ThumbnailUrl} alt="Project_Picture" />
         <div className='flex flex-col gap-y-1 p-3 bg-slate-100  rounded-b-xl flex-grow'>
