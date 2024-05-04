@@ -22,9 +22,40 @@ import useUser from '../../hooks/useUser'
 
 
 const AdminBrainStorming = () => {
+  const trashThoughts = [
+    {
+      text: "feu",
+      isBold: false,
+      isItalic: false,
+      color: "#000",
+      selected: false,
+    },
+    {
+      text: "jardin",
+      isBold: false,
+      isItalic: false,
+      color: "#000",
+      selected: false,
+    },
+    {
+      text: "zino",
+      isBold: false,
+      isItalic: false,
+      color: "#000",
+      selected: false,
+    },
+    {
+      text: "good luck l7bib",
+      isBold: false,
+      isItalic: false,
+      color: "#000",
+      selected: false,
+    },
+  ]
 
   const [textInput, setTextInput] = useState('');
-  const [userThoughts, setUserThoughts] = useState([]);
+  // const [userThoughts, setUserThoughts] = useState([]);
+  const [userThoughts, setUserThoughts] = useState(trashThoughts);
   const [isBold, setIsBold] = useState(false);
   const [isItalic, setIsItalic] = useState(false);
   const [showColorPicker, setShowColorPicker] = useState(false);
@@ -35,6 +66,7 @@ const AdminBrainStorming = () => {
   const [countdownEnded, setCountdownEnded] = useState(false);
   const [countdownTime, setCountdownTime] = useState(30);
   const [selectedIdeas, setSelectedIdeas] = useState([]);
+  const [enlargedText, setEnlargedText] = useState('');
 
 
   const handleSend = () => {
@@ -46,6 +78,7 @@ const AdminBrainStorming = () => {
           isBold,
           isItalic,
           color: selectedColor,
+          selected: false,
         }
       ]);
       setTextInput('');
@@ -87,11 +120,6 @@ const AdminBrainStorming = () => {
     setShowComment(!showComment);
   };
 
-  const toggleCombinePopUp = () => {
-    if (selectedIdeas.length >= 2) {
-      setShowCombinePopUp(true);
-    }
-  };
   
   const handleCancel = () => {
     setShowCombinePopUp(false);
@@ -106,29 +134,57 @@ const AdminBrainStorming = () => {
   };
 
   const groupUserThoughts = () => {
-    const pairs = [];
-    for (let i = 0; i < userThoughts.length; i += 2) {
-      const pair = [userThoughts[i]];
-      if (userThoughts[i + 1]) {
-        pair.push(userThoughts[i + 1]);
-      }
-      pairs.push(pair);
-    }
-    return pairs;
-  };
-
-  const handleCombinedIdeaSend = (combinedIdeaText) => {
-    setUserThoughts([{ text: combinedIdeaText, isBold: false, isItalic: false, color: '#000000', file: null }]);
+    return userThoughts.map(idea => [idea]);
   };
   
+  const toggleCombinePopUp = (event) => {
+    event.stopPropagation();
+    if(showCombinePopUp){
+      // the pop up is displayed, close it
+      setShowCombinePopUp(false);
+    }else{
+      // the popup is hidden, show it
+      if (selectedIdeas.length >= 2) {
+        // just copy the selected ideas (already done, through the "selectedIdeas" state)
 
+        // open the pop up
+        setShowCombinePopUp(true);
+      }
+    }
+  };
+
+  const handleCombinedIdeaSend = (newIdeaText) => {
+    // filter out the selected ideas from the global ideas array, then create the new idea
+    const selectedIdeasTexts = selectedIdeas.map(idea => idea.text);
+
+    setUserThoughts(previousUserThoughts => [...previousUserThoughts.filter(userThought => !selectedIdeasTexts.includes(userThought.text)), {
+      text: newIdeaText,
+      color: '#000',
+      isBold: false,
+      isItalic: false,
+      selected: false,
+    }]);
+
+    // clear out the selectedIdeas state
+    setSelectedIdeas([]);
+
+    // close the popup
+    setShowCombinePopUp(false);
+  };
+
+  const handleEnlarge = (text) => {
+    setEnlargedText(text);
+    toggleExtendPopUp();
+  };
+  
+  
   const [searchParams,setSearchParams] = useSearchParams();
     const ProjectTitle = searchParams.get("ProjectTitle");
     const MainTopic = searchParams.get("MainTopic");
     const user = useUser();
     const navigate = useNavigate();
   return (
-    <div className='bg-[#F1F6FB] relative pt-36 min-h-screen'>
+    <div key={'hello'} className='bg-[#F1F6FB] relative pt-36 min-h-screen'>
       <div className='flex justify-between items-center py-4 px-5 fixed top-0 left-0 right-0'>
         <div className='bg-white border border-black flex justify-between items-center px-2 w-56 h-10 rounded-full shadow-[0_4px_4px_rgba(0,0,0,0.2)]'>
           <img className='cursor-pointer' onClick={()=>{navigate(-1)}} src={Back}/>
@@ -201,11 +257,19 @@ const AdminBrainStorming = () => {
            
             {userThoughts.length > 0 && (
               <div className="flex flex-wrap justify-start px-12 h-[55vh] w-5/6 ml-24 overflow-x-hidden overflow-y-scroll scrollbar-thin scrollbar-webkit" style={{ wordWrap: 'break-word' }}>
-                {groupUserThoughts().map((pair, index) => (
-                  <div key={index} className="w-[30%]">
+                {groupUserThoughts().map(pair => (
+                  <div key={pair.text} className="w-[30%]">
                     {countdownEnded ? (
                       <div className="w-full">
-                        <IdeaEvaluationAdmin ideas={pair} toggleCommentPopup={toggleCommentPopup} toggleCombinePopUp={toggleCombinePopUp} toggleExtendPopUp={toggleExtendPopUp} selectedIdeas={selectedIdeas} setSelectedIdeas={setSelectedIdeas}/>
+                        <IdeaEvaluationAdmin  
+                            ideas={pair}
+                            toggleCommentPopup={toggleCommentPopup}
+                            onEnlargeClick={handleEnlarge}
+                            toggleCombinePopUp={toggleCombinePopUp}
+                            toggleExtendPopUp={toggleExtendPopUp}
+                            selectedIdeas={selectedIdeas}
+                            setSelectedIdeas={setSelectedIdeas}
+                        />
                       </div>
                     ) : (
                       <div className="w-full">
@@ -215,8 +279,8 @@ const AdminBrainStorming = () => {
                   </div>
                 ))}
                 {showComment && <IdeaComment onClose={toggleCommentPopup} />}
-                {showCombinePopUp && ( <CombinePopUp onClose={() => setShowCombinePopUp(false)} selectedIdeas={selectedIdeas} onSend={handleCombinedIdeaSend} setUserThoughts={setUserThoughts}/>)}
-                {showExtendPopUp && <Extend onClose={toggleExtendPopUp} />}
+                {showCombinePopUp && ( <CombinePopUp onClose={(event) => toggleCombinePopUp(event)} selectedIdeas={selectedIdeas} onSend={handleCombinedIdeaSend} setUserThoughts={setUserThoughts}/>)}
+                {showExtendPopUp && <Extend onClose={toggleExtendPopUp} enlargedText={enlargedText}/>}
               </div>
             )}
            </div> 

@@ -10,16 +10,6 @@ const CombinePopUp = ({ onClose, selectedIdeas , onSend , setUserThoughts }) => 
 
   const handleSend = () => {
     if (combinedIdea.trim() !== '') {
-      setUserThoughts(prevUserThoughts => [
-        ...prevUserThoughts,
-        {
-          text: combinedIdea,
-          isBold: false,
-          isItalic: false,
-          color: '#000000',
-          file: null
-        }
-      ]);
       setCombinedIdea('');
       onSend(combinedIdea);
     }
@@ -33,7 +23,7 @@ const CombinePopUp = ({ onClose, selectedIdeas , onSend , setUserThoughts }) => 
         {/* Control buttons */}
         <ul className='flex absolute right-8 top-10'>
           <li className='flex justify-center items-center w-16 rounded-full text-sm text-skyBlue font-semibold cursor-pointer' onClick={onClose}>Cancel</li>
-          <li className='bg-skyBlue flex justify-center items-center w-16 h-7 rounded-full text-sm text-white font-semibold ml-3 cursor-pointer'>Save</li>
+          <li className='bg-skyBlue flex justify-center items-center w-16 h-7 rounded-full text-sm text-white font-semibold ml-3 cursor-pointer' onClick={handleSend}>Save</li>
         </ul>
 
         {/* Content container */}
@@ -43,10 +33,11 @@ const CombinePopUp = ({ onClose, selectedIdeas , onSend , setUserThoughts }) => 
             <p className='text-sm'>Here are all the ideas you selected. <br /> Please use the prompt below to <br /> combine them</p>
           </div>
 
-          <div className='flex flex-wrap h-4/5 w-full pt-2 pb-20 gap-24 overflow-y-auto'>
-            {selectedIdeas.map((idea, index) => (
-              <div key={index} className='bg-gray-200 w-[40%] h-full p-4 rounded-lg'>
-                <p className='text-gray-800'>{idea.text}</p>
+          <div className='flex flex-wrap h-4/5 w-full pt-2 pb-20 gap-4 overflow-y-auto'>
+            {selectedIdeas.map(idea => (
+              <div key={idea.text} className='bg-white border border-black w-[40%] h-full p-4 rounded-2xl'>
+                <p className='text-lg font-medium mb-3'> Someone thinks :</p>
+                <p className='text-gray-800'>•{idea.text}</p>
               </div>
             ))}
           </div>
@@ -64,13 +55,8 @@ const CombinePopUp = ({ onClose, selectedIdeas , onSend , setUserThoughts }) => 
               onChange={(e) => setCombinedIdea(e.target.value)}
             />
             <div className='flex items-center '>
-              <img src={Attach} className='w-8' />
-              <input
-                type="file"
-                className="hidden"
-              />
-              <div className='flex items-center justify-center rounded-full bg-[#59AEF8] p-2'>
-                <img src={Send} className='w-8' onClick={handleSend}/>
+              <div className='flex items-center justify-center rounded-full cursor-pointer bg-[#59AEF8] p-2'>
+                <img src={Send} className='w-6' onClick={handleSend}/>
               </div>
             </div>
           </div>

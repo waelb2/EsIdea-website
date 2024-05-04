@@ -3,8 +3,9 @@ import IdeaComment from '../Idea Comment/IdeaComment';
 import Enlarge from '../../assets/Enlarge.png'
 import Compress from '../../assets/Compress.png'
 import CombinePopUp from '../Combine/CombinePopUp';
+import Extend from '../Extend/Extend';
 
-const IdeaEvaluationAdmin = ({ideas , toggleCommentPopup , toggleCombinePopUp , toggleExtendPopUp, selectedIdeas, setSelectedIdeas}) => {
+const IdeaEvaluationAdmin = ({ideas , toggleCommentPopup , onEnlargeClick , toggleCombinePopUp , toggleExtendPopUp, selectedIdeas, setSelectedIdeas}) => {
 
   const [clicked, setClicked] = useState(false);
   const [count, setCount] = useState(0);
@@ -28,6 +29,11 @@ const IdeaEvaluationAdmin = ({ideas , toggleCommentPopup , toggleCombinePopUp , 
       });
     };
 
+    const handleEnlarge = (text) => {
+      setEnlargedText(text); 
+      toggleExtendPopUp(); 
+    };
+
 
     return (
         <div className={`bg-[#FEFEFE] p-8 m-2 rounded-2xl shadow-md hover:shadow-lg border ${clicked ? 'border-skyBlue border-2' : 'border-black'} max-w-[400px] relative group`} onClick={handleClick}>
@@ -35,13 +41,13 @@ const IdeaEvaluationAdmin = ({ideas , toggleCommentPopup , toggleCombinePopUp , 
         <div className='flex items-center justify-between'>
             <p className='font-medium'>User thinks :</p>
             <div className='flex items-center justify-center w-9 opacity-0 group-hover:opacity-100 transition-opacity'>
-              <img src={Enlarge} alt="Enlarge" className='cursor-pointer' onClick={() => toggleCombinePopUp(selectedIdeas)}/> 
-              <img src={Compress} alt="Compress" className='cursor-pointer' onClick={toggleExtendPopUp}/>
+              <img src={Enlarge} alt="Enlarge" className='cursor-pointer' onClick={() => onEnlargeClick(ideas[0].text)} />
+              <img src={Compress} alt="Compress" className='cursor-pointer' onClick={(event) => toggleCombinePopUp(event, selectedIdeas)}/>
             </div>
         </div>
 
     
-          {ideas.map((idea, index) => (
+          {ideas.map(idea => (
             <p key={idea.text} className="relative mt-2 pl-1.5 text-sm" style={{ color: idea.color }} >
                 <span className="absolute left-0 top-0">&#8226;</span> 
                 <span className="overflow-hidden whitespace-pre-wrap break-words ml-2" style={{fontWeight: idea.isBold ? 'bold' : 'normal', fontStyle: idea.isItalic ? 'italic' : 'normal'}}>
