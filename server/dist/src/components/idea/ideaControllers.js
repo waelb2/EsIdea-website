@@ -23,9 +23,23 @@ const getIdeasByProject = (req, res) => __awaiter(void 0, void 0, void 0, functi
             });
         }
         const ideas = yield ideaModels_1.Idea.find({
-            project_id: projectId
+            projectId
+        }).populate('createdBy');
+        const formattedIdeas = ideas.map(idea => {
+            const formattedIdea = {
+                content: idea.content,
+                createdBy: {
+                    firstName: idea.createdBy.firstName,
+                    lastName: idea.createdBy.lastName,
+                    email: idea.createdBy.email,
+                    profilePicUrl: idea.createdBy.profilePicUrl
+                },
+                createdAt: idea.creationDate,
+                votes: idea.votes
+            };
+            return formattedIdea;
         });
-        res.status(201).json(ideas);
+        res.status(201).json(formattedIdeas);
     }
     catch (error) {
         console.log(error);
@@ -45,7 +59,7 @@ const postIdea = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 error: `User with id : ${userId} does not exist`
             });
         }
-        const { projectId, topicId, content } = req.body;
+        const { projectId, topicId, content, isBold, isItalic, color } = req.body;
         const project = yield projectModels_1.Project.findById(projectId);
         if (!project) {
             return res.status(404).json({
@@ -74,7 +88,10 @@ const postIdea = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             createdBy: user,
             topic,
             content,
-            creationDate: new Date()
+            creationDate: new Date(),
+            isBold,
+            isItalic,
+            color
         });
         if (!createdIdea) {
             return res.status(500).json({

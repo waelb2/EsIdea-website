@@ -14,4 +14,7 @@ export interface IdeaInterface extends Document {
     author: UserInterface
   }[]
   votes: number
+  isBold: boolean
+  isItalic: boolean
+  color: string
 }

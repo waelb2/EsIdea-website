@@ -37,7 +37,10 @@ const ideaSchema = new Schema<IdeaInterface>({
   votes: {
     type: Number,
     default: 0
-  }
+  },
+  isBold: Boolean,
+  isItalic: Boolean,
+  color: String
 })
 
 const Idea = mongoose.model<IdeaInterface>('Idea', ideaSchema)
