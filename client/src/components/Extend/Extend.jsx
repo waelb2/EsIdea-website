@@ -5,7 +5,7 @@ import Send from '../../assets/Send.png';
 import Star from '../../assets/Star.png';
 import Nothing from '../../assets/ProjectsEmpty.svg';
 
-const Extend = ({ onClose }) => {
+const Extend = ({ onClose , enlargedText }) => {
   return (
     <div className='h-screen flex justify-center py-5 fixed top-0 left-0 right-0 z-50 bg-gray-900 bg-opacity-50'>
       <div className='bg-white border border-black rounded-xl w-4/5 relative h-full'>
@@ -20,10 +20,7 @@ const Extend = ({ onClose }) => {
         <div className=' w-5/6 my-0 mx-auto'>
           <p className='font-medium mb-1'>The idea to extend :</p>
           <div className=' px-4 py-2 shadow-[0_6px_16px_0px_rgba(0,0,0,0.3)]  border border-black rounded-2xl mb-4'>
-            <p className='text-sm'><span>•</span> The sun peeked over the horizon, casting its golden hues across the landscape.</p>
-            <p className='text-sm'><span>•</span> Birds chirped their morning melodies, greeting the dawn with enthusiasm.</p>
-            <p className='text-sm'><span>•</span> Dew glistened on the grass, a testament to the night's embrace.</p>
-            <p className='text-sm'><span>•</span> A gentle breeze whispered through the trees, carrying the scent of blooming flowers.</p>
+             <p className='text-sm'><span>•</span> {enlargedText}</p>
           </div>
           <p className='font-medium'>The new ideas :</p>
           <div className='w-full flex flex-col items-center justify-center my-0 mx-auto'>

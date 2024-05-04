@@ -48,7 +48,23 @@ const ideaSchema = new mongoose_1.Schema({
         type: mongoose_1.default.Schema.Types.ObjectId,
         ref: 'Topic',
         required: true
-    }
+    },
+    comments: [
+        {
+            content: String,
+            author: {
+                type: mongoose_1.default.Schema.Types.ObjectId,
+                ref: 'User'
+            }
+        }
+    ],
+    votes: {
+        type: Number,
+        default: 0
+    },
+    isBold: Boolean,
+    isItalic: Boolean,
+    color: String
 });
 const Idea = mongoose_1.default.model('Idea', ideaSchema);
 exports.Idea = Idea;
