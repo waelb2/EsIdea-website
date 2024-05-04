@@ -9,4 +9,9 @@ export interface IdeaInterface extends Document {
   content: string
   creationDate: Date
   topic: TopicInterface
+  comments: {
+    content: string
+    author: UserInterface
+  }[]
+  votes: number
 }
