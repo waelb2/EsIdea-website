@@ -214,8 +214,7 @@ const createProject = async (req: Request, res: Response) => {
   }
 }
 const updateProject = async (req: Request, res: Response) => {
-
-  const {userId} = req.user as AuthPayload
+  const { userId } = req.user as AuthPayload
 
   const { projectId } = req.params
   let secureURL: string = ''
@@ -247,10 +246,8 @@ const updateProject = async (req: Request, res: Response) => {
       })
     }
 
-    const {
-      title,
-      description
-    }: { title: string; description: string; } = req.body
+    const { title, description }: { title: string; description: string } =
+      req.body
 
     console.log(req.body)
     project.title = title
@@ -562,7 +559,7 @@ const getProjectByUserId = async (req: Request, res: Response) => {
       }
       const formattedProject = {
         projectId: project.project.id,
-        IdeationMethod:project.project.ideationMethod.methodName,
+        IdeationMethod: project.project.ideationMethod.methodName,
         ProjectTitle: title,
         Description: description,
         coordinator,
@@ -576,7 +573,8 @@ const getProjectByUserId = async (req: Request, res: Response) => {
         Events: events.map(event => event.eventName),
         ThumbnailUrl: thumbnailUrl,
         isTrashed: project.isTrashed,
-        joinedDate: project.joinedAt
+        joinedDate: project.joinedAt,
+        projectStatus: project.project.status
       }
 
       return formattedProject
