@@ -106,10 +106,10 @@ const Card = ({proj,index,openedMore,setOpenedMore,handleMoveToTrash}) => {
     }
   }
   return (
-    <div onClick={navigateToIdeationPage}  className={`group flex flex-col w-full  rounded-xl   relative transition-all duration-500   hover:shadow-lg border-2 border-gray-200 cursor-pointer`}>
+    <div onClick={navigateToIdeationPage}  className={`group flex flex-col w-full  rounded-md   relative transition-all duration-500   hover:shadow-lg border-2 border-gray-200 cursor-pointer`}>
         {/* <input className='absolute top-2 left-2 outline-none border-none scale-110 cursor-pointer hidden group-hover:inline ' type="checkbox" /> */}
-        <img className='h-32 object-cover rounded-t-xl' src={proj.ThumbnailUrl === "" ? "https://img.freepik.com/free-vector/startup-success-launch-business-project_107791-4758.jpg?t=st=1714342322~exp=1714345922~hmac=81d1a808f2b5abda57ed89b74489360abce54b3c9bdc7816ecd6a489f3339b35&w=1380": proj.ThumbnailUrl} alt="Project_Picture" />
-        <div className='flex flex-col gap-y-1 p-3 bg-slate-100  rounded-b-xl flex-grow'>
+        <img className='h-32 object-contain rounded-t-md' src={proj.ThumbnailUrl === "" ? "https://img.freepik.com/free-vector/startup-success-launch-business-project_107791-4758.jpg?t=st=1714342322~exp=1714345922~hmac=81d1a808f2b5abda57ed89b74489360abce54b3c9bdc7816ecd6a489f3339b35&w=1380": proj.ThumbnailUrl} alt="Project_Picture" />
+        <div className='flex flex-col gap-y-1 p-3 bg-slate-100  rounded-b-md flex-grow'>
             <div className='flex justify-between items-center'>
                 <h1 className='text-[14px] font-semibold'>{proj.ProjectTitle}</h1>
                 <p className='text-[12px] '>{new Date(proj.joinedDate).toLocaleDateString(dataOptions)}</p>

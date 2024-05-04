@@ -466,7 +466,8 @@ const getProjectByUserId = (req, res) => __awaiter(void 0, void 0, void 0, funct
                 Events: events.map(event => event.eventName),
                 ThumbnailUrl: thumbnailUrl,
                 isTrashed: project.isTrashed,
-                joinedDate: project.joinedAt
+                joinedDate: project.joinedAt,
+                projectStatus: project.project.status
             };
             return formattedProject;
         });
