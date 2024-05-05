@@ -125,10 +125,46 @@ const getUser = async (req:Request
     }
 }
 
+const addFavouriteProject = async (req: Request, res: Response) => {
+  const errResult = validationResult(req)
+  if(!errResult.isEmpty())
+      return res.status(400).send({ errors: errResult.array() })
+
+  const { userId, projectId } = req.body
+  
+  if (!isObjectIdOrHexString(userId) || !isObjectIdOrHexString(projectId)) {
+    return res
+      .status(400)
+      .send({ error: 'Bad id must be 24 character hex string' })
+  }
+  const userObjectId = new mongoose.Types.ObjectId(userId)
+  const projectObjectId = new mongoose.Types.ObjectId(projectId)
+
+  try {
+      const user = await User.findById(userObjectId)
+      if (!user) {
+        return res.status(404).send({ error: 'User not found' })
+      }
+      for(const projectObj of user.projects) {
+        console.log("got in !!!\n") 
+        if (projectObjectId.equals(new mongoose.Types.ObjectId(projectObj.project.toString()))) {
+          user.projects[user.projects.indexOf(projectObj)].isFav = true
+          await user.save()
+          return res.status(200).send({ msg: 'Project added to favourites' })
+        }
+      }
+      return res.status(400).send({ error: 'The user is not a member of the given project' })
+  } catch (error) {
+      console.log(error)
+      return res.sendStatus(400)
+  }
+}
+
 export {
   upload,
   modifyProfilePicture,
   createFeedback,
   createPublicProjectRequest,
-  getUser
+  getUser,
+  addFavouriteProject
 }

@@ -2,8 +2,8 @@ import { profile } from "console"
 import express, {Request , Response} from "express"
 import { body, checkSchema, validationResult } from "express-validator"
 import mongoose, { isObjectIdOrHexString } from "mongoose"
-import { User, userIdValidationSchema } from "./userModels"
-import { createFeedback, createPublicProjectRequest, modifyProfilePicture, upload } from "./userControllers"
+import { User, addFavouriteProjectValidationSchema, userIdValidationSchema } from "./userModels"
+import { addFavouriteProject, createFeedback, createPublicProjectRequest, modifyProfilePicture, upload } from "./userControllers"
 import { createFeedbackValidationSchema } from "../feedback/feedbackModel"
 import { createPublicProjectRequestValidationSchema } from "../publicProjectRequest/publicProjectRequestModel"
 
@@ -26,5 +26,7 @@ router.post("/settings/feedback", checkSchema(createFeedbackValidationSchema), c
 
 router.post("/publicProjectRequest", checkSchema(createPublicProjectRequestValidationSchema),
   createPublicProjectRequest)
+
+router.patch("/project/favourite", checkSchema(addFavouriteProjectValidationSchema), addFavouriteProject)
 
 export default router

@@ -4,7 +4,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
-const invitationControllers_1 = require("./invitationControllers");
+// import { acceptInvitation } from './invitationControllers'
 const router = express_1.default.Router();
-router.post('/accept', invitationControllers_1.acceptInvitation);
+// router.post('/accept', acceptInvitation)
 exports.default = router;

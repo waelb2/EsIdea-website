@@ -48,6 +48,14 @@ const userSchema = new Schema<UserInterface>({
             ref: 'Project',
         },
         joinedAt: Date,
+        isTrashed: {
+            type: Boolean,
+            default: false
+        },
+        isFav: {
+            type: Boolean,
+            default: false
+        }
     }],
     projectInvitations: [{
         type: mongoose.Types.ObjectId,
@@ -81,6 +89,19 @@ const userIdValidationSchema = {
     }
 }
 
-export { User, UserRole, userIdValidationSchema }
+const addFavouriteProjectValidationSchema = {
+    userId: {
+        notEmpty: {
+            errorMessage: "Must provide the id of the user"
+        }
+    },
+    projectId: {
+        notEmpty: {
+            errorMessage: "Must provide the id of the project"
+        }
+    }
+}
+
+export { User, UserRole, userIdValidationSchema, addFavouriteProjectValidationSchema }
 
 

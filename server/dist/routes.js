@@ -1,0 +1,26 @@
+"use strict";
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
+Object.defineProperty(exports, "__esModule", { value: true });
+const express_1 = __importDefault(require("express"));
+const userRoutes_1 = __importDefault(require("./src/components/user/userRoutes"));
+const authRoutes_1 = __importDefault(require("./src/components/auth/authRoutes"));
+const dashboardRoutes_1 = __importDefault(require("./src/components/dashboard/dashboardRoutes"));
+const projectRoutes_1 = __importDefault(require("./src/components/project/projectRoutes"));
+const homeRoutes_1 = __importDefault(require("./src/components/home/homeRoutes"));
+const invitationRoutes_1 = __importDefault(require("./src/components/invitation/invitationRoutes"));
+const clubRoutes_1 = __importDefault(require("./src/components/club/clubRoutes"));
+const moduleRoutes_1 = __importDefault(require("./src/components/module/moduleRoutes"));
+const eventRoutes_1 = __importDefault(require("./src/components/event/eventRoutes"));
+const router = express_1.default.Router();
+router.use('/user', userRoutes_1.default);
+router.use('/home', homeRoutes_1.default);
+router.use('/auth', authRoutes_1.default);
+router.use('/dashboard', dashboardRoutes_1.default);
+router.use('/project', projectRoutes_1.default);
+router.use('/invitation', invitationRoutes_1.default);
+router.use('/club', clubRoutes_1.default);
+router.use('/module', moduleRoutes_1.default);
+router.use('/event', eventRoutes_1.default);
+exports.default = router;
