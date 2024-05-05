@@ -3,22 +3,86 @@ import React, { createContext, useEffect, useRef, useState } from 'react'
 import { BrainstormingMethodIcon, BrainwritingMethodIcon, Search, blackClose,Back, ProjectsEmpty, dragdropfiles, User } from '../../../assets';
 import propTypes from 'prop-types';
 import Select from './Select'
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
 import { useDebounce } from '../constants';
-import { ColorRing } from 'react-loader-spinner';
+import { ColorRing, ThreeDots } from 'react-loader-spinner';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { projectContext } from '../Dashbord';
 export const DependenciesContext = createContext();
-const CreateNewProject = ({visible,closePopUp,currentPage,nextPage,prevPage}) => {
-        const navigate = useNavigate()
-        const [image, setImage] = useState(null)
-        const [clubs,setClubs] = useState(null);
-        const [modules,setModules] = useState(null);
-        const [events,setEvents] = useState(null);
-        const userToken = localStorage.getItem('userToken')
-        const getTags = async (tagPath,callback) =>{
-                try {
+const CreateNewProject = ({method,setMethod,visible,closePopUp,currentPage,nextPage,prevPage}) => {
+    const {getProjects,displayMessageToUser} = useContext(projectContext)
+    const navigate = useNavigate()
+    const [image, setImage] = useState(null)
+    const [clubs,setClubs] = useState(null);
+    const [modules,setModules] = useState(null);
+    const [events,setEvents] = useState(null);
+    const [projectName,setProjectName] = useState("");
+    const [description,setDescription] = useState("");
+    const [tags,setTags] = useState([]);
+    const [tagsDisplayed,setTagsDisplayed] = useState([]);
+    const [mainTopic,setMainTopic] = useState("");
+    const [subTopics,setSubTopics] = useState([]);
+    const [addSubTopicState,setAddSubTopicState] = useState(false);
+    const [subTopicInputValue,setSubTopicInputValue] = useState("");
+    const [banner,setBanner] = useState(null);
+    const [loading,setLoading] = useState(false);
+    const [searchColl,setSearchColl] = useState("");
+    const [displayedCollaborators,setDisplayedCollaborators] = useState([]);
+    const [collaborators,setCollaborators] = useState([]);
+    const debouncedSearch = useDebounce(searchColl,500);
+    const [active,setActive] = useState("");
+    const [inputValue,setInputValue] = useState("");
+    const browseRef = useRef();
+    const userToken = localStorage.getItem('userToken')
+    const methods = [{
+            Id:"BrainstormingMethodIcon_btn",
+            icon:BrainstormingMethodIcon,
+            title:"Brainstorming",
+            action:function(){
+                setMethod("Brainstorming")
+                nextPage();
+            }
+        },
+        {
+            Id:"BrainwritingMethodIcon_btn",
+            icon:BrainwritingMethodIcon,
+            title:"Brainwriting",
+            action:function(){
+                setMethod("Brainwriting");
+                nextPage();
+            }
+        }
+    ]
+    const createButtonRef = useRef();
+    const displayedMethods = methods.filter(method=>method.title.toLocaleLowerCase().includes(inputValue.toLocaleLowerCase()))
+    const formattedTags = tags.map(tag=>{
+        return (
+            {tagType : tag.tagType,
+            tagId : tag.tagId
+            }
+        )
+    })
+    const [createProjectState,setcreateProjectState] = useState(false);
+    // creating the project data object
+    const myForm = new FormData()
+    myForm.append('projectThumbnail',image)
+    myForm.append('projectTitle', projectName);
+    myForm.append('description', description);
+    myForm.append('ideationMethodName', method);
+    collaborators.forEach(collaborator => {
+        myForm.append('collaborators[]', collaborator.email);
+    });
+    myForm.append('mainTopic', mainTopic);
+    subTopics.forEach(subTopic => {
+        myForm.append('subTopics[]', subTopic);
+    });
+    formattedTags.forEach(tag => {
+        myForm.append('tags[]',JSON.stringify( tag));
+    });
+    ////////////////////:::::Methods::::://///////////////////////////
+    const getTags = async (tagPath,callback) =>{
+        try {
             const userToken = localStorage.getItem('userToken')
             const response = await axios.get(`http://localhost:3000/${tagPath}`, {
             headers: {
@@ -27,34 +91,21 @@ const CreateNewProject = ({visible,closePopUp,currentPage,nextPage,prevPage}) =>
              'Authorization': `Bearer ${userToken}`
           },
         });
-
         if (response.status === 200) {
             callback(response.data);
-            //console.log(response.data)
         } else {
           throw new Error("Authentication has failed!");
         } 
-                } catch (error) {
-                   console.log(error) 
-                   throw new Error 
-                }
+        } catch (error) {
+            console.log(error) 
+            throw new Error 
         }
-        useEffect(()=>{
-            getTags('club/getClubs',setClubs)
-            getTags('module/getModules',setModules)
-            getTags('event/getEvents',setEvents)
-        }, [])
-    //////////////////////////////////////////////////////
-    const [method,setMethod] = useState("");
-    const [projectName,setProjectName] = useState("");
-    const [description,setDescription] = useState("");
-    const [tags,setTags] = useState([]);
-    const [tagsDisplayed,setTagsDisplayed] = useState([]);
-    const [mainTopic,setMainTopic] = useState("");
-    ///////////////////////////////////////////////
-    const [subTopics,setSubTopics] = useState([]);
-    const [addSubTopicState,setAddSubTopicState] = useState(false);
-    const [subTopicInputValue,setSubTopicInputValue] = useState("");
+    }
+    useEffect(()=>{
+        getTags('club/getClubs',setClubs)
+        getTags('module/getModules',setModules)
+        getTags('event/getEvents',setEvents)
+    }, [])
     const handleAddNewSubTopic = ()=>{
         setAddSubTopicState(true);
     }
@@ -64,23 +115,13 @@ const CreateNewProject = ({visible,closePopUp,currentPage,nextPage,prevPage}) =>
             setSubTopicInputValue("");
             setAddSubTopicState(false);
         }else{
-            toast.error('You can\'t add empty sub topic!', {
-                position: "top-center",
-                autoClose: 5000,
-                hideProgressBar: false,
-                closeOnClick: true,
-                pauseOnHover: false,
-                draggable: false,
-                progress: undefined,
-                theme: "colored",
-                });
+            displayMessageToUser("error","You can't add empty sub topic!");
         }
     }
     const handleRemoveSubTopic = (ind)=>{
         const arr = subTopics.filter((_,index)=>ind !== index);
         setSubTopics(arr);
     }
-    // ////////////////////////////////
     const addTag= (item)=>{
         setTags(prevtags => [...prevtags,item.obj]);
         setTagsDisplayed(prevDisTags=>[...prevDisTags,item]);
@@ -92,29 +133,18 @@ const CreateNewProject = ({visible,closePopUp,currentPage,nextPage,prevPage}) =>
         setTagsDisplayed([...arr1]);
         setTags([...arr2]);
     }
-    //////////::files:://////////////
-    const [banner,setBanner] = useState(null);
     const handleDragOver = (event)=>{
         event.preventDefault();
     }
     const handleDrop=(event)=>{
         setBanner(URL.createObjectURL(event.dataTransfer.files[0]));
+        setImage(event.dataTransfer.files[0]);
         event.preventDefault();
     }
     const handleUpload=(event)=>{
         setBanner(URL.createObjectURL(event.target.files[0]))
         setImage(event.target.files[0])
     }
-    const browseRef = useRef();
-    ////////////////////////////////
-
-
-    // /////////:: Search collaborators////////////////::
-    const [loading,setLoading] = useState(false);
-    const [searchColl,setSearchColl] = useState("");
-    const [displayedCollaborators,setDisplayedCollaborators] = useState([]);
-    const [collaborators,setCollaborators] = useState([]);
-    const debouncedSearch = useDebounce(searchColl,500);
     useEffect(()=>{
         const  loadCollaborators = ()=>{
             setLoading(true);
@@ -139,85 +169,57 @@ const CreateNewProject = ({visible,closePopUp,currentPage,nextPage,prevPage}) =>
             return arr;
         });
     }
-
-
-
-    /////////////////////////
-
-
-    const [active,setActive] = useState("");
-    const dependencies = {addTag,removeTag,active,setActive};
-    ////////////////////////////////////////////////////////////////////////////////////////
-    const [inputValue,setInputValue] = useState("");
-    const methods = [
-        {
-            Id:"BrainstormingMethodIcon_btn",
-            icon:BrainstormingMethodIcon,
-            title:"Brainstorming",
-            action:function(){
-                setMethod("Brainstorming")
-                nextPage();
-            }
-        },
-        {
-            Id:"BrainwritingMethodIcon_btn",
-            icon:BrainwritingMethodIcon,
-            title:"Brainwriting",
-            action:function(){
-                setMethod("Brainwriting");
-                nextPage();
-            }
-        }
-    ]
-
-    const formattedTags = tags.map(tag=>{
-        return (
-            {tagType : tag.tagType,
-            tagId : tag.tagId
-            }
-        )
-    })
-    const displayedMethods = methods.filter(method=>method.title.toLocaleLowerCase().includes(inputValue.toLocaleLowerCase()))
-     
-    
-    // creating the project data object
-
-    const myForm = new FormData()
-    myForm.append('projectThumbnail',image)
-
-    myForm.append('projectTitle', projectName);
-    myForm.append('description', description);
-    myForm.append('ideationMethodName', method);
-    collaborators.forEach(collaborator => {
-        myForm.append('collaborators[]', collaborator.email);
-    });
-    myForm.append('mainTopic', mainTopic);
-    subTopics.forEach(subTopic => {
-        myForm.append('subTopics[]', subTopic);
-    });
-    formattedTags.forEach(tag => {
-        myForm.append('tags[]',JSON.stringify( tag));
-    });
-
-    
     const createProject = async ()=>{
+        createButtonRef.current.disabled = true;
+        setcreateProjectState(true);
         axios.post('http://localhost:3000/project/create-project',myForm, {headers: {
-    'Authorization': `Bearer ${userToken}`
-  },
-}).then(response => {
-    console.log('Response:', response.data);
-  })
-  .catch(error => { 
-    console.error('Error:', error.response.data.error);
-    if (error.response && error.response.status === 401){
-       navigate('/login') 
+            'Authorization': `Bearer ${userToken}`
+        },
+        }).then(response => {
+            closePopUp();
+            displayMessageToUser("success","Project Created succesfully.")
+            getProjects();
+            setcreateProjectState(false);
+        })
+        .catch(error => { 
+            console.error('Error:', error.response.data.error);
+            if (error.response && error.response.status === 401){
+            navigate('/login') 
+            }
+        });
     }
-  });
+    const displayError = ()=>{
+        displayMessageToUser("error","Please fill all fields!")
     }
+    const handleNext=()=>{
+        switch(currentPage){
+            case 2:
+                if(projectName !== '' && description !== '' && tags.length !== 0){
+                    nextPage()
+                }else{
+                    displayError();
+                }
+                break;
+            case 3:
+                if(collaborators.length !== 0){
+                    nextPage()   
+                }else{
+                    displayError();
+                }
+                break;
+            case 4:
+                if(mainTopic !== ""){
+                    nextPage()   
+                }else{
+                    displayError();
+                }
+                break
+        }
+    }
+    const dependencies = {addTag,removeTag,active,setActive};
     return (
         <div onClick={closePopUp} className={`fixed top-0 left-0 bg-black bg-opacity-40 w-screen min-h-screen backdrop-blur z-50 duration-500  transition-opacity ease-in-out flex justify-center items-center  ${visible?"Pop-up-Active":"Pop-up-notActive"}`}>
                 <div onClick={(e)=>{e.stopPropagation();setActive("")}} className='bg-white max-w-full w-[37.5rem]   rounded-2xl shadow-md  px-3 py-4 sm:py-7 sm:px-9 m-4'>
-                {/* min-h-[28.125rem] ss:min-h-[31.25rem]  max-h-full */}
                 <div className={`flex flex-col justify-center items-center`}>
 
                         <div className={`w-full flex  ${currentPage === 1 ? "justify-end":"justify-between"}`}>
@@ -235,7 +237,7 @@ const CreateNewProject = ({visible,closePopUp,currentPage,nextPage,prevPage}) =>
                             </div>
 
                             <div className='flex flex-wrap gap-3 justify-center  ss:px-9 ss:justify-start overflow-y-auto scroll-smooth py-2'>
-                                {displayedMethods.map((method)=>(<div onClick={method.action} className='bg-lightGrey w-[9rem] h-[7rem] rounded-md flex flex-col items-center justify-center cursor-pointer transition-shadow duration-300 hover:shadow-md' key={method.Id}>
+                                {displayedMethods.map((method)=>(<div onClick={method.action} className='bg-lightGrey w-[9rem] h-[7rem] rounded-md flex flex-col items-center justify-center cursor-pointer border-2 border-transparent transition-all duration-500 hover:border-slate-400' key={method.Id}>
                                     <img className='w-16 h-16' src={method.icon} alt={method.title} />
                                     <p className='text-black text-sm font-medium'>{method.title}</p>
                                 </div>))}
@@ -303,7 +305,7 @@ const CreateNewProject = ({visible,closePopUp,currentPage,nextPage,prevPage}) =>
                                     {
                                         displayedCollaborators.map((collaborator)=><div  className='flex justify-between items-center border rounded-md border-black p-2' key={collaborator.name}>
                                              <div className='flex gap-2'>
-                                                <img className='w-11 h-11 rounded-full' src={collaborator.profilePicUrl} alt="user" />
+                                                <img className='w-11 h-11 rounded-full' src={collaborator.profilePicUrl  ? collaborator.profilePicUrl : User} alt="user" />
                                                 <div className='flex flex-col justify-center'>
                                                     <p className='font-medium text-sm'>{collaborator.firstName + ' ' + collaborator.lastName}</p>
                                                     <p className='text-sm'>{collaborator.email}</p>
@@ -329,7 +331,7 @@ const CreateNewProject = ({visible,closePopUp,currentPage,nextPage,prevPage}) =>
                                     </div>:<div className='flex flex-col gap-1 overflow-y-auto scroll-smooth max-h-56'>
                                         {collaborators.map((collaborator,ind)=><div className='flex justify-between items-center border rounded-md border-black p-1 w-full' key={collaborator.email}>
                                             <div className='flex gap-2'>
-                                                <img className='w-11 h-11 rounded-full' src={collaborator.profilePicUrl} alt="user" />
+                                                <img className='w-11 h-11 rounded-full' src={collaborator.profilePicUrl  ? collaborator.profilePicUrl : User} alt="user" />
                                                 <div className='flex flex-col justify-center'>
                                                     <p className='font-medium text-sm'>{collaborator.firstName + ' ' + collaborator.lastName}</p>
                                                     <p className='text-sm'>{collaborator.email}</p>
@@ -356,7 +358,7 @@ const CreateNewProject = ({visible,closePopUp,currentPage,nextPage,prevPage}) =>
                             </div>
                             <div className='flex flex-col w-full gap-1 mb-3'>
                                 <div className='flex justify-between items-center'>
-                                    <label htmlFor='subTopic' className='text-black font-semibold'>Do you want to add sub topics</label>
+                                    <h1 className='text-black font-semibold'>Do you want to add sub topics</h1>
                                     <button onClick={handleAddNewSubTopic} className='bg-skyBlue py-1 px-2 rounded-lg text-realWhite text-nowrap'>Add new +</button>
                                 </div>
                                 <div className={`${addSubTopicState ? "block":"hidden"} flex justify-between items-center border rounded-md border-gray-700 p-2 gap-2`}>
@@ -400,20 +402,21 @@ const CreateNewProject = ({visible,closePopUp,currentPage,nextPage,prevPage}) =>
                             
                         </div>
                         <div className={`w-full ss:px-3 self-end  ${currentPage>1 && currentPage <=5 ? "flex justify-end" : "hidden" }`}>
-                                <button onClick={nextPage} className={`bg-skyBlue px-3 py-1 rounded-md text-white ${currentPage < 5 ?"inline":"hidden"}`}>Next</button>
-                                <button onClick={createProject} className={`bg-skyBlue px-3 py-1 rounded-md text-white ${currentPage < 5 ?"hidden":"inline"}`}>Create</button>
+                                <button onClick={handleNext} className={`bg-skyBlue px-3 py-1 rounded-md text-white ${currentPage < 5 ?"inline":"hidden"}`}>Next</button>
+                                <button ref={createButtonRef} onClick={createProject} className={`bg-skyBlue text-center px-3 py-1 rounded-md text-white ${currentPage < 5 ?"hidden":"inline"}`}>{createProjectState ? <ThreeDots visible={true} height="20" width="40" color="#fff" radius="9" ariaLabel="three-dots-loading" wrapperStyle={{}} wrapperClass=""/>
+                                :"Create"}</button>
                         </div>
                 </div>
                 </div>
-                <ToastContainer/>
         </div>
   )
 }
 CreateNewProject.propTypes = {
+    method:propTypes.string.isRequired,
+    setMethod:propTypes.func.isRequired,
     visible:propTypes.bool.isRequired,
     closePopUp:propTypes.func.isRequired,
     nextPage:propTypes.func.isRequired,
     prevPage:propTypes.func.isRequired,
-    currentPage:propTypes.number.isRequired
-}
+    currentPage:propTypes.number.isRequired}
 export default CreateNewProject

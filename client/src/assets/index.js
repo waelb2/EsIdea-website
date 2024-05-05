@@ -12,7 +12,6 @@ import Flipboard from './Flipboard.svg';
 import Folder from './Folder.svg';
 import google from './google.svg';
 import loginPic from './loginPic.svg';
-import logo from './logo.png';
 import More from './More.svg';
 import ProjectIcon from './ProjectIcon.svg';
 import ProjectsEmpty from './ProjectsEmpty.svg';
@@ -66,10 +65,11 @@ import Restore from './Restore.svg'
 import RemoveRed from './RemoveRed.svg'
 import NotFoundPic from './NotFound.svg'
 import UploadProjectPic from './UploadProj.svg'
+import whiteLogo from './whiteLogo.svg'
 export {
     add,OpenProj,Colaborators,hidePassword,ResetPasswordImage,ExportProj,Publish,TrashBlack,MoveFavorite,Edit,chart1,Restore,RemoveRed,UploadProjectPic,
     General,Users,Logs,ForgotPasswordImage,FeedBacks,Tags,chart2,chart3,ChangePFP,ChangePassIcon,LogoutIcon,HelpIcon,FeedBackIcon,DashboardImage,
-    brainstorming,
+    brainstorming,whiteLogo,
     BrainstormingMethodIcon,NotFoundPic,
     BrainwritingMethodIcon,
     chatbot,
@@ -82,7 +82,6 @@ export {
     Folder,
     google,
     loginPic,
-    logo,
     More,
     ProjectIcon,
     ProjectsEmpty,

@@ -16,6 +16,10 @@ import ForgotPassword from "./Password/ForgotPassword";
 import ResetPassword from "./Password/ResetPassword";
 import AddPassword from "./Password/AddPassword";
 import ChangePassword from './Password/ChangePassword'
+import BrainStorming from "./pages/BrainStorming";
+import BrainWriting from './pages/BrainWriting'
+import AdminBrainStorming from './Admin Brainstorming/AdminBrainstorming'
+import AdminBrainWriting from './Admin Brainwriting/AdmingBrainwriting'
 export {
     LoginPage,
     Dashbord,
@@ -34,5 +38,9 @@ export {
     ForgotPassword,
     ResetPassword,
     AddPassword,
-    ChangePassword
+    ChangePassword,
+    BrainStorming,
+    BrainWriting,
+    AdminBrainStorming,
+    AdminBrainWriting
 }

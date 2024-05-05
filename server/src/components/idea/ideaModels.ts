@@ -24,7 +24,23 @@ const ideaSchema = new Schema<IdeaInterface>({
     type: mongoose.Schema.Types.ObjectId,
     ref: 'Topic',
     required: true
-  }
+  },
+  comments: [
+    {
+      content: String,
+      author: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'User'
+      }
+    }
+  ],
+  votes: {
+    type: Number,
+    default: 0
+  },
+  isBold: Boolean,
+  isItalic: Boolean,
+  color: String
 })
 
 const Idea = mongoose.model<IdeaInterface>('Idea', ideaSchema)

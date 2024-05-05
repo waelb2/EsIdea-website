@@ -64,7 +64,8 @@ const acceptInvitation = async (req: Request, res: Response) => {
     }
     user?.projects.push({
       project: project,
-      joinedAt: new Date()
+      joinedAt: new Date(),
+      isTrashed: false
     })
     const updateUser = await User.findByIdAndUpdate(
       userId,

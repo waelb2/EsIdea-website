@@ -4,6 +4,8 @@ import NavBar from '../LandingPage/NavBar'
 import { Eye, ResetPasswordImage, hidePassword } from '../../assets'
 import { useLocation, useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { ToastContainer, toast } from 'react-toastify';
+
 
 const ResetPassword = () => {
     const {pathname} = useLocation();
@@ -63,7 +65,16 @@ const ResetPassword = () => {
               navigate("/login", { state: { fromResetPassword: true } });
             })
             .catch((error) => {
-              console.log(error.message);
+                toast.error(error.message, {
+                    position: "top-center",
+                    autoClose: 5000,
+                    hideProgressBar: false,
+                    closeOnClick: false,
+                    pauseOnHover: false,
+                    draggable: false,
+                    progress: undefined,
+                    theme: "colored",
+                    });
             });
         }
       };
@@ -103,6 +114,7 @@ const ResetPassword = () => {
                     <img className='w-[450px] h-[450px] object-cover mt-3 md:mt-0 p-6 ' src={ResetPasswordImage} alt="ForgotPasswordImage" />
                 </div>
           </div>
+          <ToastContainer/>
     </div>
   )
 }

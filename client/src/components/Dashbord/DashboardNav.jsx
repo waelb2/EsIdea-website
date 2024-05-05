@@ -64,7 +64,7 @@ const DashboardNav = ({currentLoc,action}) => {
             </div>
             <div>
                 <img onClick={()=>{setToggle(prev => !prev)}} className='w-10 h-10 cursor-pointer object-contain rounded-full border-2 border-skyBlue p-0.5' src={user.profilePicUrl} alt="User" />
-                <div className={`${!toggle ? "hidden":"flex border-2"} p-4 bg-white absolute z-20 top-16 right-6 mx-4 my-2 min-w-[15.625rem] rounded-xl sidebar flex-col`}>
+                <div className={`${!toggle ? "hidden":"flex border-2"} p-4 bg-realWhite absolute z-20 top-16 right-6 shadow-xl mx-4 my-2 min-w-[15.625rem] rounded-xl slideDown flex-col overflow-hidden`}>
                     <img onClick={()=>{setToggle(prev => !prev)}} className='w-5 h-5 object-contain cursor-pointer fixed top-2 right-3' src={blackClose} alt="Close"/>
                     <div className='flex flex-col items-center mb-3'>
                         <img className='w-20 h-20 rounded-full object-contain mb-2 border-2 border-skyBlue p-0.5' src={user.profilePicUrl} alt="UserPic" />
@@ -73,7 +73,7 @@ const DashboardNav = ({currentLoc,action}) => {
                     </div>
                     <ul className='list-none flex justify-end items-start flex-1 flex-col'>
                         {userDetails.map((det,ind) =><div className='w-full' key={det.title}>
-                            <li className={`w-full rounded-md transition-all hover:bg-lightGrey`}>
+                            <li className={`w-full rounded-md transition-all hover:bg-[#d9e9f6]`}>
                                 <Link onClick={det.action} to={det.path} className='flex w-full items-center  p-2'>
                                     <img className='mr-3 w-5 h-5 object-contain' src={det.icon} alt={det.title} />
                                     <p className='flex-grow'>{det.title}</p>

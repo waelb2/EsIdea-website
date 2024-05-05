@@ -11,7 +11,7 @@ module.exports = {
       },
       colors: {
         primary: "#3A86FF",
-        skyBlue: "#59AEF8",
+        skyBlue: "#59aef8",
         black: "#1C1C1E",
         grey: "#55555E",
         lightGrey:"rgba(0, 0, 0, 0.05)",
@@ -37,5 +37,28 @@ module.exports = {
       xl: "1700px",
     },
   },
-  plugins: [require('tailwind-scrollbar'),],
+  plugins: [require('tailwind-scrollbar'),function({addUtilities}){
+    const newUtilities = {
+      ".scrollbar-thin" : {
+        scrollbarWidth : "thin",
+        scrollbarColor : "rgba(31 29 29 0.5) white"
+      },
+      ".scrollbar-webkit":{
+        "&::-webkit-scrolbar" : {
+          width: "8px"
+        },
+        "&::-webkit-scrollbar-track" : {
+          backgournd: "white"
+        },
+        "&::-webkit-scrollbar-track" : {
+          
+          backgourndColor: "rgb(31 41 55 0.5)",
+          borderRadius: "20px",
+          border: "1px solid white"
+        },          
+      }
+    }
+
+    addUtilities(newUtilities, ["responsive" , "hover"])
+  }],
 };

@@ -4,6 +4,7 @@ import NavBar from '../LandingPage/NavBar'
 import { ForgotPasswordImage } from '../../assets'
 import { useNavigate } from 'react-router-dom'
 import axios from 'axios'
+import { ToastContainer, toast } from 'react-toastify';
 
 const ForgotPassword = () => {
     const navigate = useNavigate();
@@ -20,7 +21,16 @@ const ForgotPassword = () => {
             navigate("/login", { state: { fromForgotPassword: true } });
           })
           .catch((error) => {
-            console.log(error.message);
+            toast.error(error.message, {
+              position: "top-center",
+              autoClose: 5000,
+              hideProgressBar: false,
+              closeOnClick: false,
+              pauseOnHover: false,
+              draggable: false,
+              progress: undefined,
+              theme: "colored",
+              });
           });
       };
     // const handleForgotPassword=()=>{
@@ -62,6 +72,7 @@ const ForgotPassword = () => {
                     <img className='w-[400px] h-[400px] object-cover mt-3 md:mt-0 p-6 ' src={ForgotPasswordImage} alt="ForgotPasswordImage" />
                 </div>
           </div>
+          <ToastContainer/>
     </div>
 
 

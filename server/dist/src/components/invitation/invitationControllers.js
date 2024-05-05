@@ -62,7 +62,8 @@ const acceptInvitation = (req, res) => __awaiter(void 0, void 0, void 0, functio
         }
         user === null || user === void 0 ? void 0 : user.projects.push({
             project: project,
-            joinedAt: new Date()
+            joinedAt: new Date(),
+            isTrashed: false
         });
         const updateUser = yield userModels_1.User.findByIdAndUpdate(userId, {
             $addToSet: {

@@ -1,5 +1,6 @@
+// eslint-disable-next-line no-unused-vars
 import React from 'react'
-import { NotFoundPic, blackLogo, logo } from '../../assets'
+import { NotFoundPic, blackLogo } from '../../assets'
 import { useNavigate } from 'react-router-dom'
 
 const NotFound = () => {

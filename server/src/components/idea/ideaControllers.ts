@@ -17,24 +17,23 @@ export const getIdeasByProject = async (req: Request, res: Response) => {
     }
     const ideas: IdeaInterface[] = await Idea.find({
       projectId
-    })
-      .populate('topic')
-      .populate('createdBy')
+    }).populate('topic').populate('createdBy')
+
 
     const formattedIdeas = ideas.map(idea => {
-      const author = {
-        name: idea.createdBy.lastName + ' ' + idea.createdBy.firstName,
-        email: idea.createdBy.email,
-        profilePicUrl: idea.createdBy.profilePicUrl
-      }
-      return {
-        createdBy: author,
-        topic: idea.topic.topicName,
+      const formattedIdea = {
         content: idea.content,
-        creationDate: idea.creationDate
+        createdBy: {
+          firstName: idea.createdBy.firstName,
+          lastName: idea.createdBy.lastName,
+          email: idea.createdBy.email,
+          profilePicUrl: idea.createdBy.profilePicUrl
+        },
+        createdAt: idea.creationDate,
+        votes: idea.votes
       }
+      return formattedIdea
     })
-
     res.status(201).json(formattedIdeas)
   } catch (error) {
     console.log(error)
@@ -56,8 +55,18 @@ export const postIdea = async (req: Request, res: Response) => {
     const {
       projectId,
       topicId,
-      content
-    }: { projectId: string; topicId: string; content: string } = req.body
+      content,
+      isBold,
+      isItalic,
+      color
+    }: {
+      projectId: string
+      topicId: string
+      content: string
+      isBold: boolean
+      isItalic: boolean
+      color: string
+    } = req.body
 
     const project = await Project.findById(projectId)
     if (!project) {
@@ -94,7 +103,10 @@ export const postIdea = async (req: Request, res: Response) => {
       createdBy: user,
       topic,
       content,
-      creationDate: new Date()
+      creationDate: new Date(),
+      isBold,
+      isItalic,
+      color
     })
     createdIdea.populate('topic')
 

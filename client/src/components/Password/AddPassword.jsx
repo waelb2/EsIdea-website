@@ -25,7 +25,6 @@ const AddPassword = () => {
         localStorage.setItem('userToken', userToken);
         localStorage.setItem('user', JSON.stringify(user));
         setUser(user);
-
         if(user.passwordIsSet){
             navigate("../Home/Projects");
         }
@@ -64,7 +63,7 @@ const AddPassword = () => {
         }
     }
   return (
-    (<div className='w-screen flex h-screen justify-center items-center'>
+    (!user.passwordIsSet && <div className='w-screen flex h-screen justify-center items-center'>
     <div className='shadow-md rounded-lg px-7 py-8  max-w-[28.125rem] w-full mt-5 md:mt-0 border-2 border-[rgba(0,0,0,0.1)] flex flex-col items-center gap-3' >
         <img className='w-96 h-10 mb-4' src={blackLogo} alt="logo" />
         <h1 className='font-bold text-2xl'>Add Password</h1>

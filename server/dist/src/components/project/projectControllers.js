@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getProjectByUserId = exports.deleteProject = exports.updateProject = exports.createProject = void 0;
+exports.restoreProject = exports.trashProject = exports.getProjectByUserId = exports.deleteProject = exports.updateProject = exports.createProject = void 0;
 const projectModels_1 = require("./projectModels");
 const userModels_1 = require("../user/userModels");
 const ideationMethodModel_1 = require("../idea/ideationMethodModel");
@@ -35,7 +35,6 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             secureURL = cloudImage.secure_url;
             fs_1.default.unlinkSync(req.file.path);
         }
-        let projectAssociation;
         const { projectTitle, description, ideationMethodName, collaborators, mainTopic, subTopics, tags } = req.body;
         // Getting and validating project metadata
         const coordinator = yield userModels_1.User.findById(userId);
@@ -145,7 +144,11 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 expiresAt: expirationDate
             });
             // Associating project with his coordinator
-            coordinator.projects.push({ project, joinedAt: new Date() });
+            coordinator.projects.push({
+                project,
+                joinedAt: new Date(),
+                isTrashed: false
+            });
             yield coordinator.save();
             user === null || user === void 0 ? void 0 : user.projectInvitations.push(invitation);
             user === null || user === void 0 ? void 0 : user.save();
@@ -165,9 +168,17 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 });
 exports.createProject = createProject;
 const updateProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const userId = '65ef22333d0a83e5abef440e';
+    const { userId } = req.user;
     const { projectId } = req.params;
+    let secureURL = '';
     try {
+        if (req.file) {
+            const cloudImage = yield cloudConfig_1.default.uploader.upload(req.file.path, {
+                folder: 'projectThumbnails'
+            });
+            secureURL = cloudImage.secure_url;
+            fs_1.default.unlinkSync(req.file.path);
+        }
         if (!projectId) {
             return res.status(400).json({
                 error: 'Project ID must be provided'
@@ -184,10 +195,11 @@ const updateProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 error: 'Unauthorized - Only project coordinator can update the project'
             });
         }
-        const { title, description, status } = req.body;
+        const { title, description } = req.body;
+        console.log(req.body);
         project.title = title;
         project.description = description;
-        project.status = status;
+        project.thumbnailUrl = secureURL;
         yield project.save();
         res.status(200).json({ message: 'Project updated successfully' });
     }
@@ -233,9 +245,7 @@ const deleteProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         // deleting the collaborator from project collaborators list
         project.collaborators = updatedCollaborators;
         project.save();
-        const updatedProjectsList = collaborator.projects.filter(collaboratorProject => console.log(collaboratorProject)
-        //collaboratorProject.project._id.toString() !== projectId
-        );
+        const updatedProjectsList = collaborator.projects.filter(collaboratorProject => collaboratorProject.project._id.toString() !== projectId);
         // deleting the project from user projects list
         collaborator.projects = updatedProjectsList;
         collaborator.save();
@@ -247,6 +257,102 @@ const deleteProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.deleteProject = deleteProject;
+const trashProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId } = req.user;
+    const { projectId } = req.params;
+    try {
+        if (!projectId) {
+            return res.status(400).json({
+                error: 'Project ID must be provided'
+            });
+        }
+        if (!userId) {
+            return res.status(400).json({
+                error: 'User ID must be provided'
+            });
+        }
+        const collaborator = yield userModels_1.User.findById(userId);
+        if (!collaborator) {
+            return res.status(404).json({
+                error: 'User not found'
+            });
+        }
+        const project = yield projectModels_1.Project.findById(projectId);
+        if (!project) {
+            return res.status(404).json({
+                error: 'Project not found'
+            });
+        }
+        const collaborators = project.collaborators.filter(collaborator => collaborator.member._id.toString() === userId);
+        if (collaborators.length < 0) {
+            return res.status(400).json({
+                error: 'This user is not a collaborator in this project'
+            });
+        }
+        const projectIndex = collaborator.projects.findIndex(project => project.project.toString() === projectId);
+        if (projectIndex === -1) {
+            return res.status(404).json({
+                error: "Project not found in the user's project list"
+            });
+        }
+        collaborator.projects[projectIndex].isTrashed = true;
+        yield collaborator.save();
+        res.status(200).json({ message: 'Project trashed successfully' });
+    }
+    catch (error) {
+        console.error('Error deleting project:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+exports.trashProject = trashProject;
+const restoreProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const userId = '662d1119ace155f48b676a7d';
+    const { projectId } = req.body;
+    try {
+        if (!projectId) {
+            return res.status(400).json({
+                error: 'Project ID must be provided'
+            });
+        }
+        if (!userId) {
+            return res.status(400).json({
+                error: 'User ID must be provided'
+            });
+        }
+        const collaborator = yield userModels_1.User.findById(userId);
+        if (!collaborator) {
+            return res.status(404).json({
+                error: 'User not found'
+            });
+        }
+        const project = yield projectModels_1.Project.findById(projectId);
+        if (!project) {
+            return res.status(404).json({
+                error: 'Project not found'
+            });
+        }
+        const collaborators = project.collaborators.filter(collaborator => collaborator.member._id.toString() === userId);
+        if (collaborators.length < 0) {
+            return res.status(400).json({
+                error: 'This user is not a collaborator in this project'
+            });
+        }
+        const projectIndex = collaborator.projects.findIndex(project => project.project.toString() === projectId);
+        if (projectIndex === -1) {
+            return res.status(404).json({
+                error: "Project not found in the user's project list"
+            });
+        }
+        collaborator.projects[projectIndex].isTrashed = false;
+        yield collaborator.save();
+        res.status(200).json({ message: 'Project restored successfully' });
+    }
+    catch (error) {
+        console.error('Error restoring project:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+exports.restoreProject = restoreProject;
 const getProjectByUserId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.user;
     try {
@@ -297,15 +403,29 @@ const getProjectByUserId = (req, res) => __awaiter(void 0, void 0, void 0, funct
                 path: 'modules',
                 model: 'Module'
             }
+        })
+            .populate({
+            path: 'projects.project',
+            populate: {
+                path: 'ideationMethod',
+                model: 'IdeationMethod'
+            }
+        })
+            .populate({
+            path: 'projects.project',
+            populate: {
+                path: 'coordinator',
+                model: 'User'
+            }
         });
         if (!user) {
             return res.status(404).json({
                 error: 'User not found'
             });
         }
-        const projects = user.projects.map(project => project === null || project === void 0 ? void 0 : project.project);
+        const projects = user.projects.map(project => project);
         const projectStrings = projects.map(project => {
-            const { title, description, visibility, collaboratorsCount, collaborators, mainTopic, subTopics, clubs, modules, events, thumbnailUrl } = project;
+            const { title, description, visibility, collaboratorsCount, collaborators, mainTopic, subTopics, clubs, modules, events, thumbnailUrl } = project.project;
             const formattedSubTopics = subTopics === null || subTopics === void 0 ? void 0 : subTopics.map(topic => {
                 return {
                     topicId: topic._id,
@@ -324,9 +444,18 @@ const getProjectByUserId = (req, res) => __awaiter(void 0, void 0, void 0, funct
                 }
                 return null;
             });
+            const coordinator = {
+                firstName: project.project.coordinator.firstName,
+                lastName: project.project.coordinator.lastName,
+                email: project.project.coordinator.email,
+                profilePicUrl: project.project.coordinator.profilePicUrl
+            };
             const formattedProject = {
+                projectId: project.project.id,
+                IdeationMethod: project.project.ideationMethod.methodName,
                 ProjectTitle: title,
                 Description: description,
+                coordinator,
                 Visibility: visibility,
                 CollaboratorsCount: collaboratorsCount.toString(),
                 collaborators: formattedCollaborators,
@@ -335,7 +464,10 @@ const getProjectByUserId = (req, res) => __awaiter(void 0, void 0, void 0, funct
                 Clubs: clubs.map(club => club.clubName),
                 Modules: modules.map(module => module.moduleName),
                 Events: events.map(event => event.eventName),
-                ThumbnailUrl: thumbnailUrl
+                ThumbnailUrl: thumbnailUrl,
+                isTrashed: project.isTrashed,
+                joinedDate: project.joinedAt,
+                projectStatus: project.project.status
             };
             return formattedProject;
         });

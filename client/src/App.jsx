@@ -1,22 +1,14 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState,useEffect,useMemo } from 'react';
 import { Routes,Route, Navigate } from 'react-router-dom';
-import { LoginPage,Dashbord,Projects,Recents,Favorites,Public,Trash, LandingPage, AdminDashboard, General, Tags, Logs, Users, FeedBacks, ForgotPassword, ResetPassword, AddPassword, ChangePassword } from './components';
-import Loader from './components/loader/Loader';
-import axios from 'axios';
+import { LoginPage,Dashbord,Projects,Recents,Favorites,Public,Trash, LandingPage, AdminDashboard, General, Tags, Logs, Users, FeedBacks, ForgotPassword, ResetPassword, AddPassword, ChangePassword, BrainStorming, BrainWriting, AdminBrainStorming, AdminBrainWriting } from './components';
 import RequireAuth from './components/auth/RequireAuth';
 import UnauthorizedPage from './components/auth/UnauthorizedPage';
 import NotFound from './components/NotFoundPage/NotFound';
-import Test from './components/testSocket/Test';
+// import Test from './components/testSocket/Test';
 
 
 const App = () => {
-  const [loading, setLoading] = useState(false);
-
-  if (loading) {
-    return <Loader/>;
-  }
-
   return (
   <>
       <Routes>
@@ -30,7 +22,7 @@ const App = () => {
         <Route path='/ChangePassword' element={<ChangePassword/>}></Route>
         <Route path='/unauthorized' element={<UnauthorizedPage/>}></Route>
         <Route path='/test-real-time' element={<RequireAuth allowedRoles={['user']}/>}>
-          <Route index={true} element={<Test/>}></Route>
+          {/* <Route index={true} element={<Test/>}></Route> */}
         </Route>
 
 
@@ -73,7 +65,10 @@ const App = () => {
                 <Route path='Trash' element={<Trash/>}/>
             </Route>
         </Route>
-
+        <Route path='/brainstorming' element={<BrainStorming/>}></Route>
+        <Route path='/brainwriting' element={<BrainWriting/>}></Route>
+        <Route path='/adminbrainStorming' element={<AdminBrainStorming/>}></Route>
+        <Route path='/adminbrainWriting' element={<AdminBrainWriting/>}></Route>
         <Route path='*' element={<NotFound/>}/>
       </Routes>
 

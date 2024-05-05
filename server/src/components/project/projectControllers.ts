@@ -36,7 +36,6 @@ const createProject = async (req: Request, res: Response) => {
       secureURL = cloudImage.secure_url
       fs.unlinkSync(req.file.path)
     }
-    let projectAssociation: string
 
     const {
       projectTitle,
@@ -184,7 +183,11 @@ const createProject = async (req: Request, res: Response) => {
       })
 
       // Associating project with his coordinator
-      coordinator.projects.push({ project, joinedAt: new Date() })
+      coordinator.projects.push({
+        project,
+        joinedAt: new Date(),
+        isTrashed: false
+      })
       await coordinator.save()
 
       user?.projectInvitations.push(invitation)
@@ -211,10 +214,19 @@ const createProject = async (req: Request, res: Response) => {
   }
 }
 const updateProject = async (req: Request, res: Response) => {
-  const userId = '65ef22333d0a83e5abef440e'
+  const { userId } = req.user as AuthPayload
+
   const { projectId } = req.params
+  let secureURL: string = ''
 
   try {
+    if (req.file) {
+      const cloudImage = await cloudinary.uploader.upload(req.file.path, {
+        folder: 'projectThumbnails'
+      })
+      secureURL = cloudImage.secure_url
+      fs.unlinkSync(req.file.path)
+    }
     if (!projectId) {
       return res.status(400).json({
         error: 'Project ID must be provided'
@@ -234,14 +246,13 @@ const updateProject = async (req: Request, res: Response) => {
       })
     }
 
-    const {
-      title,
-      description,
-      status
-    }: { title: string; description: string; status: ProjectStatus } = req.body
+    const { title, description }: { title: string; description: string } =
+      req.body
+
+    console.log(req.body)
     project.title = title
     project.description = description
-    project.status = status
+    project.thumbnailUrl = secureURL
 
     await project.save()
     res.status(200).json({ message: 'Project updated successfully' })
@@ -299,8 +310,8 @@ const deleteProject = async (req: Request, res: Response) => {
     project.save()
 
     const updatedProjectsList = collaborator.projects.filter(
-      collaboratorProject => console.log(collaboratorProject)
-      //collaboratorProject.project._id.toString() !== projectId
+      collaboratorProject =>
+        collaboratorProject.project._id.toString() !== projectId
     )
 
     // deleting the project from user projects list
@@ -313,6 +324,125 @@ const deleteProject = async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Internal Server Error' })
   }
 }
+
+const trashProject = async (req: Request, res: Response) => {
+  const { userId } = req.user as AuthPayload
+  const { projectId } = req.params
+
+  try {
+    if (!projectId) {
+      return res.status(400).json({
+        error: 'Project ID must be provided'
+      })
+    }
+    if (!userId) {
+      return res.status(400).json({
+        error: 'User ID must be provided'
+      })
+    }
+
+    const collaborator = await User.findById(userId)
+
+    if (!collaborator) {
+      return res.status(404).json({
+        error: 'User not found'
+      })
+    }
+
+    const project = await Project.findById(projectId)
+
+    if (!project) {
+      return res.status(404).json({
+        error: 'Project not found'
+      })
+    }
+
+    const collaborators = project.collaborators.filter(
+      collaborator => collaborator.member._id.toString() === userId
+    )
+    if (collaborators.length < 0) {
+      return res.status(400).json({
+        error: 'This user is not a collaborator in this project'
+      })
+    }
+
+    const projectIndex = collaborator.projects.findIndex(
+      project => project.project.toString() === projectId
+    )
+    if (projectIndex === -1) {
+      return res.status(404).json({
+        error: "Project not found in the user's project list"
+      })
+    }
+    collaborator.projects[projectIndex].isTrashed = true
+    await collaborator.save()
+
+    res.status(200).json({ message: 'Project trashed successfully' })
+  } catch (error) {
+    console.error('Error deleting project:', error)
+    res.status(500).json({ error: 'Internal Server Error' })
+  }
+}
+
+const restoreProject = async (req: Request, res: Response) => {
+  const userId = '662d1119ace155f48b676a7d'
+  const { projectId } = req.body
+
+  try {
+    if (!projectId) {
+      return res.status(400).json({
+        error: 'Project ID must be provided'
+      })
+    }
+    if (!userId) {
+      return res.status(400).json({
+        error: 'User ID must be provided'
+      })
+    }
+
+    const collaborator = await User.findById(userId)
+
+    if (!collaborator) {
+      return res.status(404).json({
+        error: 'User not found'
+      })
+    }
+
+    const project = await Project.findById(projectId)
+
+    if (!project) {
+      return res.status(404).json({
+        error: 'Project not found'
+      })
+    }
+
+    const collaborators = project.collaborators.filter(
+      collaborator => collaborator.member._id.toString() === userId
+    )
+    if (collaborators.length < 0) {
+      return res.status(400).json({
+        error: 'This user is not a collaborator in this project'
+      })
+    }
+
+    const projectIndex = collaborator.projects.findIndex(
+      project => project.project.toString() === projectId
+    )
+    if (projectIndex === -1) {
+      return res.status(404).json({
+        error: "Project not found in the user's project list"
+      })
+    }
+    collaborator.projects[projectIndex].isTrashed = false
+    await collaborator.save()
+
+    res.status(200).json({ message: 'Project restored successfully' })
+  } catch (error) {
+    console.error('Error restoring project:', error)
+    res.status(500).json({ error: 'Internal Server Error' })
+  }
+}
+
 const getProjectByUserId = async (req: Request, res: Response) => {
   const { userId } = req.user as AuthPayload
   try {
@@ -364,6 +494,20 @@ const getProjectByUserId = async (req: Request, res: Response) => {
           model: 'Module'
         }
       })
+      .populate({
+        path: 'projects.project',
+        populate: {
+          path: 'ideationMethod',
+          model: 'IdeationMethod'
+        }
+      })
+      .populate({
+        path: 'projects.project',
+        populate: {
+          path: 'coordinator',
+          model: 'User'
+        }
+      })
 
     if (!user) {
       return res.status(404).json({
@@ -371,7 +515,7 @@ const getProjectByUserId = async (req: Request, res: Response) => {
       })
     }
 
-    const projects = user.projects.map(project => project?.project)
+    const projects = user.projects.map(project => project)
     const projectStrings = projects.map(project => {
       const {
         title,
@@ -385,7 +529,7 @@ const getProjectByUserId = async (req: Request, res: Response) => {
         modules,
         events,
         thumbnailUrl
-      } = project
+      } = project.project
 
       const formattedSubTopics = subTopics?.map(topic => {
         return {
@@ -407,9 +551,18 @@ const getProjectByUserId = async (req: Request, res: Response) => {
 
         return null
       })
+      const coordinator = {
+        firstName: project.project.coordinator.firstName,
+        lastName: project.project.coordinator.lastName,
+        email: project.project.coordinator.email,
+        profilePicUrl: project.project.coordinator.profilePicUrl
+      }
       const formattedProject = {
+        projectId: project.project.id,
+        IdeationMethod: project.project.ideationMethod.methodName,
         ProjectTitle: title,
         Description: description,
+        coordinator,
         Visibility: visibility,
         CollaboratorsCount: collaboratorsCount.toString(),
         collaborators: formattedCollaborators,
@@ -418,7 +571,10 @@ const getProjectByUserId = async (req: Request, res: Response) => {
         Clubs: clubs.map(club => club.clubName),
         Modules: modules.map(module => module.moduleName),
         Events: events.map(event => event.eventName),
-        ThumbnailUrl: thumbnailUrl
+        ThumbnailUrl: thumbnailUrl,
+        isTrashed: project.isTrashed,
+        joinedDate: project.joinedAt,
+        projectStatus: project.project.status
       }
 
       return formattedProject
@@ -430,4 +586,11 @@ const getProjectByUserId = async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Internal Server Error' })
   }
 }
-export { createProject, updateProject, deleteProject, getProjectByUserId }
+export {
+  createProject,
+  updateProject,
+  deleteProject,
+  getProjectByUserId,
+  trashProject,
+  restoreProject
+}
