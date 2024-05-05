@@ -96,15 +96,20 @@ const Card = ({proj,index,openedMore,setOpenedMore,handleMoveToTrash}) => {
         }
     }
 ]
-  const user = useUser();
+
   const navigateToIdeationPage = ()=>{
-    const userIsCoordinator = user.user.email === proj.coordinator.email;
-    if(userIsCoordinator){
-        navigate(`/admin${proj.IdeationMethod}?ProjectTitle=${proj.ProjectTitle}&MainTopic=${proj.MainTopic}`)
-    }else{
-      navigate(`/${proj.IdeationMethod}?ProjectTitle=${proj.ProjectTitle}&MainTopic=${proj.MainTopic}`)
-    }
+    // const userIsCoordinator = user.user.email === proj.coordinator.email;
+    // if(userIsCoordinator){
+    //     navigate(`/admin${proj.IdeationMethod}?ProjectTitle=${proj.ProjectTitle}&MainTopic=${proj.MainTopic}`)
+    // }else{
+    //   navigate(`/${proj.IdeationMethod}?ProjectTitle=${proj.ProjectTitle}&MainTopic=${proj.MainTopic}`);
+    // }
+
+    navigate("/ideation", {state: {
+      project: proj
+    }})
   }
+
   return (
     <div onClick={navigateToIdeationPage}  className={`group flex flex-col w-full  rounded-md   relative transition-all duration-500   hover:shadow-lg border-2 border-gray-200 cursor-pointer`}>
         {/* <input className='absolute top-2 left-2 outline-none border-none scale-110 cursor-pointer hidden group-hover:inline ' type="checkbox" /> */}

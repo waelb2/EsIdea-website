@@ -18,7 +18,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import useUser from '../../hooks/useUser';
 
 
-const BrainStorming = () => {
+const BrainStorming = ({project}) => {
 
     const trashThoughts = [
       {
@@ -140,18 +140,15 @@ const BrainStorming = () => {
   //     return updatedUserArray;
   //   });
   // };
+  const { user } = useUser();
+  const navigate = useNavigate();
 
-  const [searchParams,setSearchParams] = useSearchParams();
-    const ProjectTitle = searchParams.get("ProjectTitle");
-    const user = useUser();
-    const MainTopic = searchParams.get("MainTopic");
-    const navigate = useNavigate();
   return (
     <div className='bg-[#F1F6FB] relative py-36 min-h-screen'>
       <div className='flex justify-between items-center py-4 px-5 fixed top-0 left-0 right-0'>
         <div className='bg-white border border-black flex justify-between items-center px-2 w-56 h-10 rounded-full shadow-[0_4px_4px_rgba(0,0,0,0.2)]'>
           <img className='cursor-pointer' onClick={()=>{navigate(-1)}} src={Back}/>
-          <p className='font-medium'>{ProjectTitle}</p>
+          <p className='font-medium'>{project.ProjectTitle}</p>
           <img src={Line} className='h-6'/>
           <img src={Download}/>
         </div>
@@ -161,13 +158,13 @@ const BrainStorming = () => {
           </div>
           <div className='flex bg-white border border-black items-center justify-around w-44 px-3 h-10 rounded-full shadow-[0_4px_4px_rgba(0,0,0,0.2)]'>
             <img src={Group} className='h-6'/>
-            <img className='rounded-full h-6' src={user.user.profilePicUrl}/>
+            <img className='rounded-full h-6' src={user.profilePicUrl}/>
           </div>
         </div>
       </div>
 
       <div className='text-center w-80 absolute left-1/2 transform -translate-x-1/2 top-8'>
-        <p className='text-3xl font-medium'>{MainTopic}</p>
+        <p className='text-3xl font-medium'>{project.MainTopic}</p>
         <p className=''>Use the prompt bellow to add your ideas about this theme</p>
       </div>
 
@@ -239,8 +236,6 @@ const BrainStorming = () => {
         ))}
         {showComment && <IdeaComment onClose={toggleCommentPopup} />}
       </div>
-
-
     </div>  
   )
 }

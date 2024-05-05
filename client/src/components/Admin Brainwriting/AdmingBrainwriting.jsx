@@ -20,7 +20,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import useUser from '../../hooks/useUser'
 import User from '../Avatar/User'
 
-const AdminBrainWriting = () => {
+const AdminBrainWriting = ({project}) => {
 
   const trashThoughts = [
     {
@@ -216,17 +216,13 @@ const AdminBrainWriting = () => {
       setUserThoughts(prevUserThoughts => prevUserThoughts.filter(idea => idea.text !== text));
     };
 
-
-    const [searchParams,setSearchParams] = useSearchParams();
-    const ProjectTitle = searchParams.get("ProjectTitle");
-    const MainTopic = searchParams.get("MainTopic");
     const navigate = useNavigate();
     return (
     <div className='h-screen bg-[#F1F6FB] relative py-36'>
         <div className='flex justify-between items-center py-4 px-5 fixed top-0 left-0 right-0'>
           <div className='bg-white border border-black flex justify-between items-center px-2 w-56 h-10 rounded-full shadow-[0_4px_4px_rgba(0,0,0,0.2)]'>
             <img className='cursor-pointer' onClick={()=>{navigate(-1)}} src={Back}/>
-            <p className='font-medium'>{ProjectTitle}</p>
+            <p className='font-medium'>{project.ProjectTitle}</p>
             <img src={Line} className='h-6'/>
             <img src={Download}/>
           </div>
@@ -247,7 +243,7 @@ const AdminBrainWriting = () => {
         </div>
   
         <div className='text-center w-80 absolute left-1/2 transform -translate-x-1/2 top-8'>
-          <p className='text-3xl font-medium'>{MainTopic}</p>
+          <p className='text-3xl font-medium'>{project.MainTopic}</p>
           <p className=''>Use the prompt bellow to add your ideas about this theme</p>
         </div>
   

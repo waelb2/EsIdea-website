@@ -5,6 +5,7 @@ import { LoginPage,Dashbord,Projects,Recents,Favorites,Public,Trash, LandingPage
 import RequireAuth from './components/auth/RequireAuth';
 import UnauthorizedPage from './components/auth/UnauthorizedPage';
 import NotFound from './components/NotFoundPage/NotFound';
+import Ideation from './components/pages/Ideation';
 // import Test from './components/testSocket/Test';
 
 
@@ -65,6 +66,9 @@ const App = () => {
                 <Route path='Trash' element={<Trash/>}/>
             </Route>
         </Route>
+
+        <Route path='/ideation' element={<Ideation/>}></Route>
+
         <Route path='/brainstorming' element={<BrainStorming/>}></Route>
         <Route path='/brainwriting' element={<BrainWriting/>}></Route>
         <Route path='/adminbrainStorming' element={<AdminBrainStorming/>}></Route>
