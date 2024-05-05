@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import UserIdea from '../idea generation phase/UserIdea';
 import IdeaEvaluation from '../idea generation phase/IdeaEvaluation';
 import IdeaComment from '../Idea Comment/IdeaComment';
+import CountdownTimerBW from '../Contdown Timer/CountdownTimerBW';
 import Back from '../../assets/Back.png';
 import Line from '../../assets/Line 3.png';
 import Download from '../../assets/Download from the Cloud.png';
@@ -12,16 +13,47 @@ import Clear from '../../assets/Clear Symbol.png';
 import Color from '../../assets/Color Mode.png';
 import Line1 from '../../assets/Line 1.png';
 import Brain from '../../assets/Brain.png';
-import Attach from '../../assets/Attach.png';
 import Send from '../../assets/Send.png';
-import CountdownTimerBW from '../Contdown Timer/CountdownTimerBW';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import useUser from '../../hooks/useUser';
 
 const BrainWriting = () => {
+
+  const trashThoughts = [
+    {
+      text: "feu",
+      isBold: false,
+      isItalic: false,
+      color: "#000",
+      selected: false,
+    },
+    {
+      text: "jardin",
+      isBold: false,
+      isItalic: false,
+      color: "#000",
+      selected: false,
+    },
+    {
+      text: "zino",
+      isBold: false,
+      isItalic: false,
+      color: "#000",
+      selected: false,
+    },
+    {
+      text: "good luck l7bib",
+      isBold: false,
+      isItalic: false,
+      color: "#000",
+      selected: false,
+    },
+  ]
+
+
   const initialMinutes = 0;
   const initialSeconds = 5;
-  const [rounds, setRounds] = useState(2);
+  const [rounds, setRounds] = useState(1);
 
   const [textInput, setTextInput] = useState('');
   const [userThoughts, setUserThoughts] = useState([]);
@@ -40,6 +72,11 @@ const BrainWriting = () => {
   ]);
 
   const [activeUserIndex, setActiveUserIndex] = useState(0);
+
+    // init user thoughts
+    useEffect(() => { 
+      setUserThoughts(trashThoughts)
+    } , [])
   
   const handleSend = () => {
     if (textInput.trim() !== '') {
@@ -52,10 +89,11 @@ const BrainWriting = () => {
           color: selectedColor,
         },
       ]);
+      setUserThoughts(newThoughtsState);
+        
+      updateUserThoughtsCards(newThoughtsState)
+      
       setTextInput('');
-      setIsBold(false);
-      setIsItalic(false);
-      setSelectedColor('#000000');
     }
   };
 
@@ -82,9 +120,11 @@ const BrainWriting = () => {
     setUserThoughts([]);
   };
 
-  const handleDeleteAll = () => {
-    setUserThoughts([]);
+  const handleDelete = (index) => {
+    const updatedIdeas = userThoughts.filter((_, i) => i !== index);
+    setUserThoughts(updatedIdeas);
   };
+  
 
   const toggleCommentPopup = () => {
     setShowComment(!showComment);
@@ -96,6 +136,14 @@ const BrainWriting = () => {
       setRounds(previousRound => previousRound-1);
     }
   };
+
+  const updateIdeas = (newIdeas) => {
+    setUserThoughts(newIdeas);
+  }
+
+  const updateUserThoughtsCards = (cards) => {
+
+  }
 
   useEffect(() => {
     if(rounds === 0) setCountdownEnded(true);
@@ -164,26 +212,26 @@ const BrainWriting = () => {
             style={{ fontWeight: isBold ? 'bold' : 'normal', fontStyle: isItalic ? 'italic' : 'normal', color: selectedColor }}
           />
           <div className="flex items-center">
-            <img src={Attach} className="w-8" />
-            <div className="flex items-center justify-center rounded-full bg-[#59AEF8] p-2">
-              <img src={Send} className="w-8" />
+            <div className="flex items-center justify-center rounded-full bg-[#59AEF8] p-2" onClick={handleSend}>
+              <img src={Send} className="w-6" />
             </div>
           </div>
         </div>
       </div>
 
-      {userThoughts.length > 0 && (
-        <div className="flex flex-wrap w-5/6 ml-24" style={{ wordWrap: 'break-word' }}>
-          {countdownEnded ? (
-            <>
-              <IdeaEvaluation ideas={userThoughts} toggleCommentPopup={toggleCommentPopup} />
-              {showComment && <IdeaComment onClose={toggleCommentPopup} />}
-            </>
-          ) : (
-            <UserIdea ideas={userThoughts} onDeleteAll={handleDeleteAll} />
-          )}
-        </div>
-      )}
+      <div className="flex flex-wrap justify-start px-12 h-[55vh] w-5/6 ml-24 overflow-x-hidden overflow-y-scroll scrollbar-thin scrollbar-webkit" style={{ wordWrap: 'break-word' }}>
+        {userThoughts.map((idea, index) => (
+          <div key={index} className="w-[30%]">
+            {countdownEnded ? (
+              <IdeaEvaluation ideas={[idea]} toggleCommentPopup={toggleCommentPopup} />
+            ) : (
+              <UserIdea ideas={[idea]} onDelete={() => handleDelete(index)} />
+            )}
+          </div>
+        ))}
+        {showComment && <IdeaComment onClose={toggleCommentPopup} />}
+      </div>
+
     </div>
   );
 };

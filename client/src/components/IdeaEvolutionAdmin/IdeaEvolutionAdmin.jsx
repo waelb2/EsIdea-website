@@ -5,7 +5,7 @@ import Compress from '../../assets/Compress.png'
 import CombinePopUp from '../Combine/CombinePopUp';
 import Extend from '../Extend/Extend';
 
-const IdeaEvaluationAdmin = ({ideas , toggleCommentPopup , onEnlargeClick , toggleCombinePopUp , toggleExtendPopUp, selectedIdeas, setSelectedIdeas}) => {
+const IdeaEvaluationAdmin = ({ideas, toggleCommentPopup, onEnlargeClick, toggleCombinePopUp, toggleExtendPopUp, selectedIdeas, setSelectedIdeas}) => {
 
   const [clicked, setClicked] = useState(false);
   const [count, setCount] = useState(0);
@@ -29,19 +29,19 @@ const IdeaEvaluationAdmin = ({ideas , toggleCommentPopup , onEnlargeClick , togg
       });
     };
 
-    const handleEnlarge = (text) => {
-      setEnlargedText(text); 
-      toggleExtendPopUp(); 
-    };
 
-
+  const handleEnlarge = (text) => {
+    onEnlargeClick(text);
+  };
+    
+    
     return (
         <div className={`bg-[#FEFEFE] p-8 m-2 rounded-2xl shadow-md hover:shadow-lg border ${clicked ? 'border-skyBlue border-2' : 'border-black'} max-w-[400px] relative group`} onClick={handleClick}>
     
         <div className='flex items-center justify-between'>
             <p className='font-medium'>User thinks :</p>
             <div className='flex items-center justify-center w-9 opacity-0 group-hover:opacity-100 transition-opacity'>
-              <img src={Enlarge} alt="Enlarge" className='cursor-pointer' onClick={() => onEnlargeClick(ideas[0].text)} />
+              <img src={Enlarge} alt="Enlarge" className='cursor-pointer' onClick={() => handleEnlarge(ideas[0].text)} />
               <img src={Compress} alt="Compress" className='cursor-pointer' onClick={(event) => toggleCombinePopUp(event, selectedIdeas)}/>
             </div>
         </div>

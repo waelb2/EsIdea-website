@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 
-const UserIdea = ({ ideas, onDeleteAll }) => {
+const UserIdea = ({ ideas, onDelete }) => {
   const [isEditing, setIsEditing] = useState(false);
   const [editedIndex, setEditedIndex] = useState(null);
   const [editedText, setEditedText] = useState("");
@@ -9,10 +9,6 @@ const UserIdea = ({ ideas, onDeleteAll }) => {
   useEffect(() => {
     setUpdatedIdeas([...ideas]);
   }, [ideas]);
-
-  const onDelete = () => {
-    onDeleteAll();
-  };
 
   const activateEditMode = () => {
     setIsEditing(true);

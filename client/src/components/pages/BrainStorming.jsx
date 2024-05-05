@@ -1,4 +1,4 @@
-import React , {useState , useRef} from 'react'
+import React , {useState , useRef , useEffect} from 'react'
 import UserIdea from '../idea generation phase/UserIdea';
 import IdeaEvaluation from '../idea generation phase/IdeaEvaluation';
 import IdeaComment from '../Idea Comment/IdeaComment';
@@ -13,7 +13,6 @@ import Clear from '../../assets/Clear Symbol.png'
 import Color from '../../assets/Color Mode.png';
 import Line1 from '../../assets/Line 1.png'
 import Brain from '../../assets/Brain.png'
-import Attach from '../../assets/Attach.png'
 import Send from '../../assets/Send.png'
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import useUser from '../../hooks/useUser';
@@ -21,16 +20,50 @@ import useUser from '../../hooks/useUser';
 
 const BrainStorming = () => {
 
+    const trashThoughts = [
+      {
+        text: "feu",
+        isBold: false,
+        isItalic: false,
+        color: "#000",
+        selected: false,
+      },
+      {
+        text: "jardin",
+        isBold: false,
+        isItalic: false,
+        color: "#000",
+        selected: false,
+      },
+      {
+        text: "zino",
+        isBold: false,
+        isItalic: false,
+        color: "#000",
+        selected: false,
+      },
+      {
+        text: "good luck l7bib",
+        isBold: false,
+        isItalic: false,
+        color: "#000",
+        selected: false,
+      },
+    ]
+
   const [textInput, setTextInput] = useState('');
   const [userThoughts, setUserThoughts] = useState([]);
   const [isBold, setIsBold] = useState(false);
   const [isItalic, setIsItalic] = useState(false);
   const [selectedColor, setSelectedColor] = useState('#000000'); 
-  const [selectedFile, setSelectedFile] = useState(null);
-  const fileInputRef = useRef(null);
   const [showComment, setShowComment] = useState(false);
   const [countdownEnded, setCountdownEnded] = useState(false);
   const [countdownTime, setCountdownTime] = useState(5);
+
+  // init user thoughts
+  useEffect(() => { 
+    setUserThoughts(trashThoughts)
+  } , [])
 
   
   const handleSend = () => {
@@ -42,14 +75,13 @@ const BrainStorming = () => {
           isBold,
           isItalic,
           color: selectedColor,
-          file: selectedFile
         }
       ]);
+      setUserThoughts(newThoughtsState);
+      
+      updateUserThoughtsCards(newThoughtsState);
+
       setTextInput('');
-      setSelectedFile(null);
-      setIsBold(false); 
-      setIsItalic(false);
-      setSelectedColor('#000000');
     }
   };
 
@@ -76,13 +108,9 @@ const BrainStorming = () => {
     }
   };
 
-  const handleFileChange = (event) => {
-    const file = event.target.files[0]; 
-    setSelectedFile(file);
-  };
-
-  const handleDeleteAll = () => {
-    setUserThoughts([]);
+  const handleDelete = (index) => {
+    const updatedIdeas = userThoughts.filter((_, i) => i !== index);
+    setUserThoughts(updatedIdeas);
   };
   
   const toggleCommentPopup = () => {
@@ -92,6 +120,11 @@ const BrainStorming = () => {
   const handleCountdownEnd = () => {
     setCountdownEnded(true); 
   };
+
+    // update cards after ideas combination
+    const updateUserThoughtsCards = (cards) => {
+
+    }
 
   // const handleCountdownEnd = () => {
   //   setUserArray(prevUserArray => {
@@ -166,29 +199,22 @@ const BrainStorming = () => {
                  style={{ fontWeight: isBold ? 'bold' : 'normal', fontStyle: isItalic ? 'italic' : 'normal' , color: selectedColor }}
               />
               <div className='flex items-center '>
-                <img src={Attach} className='w-8' onClick={() => fileInputRef.current.click()} />
-                <input
-                  type="file"
-                  onChange={handleFileChange}
-                  className="hidden"
-                  ref={fileInputRef}
-                />
                 <div 
                   className='flex items-center justify-center rounded-full bg-[#59AEF8] p-2'
                   onClick={handleSend}
                 >
-                  <img src={Send} className='w-8'/>
+                  <img src={Send} className='w-6'/>
                 </div>
               </div>
             </div>
           </div>
            
-      {userThoughts.length > 0 && (
-        <div className="flex flex-wrap w-5/6 ml-24" style={{ wordWrap: 'break-word' }}>
+      {/* {userThoughts.length > 0 && (
+        <div className="flex flex-wrap justify-start px-12 h-[55vh] w-5/6 ml-24 overflow-x-hidden overflow-y-scroll scrollbar-thin scrollbar-webkit" style={{ wordWrap: 'break-word' }}>
           {/* <UserIdea ideas={userThoughts} onDeleteAll={handleDeleteAll} /> */}
           {/* <IdeaEvaluation ideas={userThoughts} toggleCommentPopup={toggleCommentPopup} />
           {showComment && <IdeaComment onClose={toggleCommentPopup} />} */}
-
+{/* 
           {countdownEnded ? (
             <>
               <IdeaEvaluation ideas={userThoughts} toggleCommentPopup={toggleCommentPopup} />
@@ -199,7 +225,21 @@ const BrainStorming = () => {
                   <UserIdea ideas={userThoughts} onDeleteAll={handleDeleteAll} />
                 )}
                   </div>
-                )}
+                )} */} */
+
+      <div className="flex flex-wrap justify-start px-12 h-[55vh] w-5/6 ml-24 overflow-x-hidden overflow-y-scroll scrollbar-thin scrollbar-webkit" style={{ wordWrap: 'break-word' }}>
+        {userThoughts.map((idea, index) => (
+          <div key={index} className="w-[30%]">
+            {countdownEnded ? (
+              <IdeaEvaluation ideas={[idea]} toggleCommentPopup={toggleCommentPopup} />
+            ) : (
+              <UserIdea ideas={[idea]} onDelete={() => handleDelete(index)} />
+            )}
+          </div>
+        ))}
+        {showComment && <IdeaComment onClose={toggleCommentPopup} />}
+      </div>
+
 
     </div>  
   )

@@ -1,4 +1,4 @@
-import React , {useState} from 'react'
+import React , {useEffect, useState} from 'react'
 import UserIdea from '../idea generation phase/UserIdea'
 import IdeaEvaluationAdmin from '../IdeaEvolutionAdmin/IdeaEvolutionAdmin'
 import IdeaComment from '../Idea Comment/IdeaComment'
@@ -13,7 +13,6 @@ import Clear from '../../assets/Clear Symbol.png'
 import Color from '../../assets/Color Mode.png';
 import Line1 from '../../assets/Line 1.png'
 import Brain from '../../assets/Brain.png'
-import Attach from '../../assets/Attach.png'
 import Send from '../../assets/Send.png'
 import CombinePopUp from '../Combine/CombinePopUp'
 import Extend from '../Extend/Extend'
@@ -54,8 +53,7 @@ const AdminBrainStorming = () => {
   ]
 
   const [textInput, setTextInput] = useState('');
-  // const [userThoughts, setUserThoughts] = useState([]);
-  const [userThoughts, setUserThoughts] = useState(trashThoughts);
+  const [userThoughts, setUserThoughts] = useState([]);
   const [isBold, setIsBold] = useState(false);
   const [isItalic, setIsItalic] = useState(false);
   const [showColorPicker, setShowColorPicker] = useState(false);
@@ -67,12 +65,17 @@ const AdminBrainStorming = () => {
   const [countdownTime, setCountdownTime] = useState(30);
   const [selectedIdeas, setSelectedIdeas] = useState([]);
   const [enlargedText, setEnlargedText] = useState('');
+  const [enlargedIndex, setEnlargedIndex] = useState(null);
 
+  // init user thoughts
+  useEffect(() => { 
+    setUserThoughts(trashThoughts)
+  } , [])
 
   const handleSend = () => {
     if (textInput.trim() !== '') {
-      setUserThoughts(prevUserThoughts => [
-        ...prevUserThoughts,
+      const newThoughtsState = [
+        ...userThoughts,
         {
           text: textInput,
           isBold,
@@ -80,7 +83,12 @@ const AdminBrainStorming = () => {
           color: selectedColor,
           selected: false,
         }
-      ]);
+      ]
+
+      setUserThoughts(newThoughtsState);
+      
+      updateUserThoughtsCards(newThoughtsState);
+
       setTextInput('');
     }
   };
@@ -101,10 +109,6 @@ const AdminBrainStorming = () => {
     setSelectedColor(color);
   };
 
-  const toggleColorPicker = () => {
-    setShowColorPicker(!showColorPicker);
-  };
-
   const handleKeyPress = event => {
     if (event.key === 'Enter') {
       event.preventDefault(); 
@@ -112,8 +116,9 @@ const AdminBrainStorming = () => {
     }
   };
 
-  const handleDeleteAll = () => {
-    setUserThoughts([]);
+  const handleDelete = (index) => {
+    const updatedIdeas = userThoughts.filter((_, i) => i !== index);
+    setUserThoughts(updatedIdeas);
   };
   
     const toggleCommentPopup = () => {
@@ -153,18 +158,30 @@ const AdminBrainStorming = () => {
     }
   };
 
+  const updateIdeas = (newIdeas) => {
+    setUserThoughts(newIdeas);
+  }
+
+  // update cards after ideas combination
+  const updateUserThoughtsCards = (cards) => {
+
+  }
+
   const handleCombinedIdeaSend = (newIdeaText) => {
     // filter out the selected ideas from the global ideas array, then create the new idea
     const selectedIdeasTexts = selectedIdeas.map(idea => idea.text);
 
-    setUserThoughts(previousUserThoughts => [...previousUserThoughts.filter(userThought => !selectedIdeasTexts.includes(userThought.text)), {
+    const newThoughtsState = [...userThoughts.filter(userThought => !selectedIdeasTexts.includes(userThought.text)), {
       text: newIdeaText,
       color: '#000',
       isBold: false,
       isItalic: false,
       selected: false,
-    }]);
+    }]
 
+    setUserThoughts(newThoughtsState);
+
+    updateUserThoughtsCards(newThoughtsState)
     // clear out the selectedIdeas state
     setSelectedIdeas([]);
 
@@ -175,16 +192,16 @@ const AdminBrainStorming = () => {
   const handleEnlarge = (text) => {
     setEnlargedText(text);
     toggleExtendPopUp();
+    setUserThoughts(prevUserThoughts => prevUserThoughts.filter(idea => idea.text !== text));
   };
   
-  
-  const [searchParams,setSearchParams] = useSearchParams();
+   const [searchParams,setSearchParams] = useSearchParams();
     const ProjectTitle = searchParams.get("ProjectTitle");
     const MainTopic = searchParams.get("MainTopic");
     const user = useUser();
     const navigate = useNavigate();
   return (
-    <div key={'hello'} className='bg-[#F1F6FB] relative pt-36 min-h-screen'>
+    <div className='bg-[#F1F6FB] relative pt-36 min-h-screen'>
       <div className='flex justify-between items-center py-4 px-5 fixed top-0 left-0 right-0'>
         <div className='bg-white border border-black flex justify-between items-center px-2 w-56 h-10 rounded-full shadow-[0_4px_4px_rgba(0,0,0,0.2)]'>
           <img className='cursor-pointer' onClick={()=>{navigate(-1)}} src={Back}/>
@@ -240,7 +257,7 @@ const AdminBrainStorming = () => {
                   className='flex items-center justify-center rounded-full bg-[#59AEF8] p-2 cursor-pointer'
                   onClick={handleSend}
                 >
-                  <img src={Send} className='w-8'/>
+                  <img src={Send} className='w-6'/>
                 </div>
               </div>
             </div>
@@ -257,30 +274,30 @@ const AdminBrainStorming = () => {
            
             {userThoughts.length > 0 && (
               <div className="flex flex-wrap justify-start px-12 h-[55vh] w-5/6 ml-24 overflow-x-hidden overflow-y-scroll scrollbar-thin scrollbar-webkit" style={{ wordWrap: 'break-word' }}>
-                {groupUserThoughts().map(pair => (
+                {groupUserThoughts().map((pair , index) => (
                   <div key={pair.text} className="w-[30%]">
                     {countdownEnded ? (
                       <div className="w-full">
-                        <IdeaEvaluationAdmin  
-                            ideas={pair}
-                            toggleCommentPopup={toggleCommentPopup}
-                            onEnlargeClick={handleEnlarge}
-                            toggleCombinePopUp={toggleCombinePopUp}
-                            toggleExtendPopUp={toggleExtendPopUp}
-                            selectedIdeas={selectedIdeas}
-                            setSelectedIdeas={setSelectedIdeas}
+                        <IdeaEvaluationAdmin
+                          ideas={pair}
+                          toggleCommentPopup={toggleCommentPopup}
+                          onEnlargeClick={handleEnlarge}
+                          toggleCombinePopUp={toggleCombinePopUp}
+                          toggleExtendPopUp={toggleExtendPopUp}
+                          selectedIdeas={selectedIdeas}
+                          setSelectedIdeas={setSelectedIdeas}
                         />
                       </div>
                     ) : (
                       <div className="w-full">
-                        <UserIdea ideas={pair} onDeleteAll={handleDeleteAll} />
+                        <UserIdea ideas={pair} onDelete={() => handleDelete(index)} />
                       </div>
                     )}
                   </div>
                 ))}
                 {showComment && <IdeaComment onClose={toggleCommentPopup} />}
                 {showCombinePopUp && ( <CombinePopUp onClose={(event) => toggleCombinePopUp(event)} selectedIdeas={selectedIdeas} onSend={handleCombinedIdeaSend} setUserThoughts={setUserThoughts}/>)}
-                {showExtendPopUp && <Extend onClose={toggleExtendPopUp} enlargedText={enlargedText}/>}
+                {showExtendPopUp && <Extend onClose={toggleExtendPopUp} enlargedText={enlargedText} enlargedIndex={enlargedIndex} userThoughts={userThoughts} updateUserThoughts={setUserThoughts} />}
               </div>
             )}
            </div> 
