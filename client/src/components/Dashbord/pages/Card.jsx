@@ -4,7 +4,7 @@ import PropTypes from 'prop-types'
 import { Colaborators, Edit, ExportProj, More, MoveFavorite, OpenProj, Publish, TrashBlack } from '../../../assets'
 import { projectContext } from '../Dashbord';
 import { useNavigate } from 'react-router-dom';
-import axios  from 'axios';
+import axios  from '../../../utils/axios';
 import useUser from '../../../hooks/useUser';
 
 const Card = ({proj,index,openedMore,setOpenedMore,handleMoveToTrash}) => {
@@ -23,7 +23,7 @@ const Card = ({proj,index,openedMore,setOpenedMore,handleMoveToTrash}) => {
   const moveToTrash = async (projectId)=>{
       handleMoveToTrash(index);
       setOpenedMore(-1);
-      axios.delete(` http://localhost:3000/project/trash-project/${projectId}`, {headers: {
+      axios.delete(`project/trash-project/${projectId}`, {headers: {
             'Authorization': `Bearer ${userToken}`
         },
         }).then(response => {

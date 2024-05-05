@@ -39,7 +39,7 @@ const sendInvitationEMail = async (
       expiresIn: '3d'
     }
   )
-  const invitationLink: string = ` http://localhost:3000/invitation/accept?token=${link_token}`
+  const invitationLink: string = `http://${process.env.HOST}:${process.env.PORT}/invitation/accept?token=${link_token}`
 
   const message: EmailInterface = {
     from: process.env.AUTH_EMAIL as string,

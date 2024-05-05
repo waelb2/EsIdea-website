@@ -21,6 +21,6 @@ const dashboard = (req, res) => {
         role: user.role,
         passwordIsSet: user.password ? true : false
     };
-    res.redirect(`http://localhost:5174/addPassword?user=${JSON.stringify(formattedUser)}&userToken=${token}`);
+    res.redirect(process.env.CLIENT_URL + `/addPassword?user=${JSON.stringify(formattedUser)}&userToken=${token}`);
 };
 exports.dashboard = dashboard;

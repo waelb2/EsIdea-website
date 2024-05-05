@@ -16,7 +16,7 @@ dotenv.config()
 const CLIENT_ID = process.env.CLIENT_ID
 const SECRET_ID = process.env.SECRET_ID
 
-const callbackURL = 'http://localhost:3000/auth/google/callback'
+const callbackURL = `http://${process.env.HOST}:${process.env.PORT}/auth/google/callback`
 
 passport.serializeUser((user: any, done) => {
   done(null, user.id)

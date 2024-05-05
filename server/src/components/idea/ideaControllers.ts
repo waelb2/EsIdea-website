@@ -17,8 +17,9 @@ export const getIdeasByProject = async (req: Request, res: Response) => {
     }
     const ideas: IdeaInterface[] = await Idea.find({
       projectId
-    }).populate('topic').populate('createdBy')
-
+    })
+      .populate('topic')
+      .populate('createdBy')
 
     const formattedIdeas = ideas.map(idea => {
       const formattedIdea = {
@@ -44,7 +45,8 @@ export const getIdeasByProject = async (req: Request, res: Response) => {
 }
 export const postIdea = async (req: Request, res: Response) => {
   try {
-    const { userId } = req.user as AuthPayload
+    const userId = '662d1119ace155f48b676a7d'
+    //const { userId } = req.user as AuthPayload
     const user = await User.findById(userId)
     if (!user) {
       return res.status(404).json({

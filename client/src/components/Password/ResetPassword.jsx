@@ -3,7 +3,7 @@ import React,{useState,useEffect} from 'react'
 import NavBar from '../LandingPage/NavBar'
 import { Eye, ResetPasswordImage, hidePassword } from '../../assets'
 import { useLocation, useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import axios from '../../utils/axios'
 import { ToastContainer, toast } from 'react-toastify';
 
 
@@ -34,29 +34,10 @@ const ResetPassword = () => {
     },[passwordConfirm])
     const data = { newPassword: password,confirmNewPassword:passwordConfirm };
 
-    // const resetPass = (e)=>{
-    //     e.preventDefault();
-    //     if(!passwordError && !passwordConfirmError){
-    //         fetch(`http://localhost:3000${pathname}`, {
-    //         method: 'PATCH',
-    //         body: JSON.stringify(data),
-    //         headers: {
-    //             'Content-type': 'application/json; charset=UTF-8',
-    //         },
-    //         })
-    //         .then((response) => response.json())
-    //         .then((data) => {
-    //             navigate("/login", { state: { fromResetPassword: true } })
-    //         })
-    //         .catch((err) => {
-    //             console.log(err.message);
-    //         });
-    //     }
-    // }
     const resetPass = (e) => {
         e.preventDefault();
         if (!passwordError && !passwordConfirmError) {
-          axios.patch(`http://localhost:3000${pathname}`, data, {
+          axios.patch(`${pathname}`, data, {
             headers: {
               "Content-type": "application/json; charset=UTF-8",
             },

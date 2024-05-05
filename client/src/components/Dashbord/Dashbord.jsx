@@ -5,7 +5,7 @@ import { Outlet} from 'react-router-dom';
 import ScrollToTop from './pages/ScrollToTop'
 import EditProject from './pages/EditProject';
 import DisplayCollaborators from './pages/DisplayCollaborators';
-import axios from 'axios';
+import axios from '../../utils/axios';
 import { ToastContainer, toast } from 'react-toastify';
 export const projectContext = createContext();
 const Dashbord = () => {
@@ -46,10 +46,8 @@ const Dashbord = () => {
           setLoading(true);
          try {
         const userToken = localStorage.getItem('userToken') 
-        const response = await axios.get(`http://localhost:3000/project/get-all-projects/}`, {
+        const response = await axios.get("project/get-all-projects", {
           headers: {
-            Accept: "application/json",
-            "Content-Type": "application/json",
              'Authorization': `Bearer ${userToken}`
           },
         });

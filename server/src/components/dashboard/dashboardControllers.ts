@@ -26,7 +26,7 @@ const dashboard = (req: Request, res: Response) => {
   }
 
   res.redirect(
-    `http://localhost:5174/addPassword?user=${JSON.stringify(
+    process.env.CLIENT_URL + `/addPassword?user=${JSON.stringify(
       formattedUser
     )}&userToken=${token}`
   )

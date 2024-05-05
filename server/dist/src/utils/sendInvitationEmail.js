@@ -26,7 +26,7 @@ const sendInvitationEMail = (coordinator, userId, email, projectId, projectName,
     const link_token = jsonwebtoken_1.default.sign(linkPayload, process.env.JWT_SECRET_EMAIL, {
         expiresIn: '3d'
     });
-    const invitationLink = ` http://localhost:3000/invitation/accept?token=${link_token}`;
+    const invitationLink = `http://${process.env.HOST}:${process.env.PORT}/invitation/accept?token=${link_token}`;
     const message = {
         from: process.env.AUTH_EMAIL,
         to: email,

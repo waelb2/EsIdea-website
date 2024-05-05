@@ -24,7 +24,7 @@ const NavBar = () => {
     content:"ESIdea is exclusive to ESI school email accounts. Please use your ESI email address to sign up or log in."
   }
   const signUp = ()=>{
-    window.open("http://localhost:3000/auth/google","_self")
+    window.open(import.meta.env.VITE_API_URL + "/auth/google","_self")
   }
   return (
     // Navbar container

@@ -2,7 +2,7 @@
 import React,{useState,useRef, useContext, useEffect} from 'react'
 import propTypes from 'prop-types'
 import { blackClose } from '../../../assets'
-import axios from 'axios'
+import axios from '../../../utils/axios'
 import { projectContext } from '../Dashbord'
 import { useNavigate } from 'react-router-dom'
 const EditProject = ({visible,closePopUp,projectToEdit}) => {
@@ -35,7 +35,7 @@ const EditProject = ({visible,closePopUp,projectToEdit}) => {
     const browseRef = useRef();
     const userToken = localStorage.getItem('userToken')
     const editProject = ()=>{
-        axios.patch(`http://localhost:3000/project/update-project/${projectToEdit.projectId}`,myForm, {headers: {
+        axios.patch(`project/update-project/${projectToEdit.projectId}`,myForm, {headers: {
             'Authorization': `Bearer ${userToken}`
         },
         }).then(response => {

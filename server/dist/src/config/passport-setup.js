@@ -11,7 +11,7 @@ const userModels_1 = require("../components/user/userModels");
 dotenv_1.default.config();
 const CLIENT_ID = process.env.CLIENT_ID;
 const SECRET_ID = process.env.SECRET_ID;
-const callbackURL = 'http://localhost:3000/auth/google/callback';
+const callbackURL = `http://${process.env.HOST}:${process.env.PORT}/auth/google/callback`;
 passport_1.default.serializeUser((user, done) => {
     done(null, user.id);
 });

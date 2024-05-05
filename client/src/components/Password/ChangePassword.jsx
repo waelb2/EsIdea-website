@@ -2,7 +2,7 @@
 import React,{useState,useEffect} from 'react'
 import { ChangePFP, ChangePassIcon, Eye, FeedBackIcon, HelpIcon, LogoutIcon, ResetPasswordImage, blackClose, blackLogo, hidePassword, notification } from '../../assets'
 import { Link, useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import axios from '../../utils/axios'
 import useUser from '../../hooks/useUser';
 
 const ResetPassword = () => {
@@ -36,30 +36,10 @@ const ResetPassword = () => {
     },[passwordConfirm])
     const data = { email: user.email,currentPassword:oldPassword,newPassword:password,confirmNewPassword:passwordConfirm };
 
-    // const changePass = (e)=>{
-    //     e.preventDefault();
-    //     if(!passwordError && !passwordConfirmError){
-    //         fetch(`http://localhost:3000/auth/updatePassword`, {
-    //         method: 'POST',
-    //         body: JSON.stringify(data),
-    //         headers: {
-    //             'Content-type': 'application/json; charset=UTF-8',
-    //         },
-    //         })
-    //         .then((response) => {
-    //             if(response.status === 200){
-    //                 navigate("../Home/Projects", { state: { fromChangePassword: true } })
-    //             }
-    //         })
-    //         .catch((err) => {
-    //             console.log(err.message);
-    //         });
-    //     }
-    // }
     const changePass = (e) => {
         e.preventDefault();
         if (!passwordError && !passwordConfirmError) {
-          axios.post("http://localhost:3000/auth/updatePassword", data, {
+          axios.post("auth/updatePassword", data, {
             headers: {
               "Content-type": "application/json; charset=UTF-8",
             },
@@ -96,9 +76,10 @@ const ResetPassword = () => {
         },{
             icon:LogoutIcon,
             title:"Log out",
-            path:"http://localhost:3000/auth/logout"
+            path: import.meta.env.VITE_API_URL + "/auth/logout"
         }
     ]
+
   return (
     <div className="bg-white w-full overflow-hidden min-h-screen flex flex-col">
         <div className="sm:px-16 px-6 flex justify-center items-center">

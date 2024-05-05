@@ -49,7 +49,7 @@ const LoginPage = () => {
       }
   },[fromResetPassword,fromForgotPassword])
   const login = ()=>{
-    window.open("http://localhost:3000/auth/google","_self")
+    window.open(import.meta.env.VITE_API_URL + "/auth/google","_self")
   }
   return (
     <>

@@ -21,9 +21,10 @@ router.post(
   authMiddleWare,
   createProject
 )
-router.patch('/update-project/:projectId',authMiddleWare, updateProject)
+
+router.patch('/update-project/:projectId', authMiddleWare, updateProject)
 router.delete('/delete-project/:projectId', deleteProject)
-router.get('/get-all-projects/:userId', authMiddleWare, getProjectByUserId)
+router.get('/get-all-projects', authMiddleWare, getProjectByUserId)
 router.delete('/trash-project/:projectId', authMiddleWare, trashProject)
 router.post('/restore-project/', restoreProject)
 

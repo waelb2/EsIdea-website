@@ -2,7 +2,7 @@
 import React,{useContext, useEffect, useState} from 'react'
 import {Eye, hidePassword} from '../../assets';
 import { Link, useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import axios from '../../utils/axios';
 import useUser from '../../hooks/useUser';
 import { ToastContainer, toast } from 'react-toastify';
 const Form = () => {
@@ -36,7 +36,7 @@ const Form = () => {
     const login = (e) => {
         e.preventDefault();
         if (!passwordError && !emailError) {
-          axios.post("http://localhost:3000/auth/login", data, {
+          axios.post("auth/login", data, {
             headers: {
               "Content-type": "application/json; charset=UTF-8",
             },

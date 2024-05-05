@@ -31,7 +31,7 @@ const app = (0, express_1.default)();
 const server = http_1.default.createServer(app);
 const io = new socket_io_1.Server(server, {
     cors: {
-        origin: 'http://localhost:5174',
+        origin: process.env.CLIENT_URL || 'http://localhost:5174',
         methods: ['GET', 'POST']
     }
 });
@@ -46,7 +46,7 @@ app.use(passport_1.default.initialize());
 app.use(passport_1.default.session());
 /////////////////////////////////////// o auth ///////////////////////////////
 app.use((0, cors_1.default)({
-    origin: 'http://localhost:5174',
+    origin: process.env.CLIENT_URL || 'http://localhost:5174',
     methods: 'GET,POST,PUT,DELETE,PATCH',
     credentials: true
 }));

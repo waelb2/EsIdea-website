@@ -5,7 +5,7 @@ import propTypes from 'prop-types';
 import Select from './Select'
 import { useDebounce } from '../constants';
 import { ColorRing, ThreeDots } from 'react-loader-spinner';
-import axios from 'axios';
+import axios from '../../../utils/axios';
 import { useNavigate } from 'react-router-dom';
 import { useContext } from 'react';
 import { projectContext } from '../Dashbord';
@@ -84,7 +84,7 @@ const CreateNewProject = ({method,setMethod,visible,closePopUp,currentPage,nextP
     const getTags = async (tagPath,callback) =>{
         try {
             const userToken = localStorage.getItem('userToken')
-            const response = await axios.get(`http://localhost:3000/${tagPath}`, {
+            const response = await axios.get(`${tagPath}`, {
             headers: {
             Accept: "application/json",
             "Content-Type": "application/json",
@@ -148,7 +148,7 @@ const CreateNewProject = ({method,setMethod,visible,closePopUp,currentPage,nextP
     useEffect(()=>{
         const  loadCollaborators = ()=>{
             setLoading(true);
-            axios.post('http://localhost:3000/user/search-user-email', {
+            axios.post('user/search-user-email', {
                 emailQuery : debouncedSearch
             })
             .then(response => {
@@ -172,7 +172,7 @@ const CreateNewProject = ({method,setMethod,visible,closePopUp,currentPage,nextP
     const createProject = async ()=>{
         createButtonRef.current.disabled = true;
         setcreateProjectState(true);
-        axios.post('http://localhost:3000/project/create-project',myForm, {headers: {
+        axios.post('project/create-project',myForm, {headers: {
             'Authorization': `Bearer ${userToken}`
         },
         }).then(response => {

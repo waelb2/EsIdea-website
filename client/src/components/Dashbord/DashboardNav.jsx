@@ -43,7 +43,7 @@ const DashboardNav = ({currentLoc,action}) => {
         },{
             icon:LogoutIcon,
             title:"Log out",
-            path:"http://localhost:3000/auth/logout",
+            path: import.meta.env.VITE_API_URL + "/auth/logout",
             action:()=>{
 
             }

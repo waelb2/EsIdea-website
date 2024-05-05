@@ -3,14 +3,14 @@ import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import { More, RemoveRed, Restore } from '../../../assets'
 import {useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import axios from '../../../utils/axios'
 import { projectContext } from '../Dashbord'
 const CardTrash = ({proj,index,openedMore,setOpenedMore}) => {
   const navigate = useNavigate();
   const {displayMessageToUser} = useContext(projectContext)
   const userToken = localStorage.getItem('userToken');
   const deleteProject = ()=>{
-    axios.delete(`http://localhost:3000/project/delete-project/${proj.projectId}`, {headers: {
+    axios.delete(`project/delete-project/${proj.projectId}`, {headers: {
             'Authorization': `Bearer ${userToken}`
         },
         }).then(response => {
@@ -24,7 +24,7 @@ const CardTrash = ({proj,index,openedMore,setOpenedMore}) => {
         });
   }
   const restoreProject = ()=>{
-    axios.post(`http://localhost:3000/project/restore-project/${proj.projectId}`, {headers: {
+    axios.post(`project/restore-project/${proj.projectId}`, {headers: {
             'Authorization': `Bearer ${userToken}`
         },
         }).then(response => {

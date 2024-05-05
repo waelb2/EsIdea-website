@@ -3,16 +3,15 @@ import React, { useState } from 'react'
 import NavBar from '../LandingPage/NavBar'
 import { ForgotPasswordImage } from '../../assets'
 import { useNavigate } from 'react-router-dom'
-import axios from 'axios'
+import axios from '../../utils/axios'
 import { ToastContainer, toast } from 'react-toastify';
 
 const ForgotPassword = () => {
     const navigate = useNavigate();
     const [email,setEmail]=useState("");
-    const url = 'http://localhost:3000/auth/forgetPassword';
     const data = { email: email };
     const handleForgotPassword = () => {
-        axios.post(url, data, {
+        axios.post('auth/forgetPassword', data, {
           headers: {
             "Content-type": "application/json; charset=UTF-8",
           },

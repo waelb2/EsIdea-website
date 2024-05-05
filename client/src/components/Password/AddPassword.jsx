@@ -3,6 +3,7 @@ import React,{useState,useEffect } from 'react'
 import { Eye, blackLogo, hidePassword } from '../../assets';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import useUser from '../../hooks/useUser';
+import axios from '../../utils/axios'
 
 const AddPassword = () => {
     const navigate = useNavigate();
@@ -42,14 +43,11 @@ const AddPassword = () => {
     const addPassword = (e)=>{
         e.preventDefault();
         if(!passwordError){
-            fetch(`http://localhost:3000/auth/addPassword`, {
-            method: 'POST',
-            body: JSON.stringify(data),
+            axios.post(`auth/addPassword`, data, {
             headers: {
                 'Content-type': 'application/json; charset=UTF-8',
             },
             })
-            .then((response) => response.json())
             .then((data) => {
                 localStorage.setItem('userToken', data.userToken);
                 localStorage.setItem('user', JSON.stringify(data.user));

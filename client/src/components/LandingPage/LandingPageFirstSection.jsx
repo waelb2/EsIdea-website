@@ -2,7 +2,7 @@ import { google,BackgroundLandingPage} from '../../assets';
 // Defining a functional component named LandingPageFirstSection
 const LandingPageFirstSection = () => {
   const signUp = ()=>{
-    window.open("http://localhost:3000/auth/google","_self")
+    window.open(import.meta.env.VITE_API_URL + "/auth/google","_self")
   }
   return (
     // Container for the first section of the landing page

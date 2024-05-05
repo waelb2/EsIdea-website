@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import axios from 'axios';
+import axios from '../../utils/axios';
 import io from 'socket.io-client';
 
 function Project({ projectTitle, projectId, userToken, profilePicUrl }) {
@@ -7,11 +7,10 @@ function Project({ projectTitle, projectId, userToken, profilePicUrl }) {
   const [ideas, setIdeas] = useState([]);
   const [socket, setSocket] = useState(null);
   const [onlineUsers, setOnlineUsers]= useState([]) 
-
   useEffect(() => {
     const fetchIdeas = async () => {
       try {
-        const response = await axios.get(`http://localhost:3000/idea/get-ideas/${projectId}`);
+        const response = await axios.get(`idea/get-ideas/${projectId}`);
         setIdeas(response.data);
       } catch (error) {
         console.error('Error fetching ideas:', error);
@@ -21,7 +20,7 @@ function Project({ projectTitle, projectId, userToken, profilePicUrl }) {
     fetchIdeas();
 
     // Connect to the socket server
-    const newSocket = io('http://localhost:3000');
+    const newSocket = io(import.meta.env.VITE_API_URL);
     setSocket(newSocket);
    // Join the project room
     newSocket.emit('joinRoom', projectId);
@@ -47,7 +46,7 @@ function Project({ projectTitle, projectId, userToken, profilePicUrl }) {
 
   const postIdea = async () => {
     try {
-      const response = await axios.post(`http://localhost:3000/idea/post-idea`, {
+      const response = await axios.post(`idea/post-idea`, {
         projectId: projectId,
         content: currentMessage,
         topicId: '66304643fffed1280d828d88'

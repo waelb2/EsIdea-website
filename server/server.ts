@@ -20,7 +20,7 @@ const app: Express = express()
 const server = http.createServer(app)
 const io = new SocketServer(server, {
   cors: {
-    origin: 'http://localhost:5174',
+    origin: process.env.CLIENT_URL || 'http://localhost:5174',
     methods: ['GET', 'POST']
   }
 })
@@ -42,7 +42,7 @@ app.use(passport.session())
 /////////////////////////////////////// o auth ///////////////////////////////
 app.use(
   cors({
-    origin: 'http://localhost:5174',
+    origin: process.env.CLIENT_URL || 'http://localhost:5174',
     methods: 'GET,POST,PUT,DELETE,PATCH',
     credentials: true
   })

@@ -31,7 +31,7 @@ const failure = (req: Request, res: Response) => {
 }
 const logout = (req: Request, res: Response) => {
   req.logout(() => {})
-  res.redirect('http://localhost:5174/login')
+  res.redirect(process.env.CLIENT_URL + '/login')
 }
 //////////////////////////////// google auth //////////////////////////////////////
 
@@ -180,7 +180,7 @@ const forgetPassword = async (
   await user.save()
 
   //const resetUrl = `${req.protocol}://${req.get("host")}/auth/resetPassword/${resetToken}`;
-  const resetUrl = `http://localhost:5174/auth/resetPassword/${resetToken}`
+  const resetUrl = process.env.CLIENT_URL + `/auth/resetPassword/${resetToken}`
   const message = `Please use the link below to reset your password:\n ${resetUrl}\nThis link is valid only for 10 minutes.`
   try {
     await sendEmail({
