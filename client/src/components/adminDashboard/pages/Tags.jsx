@@ -4,13 +4,14 @@ import AdminNavBar from './AdminNavBar'
 import SearchCat from './SearchCat'
 import axios from '../../../utils/axios'
 import {useReactTable,flexRender,getCoreRowModel,getPaginationRowModel,getFilteredRowModel} from '@tanstack/react-table'
-import { Hammer, Remove, View } from '../../../assets'
+import {Remove } from '../../../assets'
 const Tags = () => {
   const [data,setData] = useState([]);
   const [searchInput,setSearchInput] = useState("");
+  const [type,setType] = useState("module");
   const getTags = async () => {
     try {
-      const response = await axios.get("admin/tags", { params: { type: "club" } });
+      const response = await axios.get("admin/tags", { params: { type:type } });
       if (response.status === 200) {
         setData(response.data);
       } else {
@@ -23,8 +24,27 @@ const Tags = () => {
   };  
   useEffect(()=>{
     getTags();
-  },[]);
-  const columns=[
+  },[type]);
+  const moduleColumns = [{
+    header:"Module name",
+    accessorKey:"moduleName"
+  },
+  {
+    header:"Code",
+    accessorKey:"description.title"
+  },{
+    header:"Field",
+    accessorKey:'description.field',
+  },
+  {
+    header:"Coef",
+    accessorKey:"description.coef"
+  },
+  {
+    header:"Edition year",
+    accessorKey:"description.edition"
+  }]
+  const clubColumns = [
     {
       header:"Club name",
       accessorKey:"clubName"
@@ -37,6 +57,7 @@ const Tags = () => {
       accessorKey:'description.numberOfEvents',
     }
 ]
+  const [columns,setColumns] = useState(moduleColumns)
   const table = useReactTable({
     data,
     columns,
@@ -62,18 +83,67 @@ const Tags = () => {
       console.log(error);
     }
   }
+  const updateTag = async(id)=>{
+    try {
+      const response = await axios.patch("admin/tags", { data: { id,type } });
+      if (response.statusText === 'OK') {
+        console.log(response.data);
+      } else {
+        console.log(response);
+        throw new Error("Authentication has failed");
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  }
+  const [active,setActive] = useState(false);
+  const tags = [
+    {
+      tagType:"module",
+      action:()=>{
+        setType("module");
+        setActive(false);
+        setColumns(moduleColumns);
+      }
+    },
+    {
+      tagType:"club",
+      action:()=>{
+        setType("club");
+        setActive(false);
+        setColumns(clubColumns);
+      }
+    },
+    {
+      tagType:"event",
+      action:()=>{
+        setType("event");
+        setActive(false);
+      }
+    }
+  ]
+  const [visible,setVisible] = useState(false);
   return (
     <>
       <AdminNavBar location='Tags'/>
       <div className='flex justify-between flex-col gap-2 ss:gap-0 ss:flex-row items-center'>
-        <SearchCat setSearchInput={setSearchInput}/>
+        <div className='flex gap-7 w-4/5 items-center'>
+          <SearchCat setSearchInput={setSearchInput}/>
+          <div className='relative'>
+            <div onClick={()=>{setActive(prev => !prev)}} className='text-center py-1 px-4 mb-1 cursor-pointer border-2 border-slate-700 bg-realWhite rounded-md min-w-[6.161rem]'>{type}</div>
+            <div className={`bg-realWhite border-2 border-slate-700 absolute overflow-hidden top-full  rounded-md shadow-xl ${!active && "hidden"}`}>
+                {tags.map(tag=><div className='px-4 py-1 cursor-pointer text-center hover:bg-gray-200' onClick={tag.action} key={tag.tagType}>{tag.tagType}</div>)}
+            </div>
+          </div>
+        </div>
+        
         <button className='px-4 rounded-lg self-stretch bg-skyBlue text-white flex  items-center justify-between'>
           <p>Add new tag &nbsp;</p>
          <span className='text-3xl'>+</span>
         </button>
       </div>
       {data.length !== 0?<>
-        <div className='mb-3 overflow-x-auto'>
+        <div className='mb-3 overflow-auto'>
         <table className='w-full max-w-full bg-white rounded-xl border-collapse'>
           <thead>
               {table.getHeaderGroups().map(headerGroup =>(
