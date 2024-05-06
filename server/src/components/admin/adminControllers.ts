@@ -194,7 +194,7 @@ const getTags = async (req: Request, res: Response) => {
   if (!errResult.isEmpty())
     return res.status(400).send({ errors: errResult.array() })
 
-  const type: string = req.body.type
+  const type: string = req.query.type as string;
   let docs: (ClubInterface | ModuleInterface | EventInterface)[]
   try {
     switch (type.toLowerCase()) {

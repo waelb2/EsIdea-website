@@ -220,7 +220,7 @@ const getTags = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const errResult = (0, express_validator_1.validationResult)(req);
     if (!errResult.isEmpty())
         return res.status(400).send({ errors: errResult.array() });
-    const type = req.body.type;
+    const type = req.query.type;
     let docs;
     try {
         switch (type.toLowerCase()) {
