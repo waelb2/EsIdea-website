@@ -61,6 +61,13 @@ const userSchema = new Schema<UserInterface>({
       ref: 'Invitation'
     }
   ],
+  ban: {
+    isBan: {
+        type : Schema.Types.Boolean,
+        default : false
+    },
+    banEnd: Date
+  },
   passwordResetToken: [
     {
       type: String

@@ -64,6 +64,10 @@ const projectSchema = new mongoose_1.Schema({
         ref: 'IdeationMethod',
         required: [true, 'Ideation method is required']
     },
+    creationDate: {
+        type: mongoose_1.Schema.Types.Date,
+        default: () => new Date()
+    },
     status: {
         type: String,
         required: [true, 'Project status is required'],
@@ -124,11 +128,7 @@ const projectSchema = new mongoose_1.Schema({
             ref: 'Event'
         }
     ],
-    thumbnailUrl: String,
-    creationDate: {
-        type: Date,
-        default: Date.now()
-    }
+    thumbnailUrl: String
 });
 projectSchema.pre('save', function (next) {
     if (this.clubs.length === 0 &&

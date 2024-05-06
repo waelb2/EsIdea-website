@@ -89,6 +89,13 @@ const userSchema = new mongoose_1.Schema({
             ref: 'Invitation'
         }
     ],
+    ban: {
+        isBan: {
+            type: mongoose_1.Schema.Types.Boolean,
+            default: false
+        },
+        banEnd: Date
+    },
     passwordResetToken: [
         {
             type: String
