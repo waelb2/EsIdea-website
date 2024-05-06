@@ -201,18 +201,25 @@ useEffect(() => {
 }, [countDownStarted, socket]);
 
   const handleCombinedIdeaSend = (newIdeaText) => {
+    const coordinator = localStorage.getItem('user')
     // filter out the selected ideas from the global ideas array, then create the new idea
-    const selectedIdeasTexts = selectedIdeas.map(idea => idea.text);
-
-    const newThoughtsState = [...userThoughts.filter(userThought => !selectedIdeasTexts.includes(userThought.text)), {
-      text: newIdeaText,
+    const selectedIdeasTexts = selectedIdeas.map(idea => idea.content);
+    const newThoughtsState = [...userIdeas.filter(userThought => !selectedIdeasTexts.includes(userThought.content)), {
+      content: newIdeaText,
+      ideaId : selectedIdeas[0].ideaId,
+      createdBy :{
+        email : coordinator.email,
+        firstName :  coordinator.firstName,
+        profilePicUrl : coordinator.profilePicUrl
+      } ,
       color: '#000',
       isBold: false,
       isItalic: false,
       selected: false,
     }]
 
-    setUserThoughts(newThoughtsState);
+    setUserIdeas(newThoughtsState);
+    console.log(newThoughtsState)
 
     updateUserThoughtsCards(newThoughtsState)
     // clear out the selectedIdeas state
@@ -326,8 +333,8 @@ useEffect(() => {
                   </div>
                 ))}
                 {showComment && <IdeaComment onClose={toggleCommentPopup} />}
-                {showCombinePopUp && ( <CombinePopUp onClose={(event) => toggleCombinePopUp(event)} selectedIdeas={selectedIdeas} onSend={handleCombinedIdeaSend} setUserThoughts={setUserThoughts}/>)}
-                {showExtendPopUp && <Extend onClose={toggleExtendPopUp} enlargedText={enlargedText} enlargedIndex={enlargedIndex} userThoughts={userThoughts} updateUserThoughts={setUserThoughts} />}
+                {showCombinePopUp && ( <CombinePopUp onClose={(event) => toggleCombinePopUp(event)} selectedIdeas={selectedIdeas} onSend={handleCombinedIdeaSend} setUserIdeas={setUserIdeas}/>)}
+                {showExtendPopUp && <Extend onClose={toggleExtendPopUp} enlargedText={enlargedText} enlargedIndex={enlargedIndex} userIdeas={userIdeas} updateUserThoughts={setUserIdeas} />}
               </div>
             )}
 

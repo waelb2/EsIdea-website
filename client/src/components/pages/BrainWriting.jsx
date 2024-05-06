@@ -53,7 +53,7 @@ const BrainWriting = ({project, ideas, socket, onlineUsers}) => {
 
 
   const initialMinutes = 0;
-  const initialSeconds = 5;
+  const initialSeconds = 7;
   const [rounds, setRounds] = useState(1);
 
   const [textInput, setTextInput] = useState('');
@@ -66,6 +66,8 @@ const BrainWriting = ({project, ideas, socket, onlineUsers}) => {
   const user = useUser();
   const userToken = localStorage.getItem('userToken')
   const [userIdeas, setUserIdeas] = useState([])
+  const [countDownStarted, setCountDownStarted] = useState(false)
+
 
   const [userArray, setUserArray] = useState([]);
 
@@ -75,6 +77,11 @@ const BrainWriting = ({project, ideas, socket, onlineUsers}) => {
     useEffect(() => { 
       setUserIdeas(ideas)
     } , [ideas])
+
+    useEffect(()=>{
+      setUserArray(onlineUsers)
+    },[onlineUsers])
+
     useEffect(() => { 
       let collaborators = []
       collaborators.push(
@@ -88,8 +95,7 @@ const BrainWriting = ({project, ideas, socket, onlineUsers}) => {
         })
      }
           
-      setUserArray(collaborators)
-    } , [project])
+     } , [project])
   
     const handleSend = async () => {
       if (textInput.trim() !== '') {
@@ -177,6 +183,14 @@ const BrainWriting = ({project, ideas, socket, onlineUsers}) => {
 
   }
 
+   useEffect(()=>{
+      if(socket){
+      socket.on('counterFiredBw',()=>{
+        console.log('your admin fired the counter')
+        setCountDownStarted(true)})
+      }
+},[socket])
+
   useEffect(() => {
     if(rounds === 0) setCountdownEnded(true);
   }, [rounds])
@@ -196,7 +210,7 @@ const BrainWriting = ({project, ideas, socket, onlineUsers}) => {
             {rounds} round{rounds > 1 ? 's' : ''} left
           </div>
           <div className="flex items-center justify-center gap-2 mr-4 bg-white font-medium h-10 w-32 rounded-full border border-black shadow-[0_4px_4px_rgba(0,0,0,0.2)]">
-            <CountdownTimerBW initialMinutes={initialMinutes} initialSeconds={initialSeconds} countdownEnded={countdownEnded} onCountdownEnd={handleCountdownEnd} />
+            <CountdownTimerBW initialMinutes={initialMinutes} initialSeconds={initialSeconds} countdownEnded={countdownEnded} onCountdownEnd={handleCountdownEnd}  countDownStarted={countDownStarted}/>
             left
           </div>
         </div>
@@ -204,7 +218,7 @@ const BrainWriting = ({project, ideas, socket, onlineUsers}) => {
 
       <div className="flex flex-col items-end absolute right-0">
         {userArray.map((user, index) => (
-          <User key={index} userName={user.lastName} imageUrl={user.imageUrl} useGradientBorder={index === activeUserIndex} showName={index === activeUserIndex} />
+          <User key={index} userName={user.lastName} imageUrl={user.profilePicUrl} useGradientBorder={index === activeUserIndex} showName={index === activeUserIndex} />
         ))}
       </div>
 
@@ -228,7 +242,7 @@ const BrainWriting = ({project, ideas, socket, onlineUsers}) => {
         <img src={Clear} className="w-6" onClick={clearIdeas} />
       </div>
 
-      <div className="w-full fixed bottom-0 h-24 flex justify-center items-start">
+      {countDownStarted && (<div className="w-full fixed bottom-0 h-24 flex justify-center items-start">
         <div className="bg-white flex items-center w-1/2 rounded-full px-2 py-1">
           <img src={Brain} className="w-8" />
           <input
@@ -246,7 +260,7 @@ const BrainWriting = ({project, ideas, socket, onlineUsers}) => {
             </div>
           </div>
         </div>
-      </div>
+      </div>)}
 
       <div className="flex flex-wrap justify-start px-12 h-[55vh] w-5/6 ml-24 overflow-x-hidden overflow-y-scroll scrollbar-thin scrollbar-webkit" style={{ wordWrap: 'break-word' }}>
         {userIdeas.map((idea, index) => (

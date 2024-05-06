@@ -56,7 +56,7 @@ const AdminBrainWriting = ({project, ideas, onlineUsers, socket}) => {
   ]
 
     const initialMinutes = 0;
-    const initialSeconds = 1;
+    const initialSeconds = 7;
     const [rounds, setRounds] = useState(1);  
 
     const [textInput, setTextInput] = useState('');
@@ -73,6 +73,7 @@ const AdminBrainWriting = ({project, ideas, onlineUsers, socket}) => {
     const [enlargedIndex, setEnlargedIndex] = useState(null);
     const [userIdeas,setUserIdeas] = useState([])
     const [countDownStarted, setCountDownStarted] = useState(false)
+    const [startCount, setStartCount] = useState(false)
     const user = useUser();
     const userToken = localStorage.getItem('userToken')
     const [userArray, setUserArray] = useState([]);
@@ -83,8 +84,12 @@ const AdminBrainWriting = ({project, ideas, onlineUsers, socket}) => {
    // init user thoughts
    useEffect(() => { 
     setUserIdeas(ideas)
-  } , [ideas])
+  } , [ideas ])
   
+  useEffect(()=>{
+    setUserArray(onlineUsers)
+  },[onlineUsers])
+
   useEffect(() => { 
     let collaborators = []
     collaborators.push(
@@ -98,8 +103,8 @@ const AdminBrainWriting = ({project, ideas, onlineUsers, socket}) => {
       })
    }
         
-    setUserArray(collaborators)
   } , [project])
+  
   
     const handleSend = async () => {
       if (textInput.trim() !== '') {
@@ -221,16 +226,24 @@ const AdminBrainWriting = ({project, ideas, onlineUsers, socket}) => {
 
     }
 
-  const fireCounter = async () => {
-  setCountDownStarted(true);
+  const fireCounter =  () => {
+  setStartCount(true);
 };
 
 useEffect(() => {
-  if (countDownStarted) {
-    socket.emit('fireCounter', countDownStarted);
+  if (startCount) {
+  const concernedUser = userArray[activeUserIndex]
+    socket.emit('fireCounterBw', {countDownStarted,concernedUser});
   }
-}, [countDownStarted, socket]);
+}, [startCount,socket, activeUserIndex]);
 
+  useEffect(()=>{
+      if(socket){
+      socket.on('counterFiredBw',()=>{
+        console.log('your admin fired the counter')
+        setCountDownStarted(true)})
+      }
+},[socket])
 
     const handleCombinedIdeaSend = (newIdeaText) => {
       // filter out the selected ideas from the global ideas array, then create the new idea
@@ -275,14 +288,14 @@ useEffect(() => {
               {rounds} round{rounds > 1 ? 's' : ''} left
             </div>
             <div className='flex items-center justify-center mr-4 bg-white font-medium h-10 w-32 rounded-full border border-black shadow-[0_4px_4px_rgba(0,0,0,0.2)]'>
-            <CountdownTimerBW initialMinutes={initialMinutes} initialSeconds={initialSeconds} countdownEnded={countdownEnded} onCountdownEnd={handleCountdownEnd} />   left
+            <CountdownTimerBW initialMinutes={initialMinutes} initialSeconds={initialSeconds} countdownEnded={countdownEnded} onCountdownEnd={handleCountdownEnd} countDownStarted={countDownStarted} />   left
             </div>
           </div>
         </div>
 
         <div className='flex flex-col items-end absolute right-0'>
           {userArray.map((user, index) => (
-            <User key={index} userName={user.lastName} imageUrl={user.imageUrl} useGradientBorder={index === activeUserIndex} showName={index === activeUserIndex} />
+            <User key={index} userName={user.lastName} imageUrl={user.profilePicUrl} useGradientBorder={index === activeUserIndex} showName={index === activeUserIndex} />
           ))}
         </div>
   

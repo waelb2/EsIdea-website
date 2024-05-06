@@ -1,15 +1,16 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Brain from '../../assets/Brain.png';
 import Attach from '../../assets/Attach.png';
 import Send from '../../assets/Send.png';
 import Star from '../../assets/Star.png';
 import Nothing from '../../assets/ProjectsEmpty.svg';
 
-const Extend = ({ onClose, enlargedText, userThoughts, updateUserThoughts }) => {
+const Extend = ({ onClose, enlargedText, userIdeas, updateUserThoughts }) => {
 
   const [inputValue, setInputValue] = useState('');
   const [ideas , setIdeas] = useState([]);
-
+  const coordinator = localStorage.getItem('user')
+ 
   const handleSendClick = () => {
     if (inputValue.trim() !== '') {
       setIdeas([...ideas, inputValue.trim()]);
@@ -20,8 +21,13 @@ const Extend = ({ onClose, enlargedText, userThoughts, updateUserThoughts }) => 
   
   const handleSaveClick = () => {
     if (ideas.length > 0) {
-      updateUserThoughts([...userThoughts, ...ideas.map(text => ({
-        text,
+      updateUserThoughts([...userIdeas, ...ideas.map(text => ({
+        content: text,
+        createdBy:{
+          firstName : coordinator.firstName,
+          email  : coordinator.email,
+          profilePicUrl  : coordinator.profilePicUrl
+        },
         isBold: false,
         isItalic: false,
         color: '#000',
@@ -60,7 +66,7 @@ const Extend = ({ onClose, enlargedText, userThoughts, updateUserThoughts }) => 
               {ideas.length > 0 ? (
                   ideas.map((idea, index) => (
                     <div key={idea} className='bg-white border border-black w-[40%]  p-4 rounded-2xl'>
-                      <p className='text-lg font-medium mb-3'> Someone thinks :</p>
+                      <p className='text-lg font-medium mb-3'> {coordinator.firstName} thinks :</p>
                       <p className='text-gray-800'>•{idea}</p>
                     </div>
                   ))

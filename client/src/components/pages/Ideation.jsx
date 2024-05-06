@@ -33,7 +33,6 @@ const Ideation = () => {
 
     useEffect(()=>{
         getProjectIdeas()
-
         // Connecting to the server 
         const newSocket = io(import.meta.env.VITE_API_URL);
         setSocket(newSocket);
@@ -41,8 +40,11 @@ const Ideation = () => {
         newSocket.emit('joinRoom', project.projectId)
 
         const profilePicUrl = user.profilePicUrl
+        
         newSocket.emit('userData',{
-            profilePicUrl
+            lastName : user.lastName,
+            profilePicUrl,
+            email: user.email
         })
          return () => newSocket.disconnect();
     },[project.projectId])
@@ -52,7 +54,12 @@ const Ideation = () => {
                socket.on('newIdea', (idea) => {
                setIdeas((prevIdeas) => [...prevIdeas, idea]);
                 });
-             socket.on('connectedUsers',connectedUsers =>setOnlineUsers(connectedUsers))
+             socket.on('connectedUsers',(connectedUsers )=>{
+                const sortedUsers = connectedUsers.sort((a,b)=>{
+                return a.email.localeCompare(b.email);
+                })
+               setOnlineUsers(sortedUsers) 
+             })
         }
     },[socket])
 

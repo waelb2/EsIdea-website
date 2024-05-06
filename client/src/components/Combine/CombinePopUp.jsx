@@ -4,11 +4,12 @@ import Attach from '../../assets/Attach.png';
 import Send from '../../assets/Send.png';
 import Star from '../../assets/Star.png';
 
-const CombinePopUp = ({ onClose, selectedIdeas , onSend , setUserThoughts }) => {
+const CombinePopUp = ({ onClose, selectedIdeas , onSend , setUserIdeas }) => {
 
   const [combinedIdea, setCombinedIdea] = useState('');
 
   const handleSend = () => {
+    console.log(combinedIdea)
     if (combinedIdea.trim() !== '') {
       setCombinedIdea('');
       onSend(combinedIdea);
@@ -27,7 +28,7 @@ const CombinePopUp = ({ onClose, selectedIdeas , onSend , setUserThoughts }) => 
         </ul>
 
         {/* Content container */}
-        <div className='flex flex-col w-4/5 h-full pt-8 justify-between items-center gap-y-4'>
+        <div className='flex flex-col w-4/5 h-4/5 pt-8 justify-between items-center gap-y-4'>
           <div className='text-center w-80 transform'>
             <p className='text-4xl font-medium'>Combine ideas</p>
             <p className='text-sm'>Here are all the ideas you selected. <br /> Please use the prompt below to <br /> combine them</p>
@@ -35,9 +36,9 @@ const CombinePopUp = ({ onClose, selectedIdeas , onSend , setUserThoughts }) => 
 
           <div className='flex flex-wrap h-4/5 w-full pt-2 pb-20 gap-4 overflow-y-auto'>
             {selectedIdeas.map(idea => (
-              <div key={idea.text} className='bg-white border border-black w-[40%] h-full p-4 rounded-2xl'>
-                <p className='text-lg font-medium mb-3'> Someone thinks :</p>
-                <p className='text-gray-800'>•{idea.text}</p>
+              <div key={idea.ideaId} className='bg-white border border-black w-[40%] h-fit p-4 rounded-2xl'>
+                <p className='text-lg font-medium mb-3'> {idea.createdBy.firstName} thinks :</p>
+                <p className='text-gray-800'>•{idea.content}</p>
               </div>
             ))}
           </div>

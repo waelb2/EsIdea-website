@@ -1,4 +1,4 @@
-import React , {useState} from 'react'
+import React , {useEffect, useState} from 'react'
 import IdeaComment from '../Idea Comment/IdeaComment';
 import Enlarge from '../../assets/Enlarge.png'
 import Compress from '../../assets/Compress.png'
@@ -18,7 +18,6 @@ const IdeaEvaluationAdmin = ({ideas, toggleCommentPopup, onEnlargeClick, toggleC
       setSelectedIdeas(prevSelectedIdeas => prevSelectedIdeas.filter(idea => !ideas.includes(idea)));
     }
   };
-
   const handleIncrement = () => {
       setCount(prevCount => {
         if (prevCount === 0) {
@@ -41,14 +40,14 @@ const IdeaEvaluationAdmin = ({ideas, toggleCommentPopup, onEnlargeClick, toggleC
         <div className='flex items-center justify-between'>
             <p className='font-medium'>{user.firstName}  thinks :</p>
             <div className='flex items-center justify-center w-9 opacity-0 group-hover:opacity-100 transition-opacity'>
-              <img src={Enlarge} alt="Enlarge" className='cursor-pointer' onClick={() => handleEnlarge(ideas[0].text)} />
+              <img src={Enlarge} alt="Enlarge" className='cursor-pointer' onClick={() => handleEnlarge(ideas[0].content)} />
               <img src={Compress} alt="Compress" className='cursor-pointer' onClick={(event) => toggleCombinePopUp(event, selectedIdeas)}/>
             </div>
         </div>
 
     
           {ideas.map(idea => (
-            <p key={idea.text} className="relative mt-2 pl-1.5 text-sm" style={{ color: idea.color }} >
+            <p key={idea.ideaId} className="relative mt-2 pl-1.5 text-sm" style={{ color: idea.color }} >
                 <span className="absolute left-0 top-0">&#8226;</span> 
                 <span className="overflow-hidden whitespace-pre-wrap break-words ml-2" style={{fontWeight: idea.isBold ? 'bold' : 'normal', fontStyle: idea.isItalic ? 'italic' : 'normal'}}>
                 {idea.content}

@@ -56,7 +56,7 @@ import routes from './routes'
 app.use(routes)
 
 interface ConnectedUsers {
-  [key: string]: { profilePicUrl: string }
+  [key: string]: { profilePicUrl: string; email: string; lastName: string }
 }
 
 const connectedUsers: ConnectedUsers = {}
@@ -94,6 +94,15 @@ io.on('connection', socket => {
   socket.on('fireCounter', counterFired => {
     console.log('Counter fired  : ', counterFired)
     socket.broadcast.emit('counterFired', counterFired)
+  })
+
+  socket.on('fireCounterBw', (data ) => {
+    const {concernedUser, counterFired} = data
+    const socketId = Object.keys(connectedUsers).find(id => connectedUsers[id].email === concernedUser.email);
+    if(socketId){
+      io.to(socketId).emit('counterFiredBw',counterFired)
+    }
+   
   })
 
   // Handle disconnections

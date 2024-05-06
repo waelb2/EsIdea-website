@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from 'react';
 
-const CountdownTimerBW = ({ initialMinutes, initialSeconds, onCountdownEnd, countdownEnded }) => {
+const CountdownTimerBW = ({ initialMinutes, initialSeconds, onCountdownEnd, countdownEnded, countDownStarted }) => {
   const [minutes, setMinutes] = useState(initialMinutes);
   const [seconds, setSeconds] = useState(initialSeconds);
 
   useEffect(() => {
     let timer;
-    if (!countdownEnded) {
+    if(countDownStarted){
+    if (!countdownEnded ) {
       timer = setInterval(() => {
         if (seconds > 0) {
           setSeconds(prevSeconds => prevSeconds - 1);
@@ -23,10 +24,9 @@ const CountdownTimerBW = ({ initialMinutes, initialSeconds, onCountdownEnd, coun
     } else {
       setMinutes(0);
       setSeconds(0);
-    }
-
+    }}
     return () => clearInterval(timer);
-  }, [minutes, seconds, countdownEnded]);
+  }, [minutes, seconds, countdownEnded, countDownStarted]);
 
   return (
     <div>
