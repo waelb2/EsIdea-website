@@ -217,8 +217,8 @@ const addFavouriteProject = async (req: Request, res: Response) => {
   const errResult = validationResult(req)
   if(!errResult.isEmpty())
       return res.status(400).send({ errors: errResult.array() })
-
-  const { userId, projectId } = req.body
+  const { userId } = req.user as AuthPayload
+  const { projectId } = req.body
   
   if (!isObjectIdOrHexString(userId) || !isObjectIdOrHexString(projectId)) {
     return res

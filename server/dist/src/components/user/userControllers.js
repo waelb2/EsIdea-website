@@ -244,7 +244,8 @@ const addFavouriteProject = (req, res) => __awaiter(void 0, void 0, void 0, func
     const errResult = (0, express_validator_1.validationResult)(req);
     if (!errResult.isEmpty())
         return res.status(400).send({ errors: errResult.array() });
-    const { userId, projectId } = req.body;
+    const { userId } = req.user;
+    const { projectId } = req.body;
     if (!(0, mongoose_1.isObjectIdOrHexString)(userId) || !(0, mongoose_1.isObjectIdOrHexString)(projectId)) {
         return res
             .status(400)
