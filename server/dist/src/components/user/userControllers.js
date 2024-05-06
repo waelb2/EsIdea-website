@@ -35,13 +35,15 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getUserById = exports.getUserByLastName = exports.getUserByEmail = exports.getUser = exports.createFeedback = exports.modifyProfilePicture = exports.upload = void 0;
+exports.createPublicProjectRequest = exports.addFavouriteProject = exports.getUserById = exports.getUserByLastName = exports.getUserByEmail = exports.getUser = exports.createFeedback = exports.modifyProfilePicture = exports.upload = void 0;
 const express_validator_1 = require("express-validator");
 const mongoose_1 = __importStar(require("mongoose"));
 const cloudConfig_1 = __importDefault(require("../../config/cloudConfig"));
 const fs_1 = __importDefault(require("fs"));
 const multer_1 = __importDefault(require("multer"));
 const feedbackModel_1 = require("../feedback/feedbackModel");
+const projectModels_1 = require("../project/projectModels");
+const publicProjectRequestModel_1 = require("../publicProjectRequest/publicProjectRequestModel");
 const userModels_1 = require("./userModels");
 const upload = (0, multer_1.default)({ dest: 'uploads/' });
 exports.upload = upload;
@@ -112,6 +114,32 @@ const createFeedback = (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.createFeedback = createFeedback;
+const createPublicProjectRequest = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const errResult = (0, express_validator_1.validationResult)(req);
+    if (!errResult.isEmpty())
+        return res.status(400).send({ errors: errResult.array() });
+    const { projectId } = req.body;
+    if (!(0, mongoose_1.isObjectIdOrHexString)(projectId)) {
+        return res
+            .status(400)
+            .send({ error: 'Bad id must be 24 character hex string' });
+    }
+    const objectId = new mongoose_1.default.Types.ObjectId(projectId);
+    try {
+        const project = yield projectModels_1.Project.findById(objectId);
+        if (!project) {
+            return res.status(404).send({ error: "The project of the publication request is not found" });
+        }
+        const ppr = new publicProjectRequestModel_1.publicProjectRequest({ projectId });
+        yield ppr.save();
+        return res.status(201).send(ppr);
+    }
+    catch (error) {
+        console.log(error);
+        return res.sendStatus(400);
+    }
+});
+exports.createPublicProjectRequest = createPublicProjectRequest;
 const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId, email } = req.user;
     try {
@@ -212,3 +240,36 @@ const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.getUser = getUser;
+const addFavouriteProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const errResult = (0, express_validator_1.validationResult)(req);
+    if (!errResult.isEmpty())
+        return res.status(400).send({ errors: errResult.array() });
+    const { userId, projectId } = req.body;
+    if (!(0, mongoose_1.isObjectIdOrHexString)(userId) || !(0, mongoose_1.isObjectIdOrHexString)(projectId)) {
+        return res
+            .status(400)
+            .send({ error: 'Bad id must be 24 character hex string' });
+    }
+    const userObjectId = new mongoose_1.default.Types.ObjectId(userId);
+    const projectObjectId = new mongoose_1.default.Types.ObjectId(projectId);
+    try {
+        const user = yield userModels_1.User.findById(userObjectId);
+        if (!user) {
+            return res.status(404).send({ error: 'User not found' });
+        }
+        for (const projectObj of user.projects) {
+            console.log("got in !!!\n");
+            if (projectObjectId.equals(new mongoose_1.default.Types.ObjectId(projectObj.project.toString()))) {
+                user.projects[user.projects.indexOf(projectObj)].isFav = true;
+                yield user.save();
+                return res.status(200).send({ msg: 'Project added to favourites' });
+            }
+        }
+        return res.status(400).send({ error: 'The user is not a member of the given project' });
+    }
+    catch (error) {
+        console.log(error);
+        return res.sendStatus(400);
+    }
+});
+exports.addFavouriteProject = addFavouriteProject;

@@ -147,7 +147,8 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             coordinator.projects.push({
                 project,
                 joinedAt: new Date(),
-                isTrashed: false
+                isTrashed: false,
+                isFav: false
             });
             yield coordinator.save();
             user === null || user === void 0 ? void 0 : user.projectInvitations.push(invitation);

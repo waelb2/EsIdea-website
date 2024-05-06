@@ -12,4 +12,12 @@ const publicProjectRequestSchema = new Schema<publicProjectRequestInterface>({
 
 const publicProjectRequest = mongoose.model<publicProjectRequestInterface>('publicProjectRequest', publicProjectRequestSchema)
 
-export { publicProjectRequest }
+const createPublicProjectRequestValidationSchema = {
+  projectId: {
+    notEmpty: {
+      errorMessage: "Must provide the id of the project"
+    }
+  }
+}
+
+export { publicProjectRequest, createPublicProjectRequestValidationSchema }

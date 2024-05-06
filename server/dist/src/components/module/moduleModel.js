@@ -33,8 +33,8 @@ const moduleSchema = new mongoose_1.Schema({
     description: {
         title: String,
         field: String,
-        credit: mongoose_1.default.Schema.Types.BigInt,
-        coef: mongoose_1.default.Schema.Types.BigInt,
+        credit: mongoose_1.default.Schema.Types.Number,
+        coef: mongoose_1.default.Schema.Types.Number,
         edition: String,
         courseHours: String,
         tdHours: String,

@@ -52,6 +52,10 @@ const userSchema = new Schema<UserInterface>({
       isTrashed: {
         type: Boolean,
         default: false
+      },
+      isFav: {
+        type: Boolean,
+        default: false
       }
     }
   ],
@@ -100,4 +104,19 @@ const userIdValidationSchema = {
   }
 }
 
-export { User, UserRole, userIdValidationSchema }
+const addFavouriteProjectValidationSchema = {
+    userId: {
+        notEmpty: {
+            errorMessage: "Must provide the id of the user"
+        }
+    },
+    projectId: {
+        notEmpty: {
+            errorMessage: "Must provide the id of the project"
+        }
+    }
+}
+
+export { User, UserRole, userIdValidationSchema, addFavouriteProjectValidationSchema }
+
+

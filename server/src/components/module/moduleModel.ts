@@ -9,8 +9,8 @@ const moduleSchema = new Schema<ModuleInterface>({
   description: {
     title: String,
     field: String,
-    credit: mongoose.Schema.Types.BigInt,
-    coef: mongoose.Schema.Types.BigInt,
+    credit: mongoose.Schema.Types.Number,
+    coef: mongoose.Schema.Types.Number,
     edition: String,
     courseHours: String,
     tdHours: String,

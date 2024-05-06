@@ -23,7 +23,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.publicProjectRequest = void 0;
+exports.createPublicProjectRequestValidationSchema = exports.publicProjectRequest = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 const publicProjectRequestSchema = new mongoose_1.Schema({
     projectId: {
@@ -34,3 +34,11 @@ const publicProjectRequestSchema = new mongoose_1.Schema({
 });
 const publicProjectRequest = mongoose_1.default.model('publicProjectRequest', publicProjectRequestSchema);
 exports.publicProjectRequest = publicProjectRequest;
+const createPublicProjectRequestValidationSchema = {
+    projectId: {
+        notEmpty: {
+            errorMessage: "Must provide the id of the project"
+        }
+    }
+};
+exports.createPublicProjectRequestValidationSchema = createPublicProjectRequestValidationSchema;
