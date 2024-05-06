@@ -2,9 +2,11 @@ import { profile } from 'console'
 import express, { Request, Response } from 'express'
 import { body, checkSchema, validationResult } from 'express-validator'
 import mongoose, { isObjectIdOrHexString } from 'mongoose'
-import { User, userIdValidationSchema } from './userModels'
+import { User, addFavouriteProjectValidationSchema, userIdValidationSchema } from './userModels'
 import {
+  addFavouriteProject,
   createFeedback,
+  createPublicProjectRequest,
   getUserByEmail,
   getUserById,
   getUserByLastName,
@@ -13,6 +15,7 @@ import {
 } from './userControllers'
 import { createFeedbackValidationSchema } from '../feedback/feedbackModel'
 import { authMiddleWare } from '../auth/authMiddleware'
+import { createPublicProjectRequestValidationSchema } from '../publicProjectRequest/publicProjectRequestModel'
 
 const router = express.Router()
 
@@ -39,5 +42,10 @@ router.post(
 router.post('/search-user-email', getUserByEmail)
 router.post('/search-user-last-name', getUserByLastName)
 router.get('/get-user', authMiddleWare, getUserById)
+
+router.post("/publicProjectRequest", checkSchema(createPublicProjectRequestValidationSchema),
+  createPublicProjectRequest)
+
+router.patch("/project/favourite", checkSchema(addFavouriteProjectValidationSchema), addFavouriteProject)
 
 export default router

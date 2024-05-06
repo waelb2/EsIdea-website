@@ -186,7 +186,8 @@ const createProject = async (req: Request, res: Response) => {
       coordinator.projects.push({
         project,
         joinedAt: new Date(),
-        isTrashed: false
+        isTrashed: false,
+        isFav: false
       })
       await coordinator.save()
 

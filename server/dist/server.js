@@ -80,6 +80,13 @@ io.on('connection', socket => {
         console.log('Counter fired  : ', counterFired);
         socket.broadcast.emit('counterFired', counterFired);
     });
+    socket.on('fireCounterBw', (data) => {
+        const { concernedUser, counterFired } = data;
+        const socketId = Object.keys(connectedUsers).find(id => connectedUsers[id].email === concernedUser.email);
+        if (socketId) {
+            io.to(socketId).emit('counterFiredBw', counterFired);
+        }
+    });
     // Handle disconnections
     socket.on('disconnect', () => {
         delete connectedUsers[socket.id];
