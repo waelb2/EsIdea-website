@@ -82,7 +82,11 @@ io.on('connection', socket => {
     const { idea, projectId } = data
     socket.broadcast.to(projectId).emit('newIdea', idea)
 
-    console.log(`New idea broadcasted to room: ${projectId}`)
+    console.log(
+      `New idea ${JSON.stringify(
+        idea.ideaId
+      )} broadcasted to room: ${projectId}`
+    )
   })
 
   // Handle disconnections

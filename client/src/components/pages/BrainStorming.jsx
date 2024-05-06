@@ -87,6 +87,7 @@ const BrainStorming = ({project, ideas}) => {
             Authorization :`Bearer ${userToken}`
           }
         })
+        socket.emit('newIdea', { idea: response.data, projectId: project.projectId });
         setUserIdeas([...userIdeas, response.data])
       } catch (error) {
         console.log(error)
@@ -122,8 +123,6 @@ const BrainStorming = ({project, ideas}) => {
   const handleDelete = async (index, ideaId) => {
     const updatedIdeas = userIdeas.filter((_, i) => i !== index);
     setUserIdeas(updatedIdeas);
-    console.log('idea ' )
-    
     try {
       const response = await axios.delete(`idea/delete-idea/${ideaId}`
       ,{
@@ -131,9 +130,7 @@ const BrainStorming = ({project, ideas}) => {
           Authorization :`Bearer ${userToken}`
         }
       })
-      console.log(response.data)
-     // setUserIdeas([...userIdeas, response.data])
-    } catch (error) {
+      console.log(response.data)    } catch (error) {
       console.log(error)
     }
   };

@@ -22,7 +22,7 @@ import User from '../Avatar/User'
 import axios from '../../utils/axios';
 
 
-const AdminBrainWriting = ({project, ideas}) => {
+const AdminBrainWriting = ({project, ideas, onlineUsers, socket}) => {
 
   const trashThoughts = [
     {
@@ -124,6 +124,7 @@ const AdminBrainWriting = ({project, ideas}) => {
               Authorization :`Bearer ${userToken}`
             }
           })
+        socket.emit('newIdea', { idea: response.data, projectId: project.projectId });
           setUserIdeas([...userIdeas, response.data])
         } catch (error) {
           console.log(error)
@@ -154,10 +155,20 @@ const AdminBrainWriting = ({project, ideas}) => {
       }
     };
   
-    const handleDelete = (index) => {
-      const updatedIdeas = userThoughts.filter((_, i) => i !== index);
-      setUserThoughts(updatedIdeas);
-    };
+   const handleDelete = async (index, ideaId) => {
+    const updatedIdeas = userIdeas.filter((_, i) => i !== index);
+    setUserIdeas(updatedIdeas);
+    try {
+      const response = await axios.delete(`idea/delete-idea/${ideaId}`
+      ,{
+        headers: {
+          Authorization :`Bearer ${userToken}`
+        }
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  };
     
       const toggleCommentPopup = () => {
       setShowComment(!showComment);
@@ -337,7 +348,7 @@ const AdminBrainWriting = ({project, ideas}) => {
                       </div>
                     ) : (
                       <div className="w-full">
-                        <UserIdea ideas={pair} onDelete={() => handleDelete(index)} />
+                        <UserIdea ideas={pair} onDelete={(ideaId) => handleDelete(index,ideaId)}/>
                       </div>
                     )}
                   </div>

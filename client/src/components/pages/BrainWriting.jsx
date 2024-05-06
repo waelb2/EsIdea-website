@@ -109,6 +109,7 @@ const BrainWriting = ({project, ideas}) => {
               Authorization :`Bearer ${userToken}`
             }
           })
+        socket.emit('newIdea', { idea: response.data, projectId: project.projectId });
           setUserIdeas([...userIdeas, response.data])
         } catch (error) {
           console.log(error)
@@ -141,10 +142,20 @@ const BrainWriting = ({project, ideas}) => {
     setUserThoughts([]);
   };
 
-  const handleDelete = (index) => {
-    const updatedIdeas = userThoughts.filter((_, i) => i !== index);
-    setUserThoughts(updatedIdeas);
-  };
+   const handleDelete = async (index, ideaId) => {
+    const updatedIdeas = userIdeas.filter((_, i) => i !== index);
+    setUserIdeas(updatedIdeas);
+    try {
+      const response = await axios.delete(`idea/delete-idea/${ideaId}`
+      ,{
+        headers: {
+          Authorization :`Bearer ${userToken}`
+        }
+      })
+    } catch (error) {
+      console.log(error)
+    }
+  }; 
   
 
   const toggleCommentPopup = () => {
@@ -243,7 +254,7 @@ const BrainWriting = ({project, ideas}) => {
             {countdownEnded ? (
               <IdeaEvaluation ideas={[idea]} toggleCommentPopup={toggleCommentPopup} />
             ) : (
-              <UserIdea ideas={[idea]} onDelete={() => handleDelete(index)} />
+              <UserIdea ideas={[idea]}  onDelete={(ideaId) => handleDelete(index,ideaId)} />
             )}
           </div>
         ))}

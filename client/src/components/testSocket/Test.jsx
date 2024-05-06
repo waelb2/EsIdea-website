@@ -11,7 +11,7 @@ function Test() {
   const profilePicUrl = user.profilePicUrl
   const queryParams = new URLSearchParams(location.search);
   const project = {
-    projectId : '66304643fffed1280d828d8d',
+    projectId : '6638158df6c71c8138d35981',
     projectTitle :"Esi cup"
   } 
   const [userName, setUserName] = useState(user.firstName +'_'+ user.lastName)
