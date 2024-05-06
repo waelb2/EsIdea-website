@@ -20,7 +20,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import useUser from '../../hooks/useUser'
 import User from '../Avatar/User'
 
-const AdminBrainWriting = ({project}) => {
+const AdminBrainWriting = ({project, ideas}) => {
 
   const trashThoughts = [
     {
@@ -160,7 +160,7 @@ const AdminBrainWriting = ({project}) => {
     }, [rounds])
   
     const groupUserThoughts = () => {
-      return userThoughts.map(idea => [idea]);
+      return ideas.map(idea => [idea]);
     };
     
     const toggleCombinePopUp = (event) => {
@@ -294,10 +294,10 @@ const AdminBrainWriting = ({project}) => {
 
             </div>
              
-            {userThoughts.length > 0 && (
+            {ideas.length > 0 && (
               <div className="flex flex-wrap justify-start px-12 h-[55vh] w-5/6 ml-24 overflow-x-hidden overflow-y-scroll scrollbar-thin scrollbar-webkit" style={{ wordWrap: 'break-word' }}>
                 {groupUserThoughts().map((pair , index) => (
-                  <div key={pair.text} className="w-[30%]">
+                  <div key={pair.content} className="w-[30%]">
                     {countdownEnded ? (
                       <div className="w-full">
                         <IdeaEvaluationAdmin

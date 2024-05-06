@@ -5,7 +5,7 @@ const UserIdea = ({ ideas, onDelete }) => {
   const [editedIndex, setEditedIndex] = useState(null);
   const [editedText, setEditedText] = useState("");
   const [updatedIdeas, setUpdatedIdeas] = useState([]);
-
+  const user = ideas[0].createdBy
   useEffect(() => {
     setUpdatedIdeas([...ideas]);
   }, [ideas]);
@@ -34,10 +34,11 @@ const UserIdea = ({ ideas, onDelete }) => {
     setEditedText(text);
   };
 
+
   return (
     <div className="bg-[#FEFEFE] p-4 m-2 rounded-2xl shadow-md hover:shadow-lg border border-black max-w-[400px] group hover:icons">
       <div className='flex items-center justify-between'>
-        <p className='font-medium'>User thinks :</p>
+        <p className='font-medium'> {user.firstName} thinks :</p>
         <div className='flex items-center justify-between w-9 icons opacity-0 group-hover:opacity-100'>
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-4 h-4 cursor-pointer" onClick={activateEditMode}>
             <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-12.15 12.15a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32L19.513 8.2Z" />
@@ -60,10 +61,10 @@ const UserIdea = ({ ideas, onDelete }) => {
               <button onClick={handleSave} className='ml-1 bg-skyBlue rounded-md w-16 border text-white font-medium'>Save</button>
             </div>
           ) : (
-            <p className="relative mt-2 pl-1.5 text-sm" style={{ color: idea.color}} onClick={() => handleEdit(index, idea.text)}>
+            <p className="relative mt-2 pl-1.5 text-sm" style={{ color: idea.color}} onClick={() => handleEdit(index, idea.content)}>
               <span className="absolute left-0 top-0">&#8226;</span> 
               <span className="overflow-hidden whitespace-pre-wrap break-words ml-2" style={{fontWeight: idea.isBold ? 'bold' : 'normal', fontStyle: idea.isItalic ? 'italic' : 'normal'}}>
-                {idea.text}
+                {idea.content}
               </span>
           </p>
           )}

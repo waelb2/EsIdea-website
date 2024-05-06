@@ -17,7 +17,7 @@ import Send from '../../assets/Send.png';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import useUser from '../../hooks/useUser';
 
-const BrainWriting = ({project}) => {
+const BrainWriting = ({project, ideas}) => {
 
   const trashThoughts = [
     {
@@ -217,7 +217,7 @@ const BrainWriting = ({project}) => {
       </div>
 
       <div className="flex flex-wrap justify-start px-12 h-[55vh] w-5/6 ml-24 overflow-x-hidden overflow-y-scroll scrollbar-thin scrollbar-webkit" style={{ wordWrap: 'break-word' }}>
-        {userThoughts.map((idea, index) => (
+        {ideas.map((idea, index) => (
           <div key={index} className="w-[30%]">
             {countdownEnded ? (
               <IdeaEvaluation ideas={[idea]} toggleCommentPopup={toggleCommentPopup} />

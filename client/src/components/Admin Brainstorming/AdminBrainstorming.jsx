@@ -20,7 +20,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import useUser from '../../hooks/useUser'
 
 
-const AdminBrainStorming = ({project}) => {
+const AdminBrainStorming = ({project, ideas}) => {
   const trashThoughts = [
     {
       text: "feu",
@@ -139,7 +139,7 @@ const AdminBrainStorming = ({project}) => {
   };
 
   const groupUserThoughts = () => {
-    return userThoughts.map(idea => [idea]);
+    return ideas.map(idea => [idea]);
   };
   
   const toggleCombinePopUp = (event) => {
@@ -269,7 +269,7 @@ const AdminBrainStorming = ({project}) => {
           </div>
            
            
-            {userThoughts.length > 0 && (
+            {ideas.length > 0 && (
               <div className="flex flex-wrap justify-start px-12 h-[55vh] w-5/6 ml-24 overflow-x-hidden overflow-y-scroll scrollbar-thin scrollbar-webkit" style={{ wordWrap: 'break-word' }}>
                 {groupUserThoughts().map((pair , index) => (
                   <div key={pair.text} className="w-[30%]">

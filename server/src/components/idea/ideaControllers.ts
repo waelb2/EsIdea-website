@@ -31,7 +31,10 @@ export const getIdeasByProject = async (req: Request, res: Response) => {
           profilePicUrl: idea.createdBy.profilePicUrl
         },
         createdAt: idea.creationDate,
-        votes: idea.votes
+        votes: idea.votes,
+        color : idea.color,
+        isBold: idea.isBold,
+        isItalic: idea.isItalic
       }
       return formattedIdea
     })

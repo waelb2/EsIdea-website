@@ -24,7 +24,9 @@ const getIdeasByProject = (req, res) => __awaiter(void 0, void 0, void 0, functi
         }
         const ideas = yield ideaModels_1.Idea.find({
             projectId
-        }).populate('topic').populate('createdBy');
+        })
+            .populate('topic')
+            .populate('createdBy');
         const formattedIdeas = ideas.map(idea => {
             const formattedIdea = {
                 content: idea.content,
@@ -35,7 +37,10 @@ const getIdeasByProject = (req, res) => __awaiter(void 0, void 0, void 0, functi
                     profilePicUrl: idea.createdBy.profilePicUrl
                 },
                 createdAt: idea.creationDate,
-                votes: idea.votes
+                votes: idea.votes,
+                color: idea.color,
+                isBold: idea.isBold,
+                isItalic: idea.isItalic
             };
             return formattedIdea;
         });
@@ -51,7 +56,8 @@ const getIdeasByProject = (req, res) => __awaiter(void 0, void 0, void 0, functi
 exports.getIdeasByProject = getIdeasByProject;
 const postIdea = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const { userId } = req.user;
+        const userId = '662d1119ace155f48b676a7d';
+        //const { userId } = req.user as AuthPayload
         const user = yield userModels_1.User.findById(userId);
         if (!user) {
             return res.status(404).json({
