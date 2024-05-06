@@ -75,6 +75,11 @@ io.on('connection', socket => {
         socket.broadcast.to(projectId).emit('newIdea', idea);
         console.log(`New idea ${JSON.stringify(idea.ideaId)} broadcasted to room: ${projectId}`);
     });
+    // handle firing counter
+    socket.on('fireCounter', counterFired => {
+        console.log('Counter fired  : ', counterFired);
+        socket.broadcast.emit('counterFired', counterFired);
+    });
     // Handle disconnections
     socket.on('disconnect', () => {
         delete connectedUsers[socket.id];

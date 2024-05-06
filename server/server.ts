@@ -89,6 +89,13 @@ io.on('connection', socket => {
     )
   })
 
+  // handle firing counter
+
+  socket.on('fireCounter', counterFired => {
+    console.log('Counter fired  : ', counterFired)
+    socket.broadcast.emit('counterFired', counterFired)
+  })
+
   // Handle disconnections
   socket.on('disconnect', () => {
     delete connectedUsers[socket.id]
