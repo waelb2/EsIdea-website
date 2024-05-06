@@ -514,7 +514,7 @@ const getProjectByUserId = async (req: Request, res: Response) => {
         error: 'User not found'
       })
     }
-
+  
     const projects = user.projects.map(project => project)
     const projectStrings = projects.map(project => {
       const {
@@ -530,7 +530,6 @@ const getProjectByUserId = async (req: Request, res: Response) => {
         events,
         thumbnailUrl
       } = project.project
-
       const formattedSubTopics = subTopics?.map(topic => {
         return {
           topicId: topic._id,

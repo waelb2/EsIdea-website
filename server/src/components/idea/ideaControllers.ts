@@ -31,7 +31,10 @@ export const getIdeasByProject = async (req: Request, res: Response) => {
           profilePicUrl: idea.createdBy.profilePicUrl
         },
         createdAt: idea.creationDate,
-        votes: idea.votes
+        votes: idea.votes,
+        isBold: idea.isBold,
+        isItalic: idea.isItalic,
+        color: idea.color
       }
       return formattedIdea
     })
@@ -60,7 +63,8 @@ export const postIdea = async (req: Request, res: Response) => {
       content,
       isBold,
       isItalic,
-      color
+      color,
+      selected
     }: {
       projectId: string
       topicId: string
@@ -68,6 +72,7 @@ export const postIdea = async (req: Request, res: Response) => {
       isBold: boolean
       isItalic: boolean
       color: string
+      selected: boolean
     } = req.body
 
     const project = await Project.findById(projectId)

@@ -37,7 +37,10 @@ const getIdeasByProject = (req, res) => __awaiter(void 0, void 0, void 0, functi
                     profilePicUrl: idea.createdBy.profilePicUrl
                 },
                 createdAt: idea.creationDate,
-                votes: idea.votes
+                votes: idea.votes,
+                isBold: idea.isBold,
+                isItalic: idea.isItalic,
+                color: idea.color
             };
             return formattedIdea;
         });
@@ -61,7 +64,7 @@ const postIdea = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
                 error: `User with id : ${userId} does not exist`
             });
         }
-        const { projectId, topicId, content, isBold, isItalic, color } = req.body;
+        const { projectId, topicId, content, isBold, isItalic, color, selected } = req.body;
         const project = yield projectModels_1.Project.findById(projectId);
         if (!project) {
             return res.status(404).json({
