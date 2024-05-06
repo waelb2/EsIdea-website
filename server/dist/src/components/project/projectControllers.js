@@ -460,6 +460,7 @@ const getProjectByUserId = (req, res) => __awaiter(void 0, void 0, void 0, funct
                 CollaboratorsCount: collaboratorsCount.toString(),
                 collaborators: formattedCollaborators,
                 MainTopic: (mainTopic === null || mainTopic === void 0 ? void 0 : mainTopic.topicName) || '',
+                MainTopicId: mainTopic === null || mainTopic === void 0 ? void 0 : mainTopic.id,
                 SubTopics: formattedSubTopics,
                 Clubs: clubs.map(club => club.clubName),
                 Modules: modules.map(module => module.moduleName),

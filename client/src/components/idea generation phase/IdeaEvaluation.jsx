@@ -4,6 +4,7 @@ import IdeaComment from '../Idea Comment/IdeaComment';
 const IdeaEvaluation = ({ideas , toggleCommentPopup}) => {
 
     const [count, setCount] = useState(0);
+    const user = ideas[0].createdBy
 
     const handleIncrement = () => {
         setCount(prevCount => {
@@ -19,13 +20,13 @@ const IdeaEvaluation = ({ideas , toggleCommentPopup}) => {
     return (
         <div className="bg-[#FEFEFE] p-8 m-2 rounded-2xl shadow-md hover:shadow-lg border border-black max-w-[400px]">
     
-            <p className='font-medium'>User thinks :</p>
+            <p className='font-medium'>{user.firstName} thinks :</p>
     
           {ideas.map((idea, index) => (
-            <p key={idea.text} className="relative mt-2 pl-1.5 text-sm" style={{ color: idea.color }}>
+            <p key={idea.content} className="relative mt-2 pl-1.5 text-sm" style={{ color: idea.color }}>
                 <span className="absolute left-0 top-0">&#8226;</span> 
                 <span className="overflow-hidden whitespace-pre-wrap break-words ml-2" style={{fontWeight: idea.isBold ? 'bold' : 'normal', fontStyle: idea.isItalic ? 'italic' : 'normal'}}>
-                {idea.text}
+                {idea.content}
               </span>
             </p>
           ))}

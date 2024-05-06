@@ -19,8 +19,10 @@ import CountdownTimerBW from '../Contdown Timer/CountdownTimerBW'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import useUser from '../../hooks/useUser'
 import User from '../Avatar/User'
+import axios from '../../utils/axios';
 
-const AdminBrainWriting = ({project}) => {
+
+const AdminBrainWriting = ({project, ideas}) => {
 
   const trashThoughts = [
     {
@@ -69,40 +71,63 @@ const AdminBrainWriting = ({project}) => {
     const [selectedIdeas, setSelectedIdeas] = useState([]);
     const [enlargedText, setEnlargedText] = useState('');
     const [enlargedIndex, setEnlargedIndex] = useState(null);
+    const [userIdeas,setUserIdeas] = useState([])
     const user = useUser();
-    const [userArray, setUserArray] = useState([
-      { lastName: user.user.firstName, imageUrl: user.user.profilePicUrl },
-      { lastName: user.user.firstName, imageUrl: user.user.profilePicUrl },
-      { lastName: user.user.firstName, imageUrl: user.user.profilePicUrl },
-      { lastName: user.user.firstName, imageUrl: user.user.profilePicUrl },
-      { lastName: user.user.firstName, imageUrl: user.user.profilePicUrl },
-    ]);
+    const userToken = localStorage.getItem('userToken')
+    const [userArray, setUserArray] = useState([]);
   
     const [activeUserIndex, setActiveUserIndex] = useState(0);
 
   // init user thoughts
   useEffect(() => { 
-    setUserThoughts(trashThoughts)
-  } , [])
+    setUserIdeas(ideas)
+  } , [ideas])
+   // init user thoughts
+   useEffect(() => { 
+    setUserIdeas(ideas)
+  } , [ideas])
   
-    const handleSend = () => {
-      if (textInput.trim() !== '') {
-        const newThoughtsState = [
-          ...userThoughts,
-          {
-            text: textInput,
-            isBold,
-            isItalic,
-            color: selectedColor,
-            selected: false,
-          }
-        ]
+  useEffect(() => { 
+    let collaborators = []
+    collaborators.push(
+      {lastName : project.coordinator.firstName, imageUrl: project.coordinator.profilePicUrl}
+    )
+   for( const collaborator of project.collaborators){
 
-        setUserThoughts(newThoughtsState);
+      collaborators.push({
+        lastName : collaborator.firstName,
+        imageUrl : collaborator.profilePicUrl
+      })
+   }
         
-        updateUserThoughtsCards(newThoughtsState)
-        
+    setUserArray(collaborators)
+  } , [project])
+  
+    const handleSend = async () => {
+      if (textInput.trim() !== '') {
+            
         setTextInput('');
+
+        try {
+          const response = await axios.post('idea/post-idea',{
+            
+              projectId : project.projectId,
+              topicId : project.MainTopicId,
+              content : textInput,
+              isBold,
+              isItalic,
+              color : selectedColor,
+              selected: false
+            }
+          ,{
+            headers: {
+              Authorization :`Bearer ${userToken}`
+            }
+          })
+          setUserIdeas([...userIdeas, response.data])
+        } catch (error) {
+          console.log(error)
+        }
       }
     };
   
@@ -160,7 +185,7 @@ const AdminBrainWriting = ({project}) => {
     }, [rounds])
   
     const groupUserThoughts = () => {
-      return userThoughts.map(idea => [idea]);
+      return userIdeas.map(idea => [idea]);
     };
     
     const toggleCombinePopUp = (event) => {
@@ -180,7 +205,7 @@ const AdminBrainWriting = ({project}) => {
     };
   
     const updateIdeas = (newIdeas) => {
-      setUserThoughts(newIdeas);
+      setUserIdeas(newIdeas);
     }
 
     const updateUserThoughtsCards = (cards) => {
@@ -294,10 +319,10 @@ const AdminBrainWriting = ({project}) => {
 
             </div>
              
-            {userThoughts.length > 0 && (
+            {userIdeas.length > 0 && (
               <div className="flex flex-wrap justify-start px-12 h-[55vh] w-5/6 ml-24 overflow-x-hidden overflow-y-scroll scrollbar-thin scrollbar-webkit" style={{ wordWrap: 'break-word' }}>
                 {groupUserThoughts().map((pair , index) => (
-                  <div key={pair.text} className="w-[30%]">
+                  <div key={pair.content} className="w-[30%]">
                     {countdownEnded ? (
                       <div className="w-full">
                         <IdeaEvaluationAdmin

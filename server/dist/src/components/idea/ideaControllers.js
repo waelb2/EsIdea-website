@@ -29,6 +29,7 @@ const getIdeasByProject = (req, res) => __awaiter(void 0, void 0, void 0, functi
             .populate('createdBy');
         const formattedIdeas = ideas.map(idea => {
             const formattedIdea = {
+                ideaId: idea.id,
                 content: idea.content,
                 createdBy: {
                     firstName: idea.createdBy.firstName,
@@ -39,8 +40,7 @@ const getIdeasByProject = (req, res) => __awaiter(void 0, void 0, void 0, functi
                 createdAt: idea.creationDate,
                 votes: idea.votes,
                 isBold: idea.isBold,
-                isItalic: idea.isItalic,
-                color: idea.color
+                isItalic: idea.isItalic
             };
             return formattedIdea;
         });
@@ -56,8 +56,8 @@ const getIdeasByProject = (req, res) => __awaiter(void 0, void 0, void 0, functi
 exports.getIdeasByProject = getIdeasByProject;
 const postIdea = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const userId = '662d1119ace155f48b676a7d';
-        //const { userId } = req.user as AuthPayload
+        // const userId = '662d1119ace155f48b676a7d'
+        const { userId } = req.user;
         const user = yield userModels_1.User.findById(userId);
         if (!user) {
             return res.status(404).json({
@@ -98,9 +98,9 @@ const postIdea = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             creationDate: new Date(),
             isBold,
             isItalic,
-            color
+            color,
         });
-        createdIdea.populate('topic');
+        (yield createdIdea.populate('topic')).populate('createdBy');
         if (!createdIdea) {
             return res.status(500).json({
                 error: 'Error posting the idea'
@@ -109,11 +109,12 @@ const postIdea = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         project.ideas.push(createdIdea);
         project.save();
         const author = {
-            name: user.lastName + ' ' + user.firstName,
+            firstName: user.firstName,
             email: user.email,
             profilePicUrl: user.profilePicUrl
         };
         const formattedIdea = {
+            ideaId: createdIdea.id,
             createdBy: author,
             topic: createdIdea.topic.topicName,
             content: createdIdea.content,
