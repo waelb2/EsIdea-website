@@ -567,6 +567,7 @@ const getProjectByUserId = async (req: Request, res: Response) => {
         CollaboratorsCount: collaboratorsCount.toString(),
         collaborators: formattedCollaborators,
         MainTopic: mainTopic?.topicName || '',
+        MainTopicId : mainTopic?.id,
         SubTopics: formattedSubTopics,
         Clubs: clubs.map(club => club.clubName),
         Modules: modules.map(module => module.moduleName),

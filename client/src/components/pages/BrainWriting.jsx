@@ -16,6 +16,7 @@ import Brain from '../../assets/Brain.png';
 import Send from '../../assets/Send.png';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import useUser from '../../hooks/useUser';
+import axios from '../../utils/axios';
 
 const BrainWriting = ({project, ideas}) => {
 
@@ -63,39 +64,59 @@ const BrainWriting = ({project, ideas}) => {
   const [showComment, setShowComment] = useState(false);
   const [countdownEnded, setCountdownEnded] = useState(false);
   const user = useUser();
-  const [userArray, setUserArray] = useState([
-    { lastName: user.user.firstName, imageUrl: user.user.profilePicUrl },
-    { lastName: user.user.firstName, imageUrl: user.user.profilePicUrl },
-    { lastName: user.user.firstName, imageUrl: user.user.profilePicUrl },
-    { lastName: user.user.firstName, imageUrl: user.user.profilePicUrl },
-    { lastName: user.user.firstName, imageUrl: user.user.profilePicUrl },
-  ]);
+  const userToken = localStorage.getItem('userToken')
+  const [userIdeas, setUserIdeas] = useState([])
+
+  const [userArray, setUserArray] = useState([]);
 
   const [activeUserIndex, setActiveUserIndex] = useState(0);
 
     // init user thoughts
     useEffect(() => { 
-      setUserThoughts(trashThoughts)
-    } , [])
+      setUserIdeas(ideas)
+    } , [ideas])
+    useEffect(() => { 
+      let collaborators = []
+      collaborators.push(
+        {lastName : project.coordinator.firstName, imageUrl: project.coordinator.profilePicUrl}
+      )
+     for( const collaborator of project.collaborators){
+
+        collaborators.push({
+          lastName : collaborator.firstName,
+          imageUrl : collaborator.profilePicUrl
+        })
+     }
+          
+      setUserArray(collaborators)
+    } , [project])
   
-  const handleSend = () => {
-    if (textInput.trim() !== '') {
-      setUserThoughts(prevUserThoughts => [
-        ...prevUserThoughts,
-        {
-          text: textInput,
-          isBold,
-          isItalic,
-          color: selectedColor,
-        },
-      ]);
-      setUserThoughts(newThoughtsState);
+    const handleSend = async () => {
+      if (textInput.trim() !== '') {
+        setTextInput('');
+        try {
+          const response = await axios.post('idea/post-idea',{
+            
+              projectId : project.projectId,
+              topicId : project.MainTopicId,
+              content : textInput,
+              isBold,
+              isItalic,
+              color : selectedColor,
+            }
+          ,{
+            headers: {
+              Authorization :`Bearer ${userToken}`
+            }
+          })
+          setUserIdeas([...userIdeas, response.data])
+        } catch (error) {
+          console.log(error)
+        }
+  
         
-      updateUserThoughtsCards(newThoughtsState)
-      
-      setTextInput('');
-    }
-  };
+      }
+    };
 
   const handleKeyPress = event => {
     if (event.key === 'Enter') {
@@ -217,7 +238,7 @@ const BrainWriting = ({project, ideas}) => {
       </div>
 
       <div className="flex flex-wrap justify-start px-12 h-[55vh] w-5/6 ml-24 overflow-x-hidden overflow-y-scroll scrollbar-thin scrollbar-webkit" style={{ wordWrap: 'break-word' }}>
-        {ideas.map((idea, index) => (
+        {userIdeas.map((idea, index) => (
           <div key={index} className="w-[30%]">
             {countdownEnded ? (
               <IdeaEvaluation ideas={[idea]} toggleCommentPopup={toggleCommentPopup} />

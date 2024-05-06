@@ -18,6 +18,7 @@ import CombinePopUp from '../Combine/CombinePopUp'
 import Extend from '../Extend/Extend'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import useUser from '../../hooks/useUser'
+import axios from '../../utils/axios'
 
 
 const AdminBrainStorming = ({project, ideas}) => {
@@ -66,30 +67,38 @@ const AdminBrainStorming = ({project, ideas}) => {
   const [selectedIdeas, setSelectedIdeas] = useState([]);
   const [enlargedText, setEnlargedText] = useState('');
   const [enlargedIndex, setEnlargedIndex] = useState(null);
+  const [userIdeas, setUserIdeas]= useState([])
+  const userToken = localStorage.getItem('userToken')
 
-  // init user thoughts
-  useEffect(() => { 
-    setUserThoughts(trashThoughts)
-  } , [])
+ // init user thoughts
+ useEffect(() => { 
+  setUserIdeas(ideas)
+} , [ideas])
 
-  const handleSend = () => {
+  const handleSend = async() => {
     if (textInput.trim() !== '') {
-      const newThoughtsState = [
-        ...userThoughts,
-        {
-          text: textInput,
-          isBold,
-          isItalic,
-          color: selectedColor,
-          selected: false,
-        }
-      ]
-
-      setUserThoughts(newThoughtsState);
-      
-      updateUserThoughtsCards(newThoughtsState);
-
+    
       setTextInput('');
+      try {
+        const response = await axios.post('idea/post-idea',{
+          
+            projectId : project.projectId,
+            topicId : project.MainTopicId,
+            content : textInput,
+            isBold,
+            isItalic,
+            color : selectedColor,
+            selected: false
+          }
+        ,{
+          headers: {
+            Authorization :`Bearer ${userToken}`
+          }
+        })
+        setUserIdeas([...userIdeas, response.data])
+      } catch (error) {
+        console.log(error)
+      }
     }
   };
 
@@ -139,7 +148,7 @@ const AdminBrainStorming = ({project, ideas}) => {
   };
 
   const groupUserThoughts = () => {
-    return ideas.map(idea => [idea]);
+    return userIdeas.map(idea => [idea]);
   };
   
   const toggleCombinePopUp = (event) => {
@@ -269,7 +278,7 @@ const AdminBrainStorming = ({project, ideas}) => {
           </div>
            
            
-            {ideas.length > 0 && (
+            {userIdeas.length > 0 && (
               <div className="flex flex-wrap justify-start px-12 h-[55vh] w-5/6 ml-24 overflow-x-hidden overflow-y-scroll scrollbar-thin scrollbar-webkit" style={{ wordWrap: 'break-word' }}>
                 {groupUserThoughts().map((pair , index) => (
                   <div key={pair.text} className="w-[30%]">

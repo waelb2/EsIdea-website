@@ -23,6 +23,7 @@ export const getIdeasByProject = async (req: Request, res: Response) => {
 
     const formattedIdeas = ideas.map(idea => {
       const formattedIdea = {
+        ideaId : idea.id,
         content: idea.content,
         createdBy: {
           firstName: idea.createdBy.firstName,
@@ -48,8 +49,8 @@ export const getIdeasByProject = async (req: Request, res: Response) => {
 }
 export const postIdea = async (req: Request, res: Response) => {
   try {
-    const userId = '662d1119ace155f48b676a7d'
-    //const { userId } = req.user as AuthPayload
+   // const userId = '662d1119ace155f48b676a7d'
+    const { userId } = req.user as AuthPayload
     const user = await User.findById(userId)
     if (!user) {
       return res.status(404).json({
@@ -72,13 +73,14 @@ export const postIdea = async (req: Request, res: Response) => {
       isItalic: boolean
       color: string
     } = req.body
-
     const project = await Project.findById(projectId)
+
     if (!project) {
       return res.status(404).json({
         error: `Project with id : ${projectId} does not exist`
       })
     }
+
     ;(await project.populate('collaborators.member')).populate('coordinator')
 
     const collaboratorIds = project.collaborators.map(collaborator => {
@@ -97,6 +99,7 @@ export const postIdea = async (req: Request, res: Response) => {
       })
     }
     const topic = await Topic.findById(topicId)
+
     if (!topic) {
       return res.status(404).json({
         error: `Topic with id : ${topicId} does not exist`
@@ -111,9 +114,9 @@ export const postIdea = async (req: Request, res: Response) => {
       creationDate: new Date(),
       isBold,
       isItalic,
-      color
+      color,
     })
-    createdIdea.populate('topic')
+    ;(await createdIdea.populate('topic')).populate('createdBy')
 
     if (!createdIdea) {
       return res.status(500).json({
@@ -125,11 +128,12 @@ export const postIdea = async (req: Request, res: Response) => {
     project.save()
 
     const author = {
-      name: user.lastName + ' ' + user.firstName,
+      firstName: user.firstName,
       email: user.email,
       profilePicUrl: user.profilePicUrl
     }
     const formattedIdea = {
+      ideaId: createdIdea.id,
       createdBy: author,
       topic: createdIdea.topic.topicName,
       content: createdIdea.content,

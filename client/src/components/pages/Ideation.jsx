@@ -4,7 +4,7 @@ import AdminBrainStorming from "../Admin Brainstorming/AdminBrainstorming";
 import AdminBrainWriting from "../Admin Brainwriting/AdmingBrainwriting";
 import BrainStorming from "./BrainStorming";
 import BrainWriting from "./BrainWriting";
-import axios from "axios";
+import axios from "../../utils/axios";
 import { useEffect, useState } from "react";
 
 const Ideation = () => {
@@ -20,7 +20,7 @@ const Ideation = () => {
     const getProjectIdeas = async ()=>{
         try {
             
-            const response = await  axios.get(`http://localhost:3000/idea/get-ideas/${project.projectId}`)
+            const response = await  axios.get(`idea/get-ideas/${project.projectId}`)
             setIdeas(response.data)
     } catch (error) {
            console.log(error) 

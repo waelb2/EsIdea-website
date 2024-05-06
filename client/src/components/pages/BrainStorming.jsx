@@ -16,7 +16,7 @@ import Brain from '../../assets/Brain.png'
 import Send from '../../assets/Send.png'
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import useUser from '../../hooks/useUser';
-import axios from 'axios'
+import axios from '../../utils/axios'
 
 
 const BrainStorming = ({project, ideas}) => {
@@ -60,29 +60,39 @@ const BrainStorming = ({project, ideas}) => {
   const [showComment, setShowComment] = useState(false);
   const [countdownEnded, setCountdownEnded] = useState(false);
   const [countdownTime, setCountdownTime] = useState(5);
+  const userToken = localStorage.getItem('userToken')
+  const [userIdeas, setUserIdeas] = useState([])
 
   // init user thoughts
   useEffect(() => { 
-    setUserThoughts(trashThoughts)
-  } , [])
+    setUserIdeas(ideas)
+  } , [ideas])
 
   
-  const handleSend = () => {
+  const handleSend = async () => {
     if (textInput.trim() !== '') {
-      setUserThoughts(prevUserThoughts => [
-        ...prevUserThoughts,
-        {
-          text: textInput,
-          isBold,
-          isItalic,
-          color: selectedColor,
-        }
-      ]);
-      setUserThoughts(newThoughtsState);
-      
-      updateUserThoughtsCards(newThoughtsState);
-
       setTextInput('');
+      try {
+        const response = await axios.post('idea/post-idea',{
+          
+            projectId : project.projectId,
+            topicId : project.MainTopicId,
+            content : textInput,
+            isBold,
+            isItalic,
+            color : selectedColor,
+          }
+        ,{
+          headers: {
+            Authorization :`Bearer ${userToken}`
+          }
+        })
+        setUserIdeas([...userIdeas, response.data])
+      } catch (error) {
+        console.log(error)
+      }
+
+      
     }
   };
 
@@ -109,9 +119,23 @@ const BrainStorming = ({project, ideas}) => {
     }
   };
 
-  const handleDelete = (index) => {
-    const updatedIdeas = userThoughts.filter((_, i) => i !== index);
-    setUserThoughts(updatedIdeas);
+  const handleDelete = async (index, ideaId) => {
+    const updatedIdeas = userIdeas.filter((_, i) => i !== index);
+    setUserIdeas(updatedIdeas);
+    console.log('idea ' )
+    
+    try {
+      const response = await axios.delete(`idea/delete-idea/${ideaId}`
+      ,{
+        headers: {
+          Authorization :`Bearer ${userToken}`
+        }
+      })
+      console.log(response.data)
+     // setUserIdeas([...userIdeas, response.data])
+    } catch (error) {
+      console.log(error)
+    }
   };
   
   const toggleCommentPopup = () => {
@@ -226,12 +250,12 @@ const BrainStorming = ({project, ideas}) => {
                 )} */} */
 
       <div className="flex flex-wrap justify-start px-12 h-[55vh] w-5/6 ml-24 overflow-x-hidden overflow-y-scroll scrollbar-thin scrollbar-webkit" style={{ wordWrap: 'break-word' }}>
-        {ideas.map((idea, index) => (
+        {userIdeas.map((idea, index) => (
           <div key={index} className="w-[30%]">
             {countdownEnded ? (
               <IdeaEvaluation ideas={[idea]} toggleCommentPopup={toggleCommentPopup} />
             ) : (
-              <UserIdea ideas={[idea]} onDelete={() => handleDelete(index)} />
+              <UserIdea ideas={[idea]} onDelete={(ideaId) => handleDelete(index,ideaId)} />
             )}
           </div>
         ))}
