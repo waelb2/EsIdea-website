@@ -51,7 +51,6 @@ const getIdeasByProject = (req, res) => __awaiter(void 0, void 0, void 0, functi
 exports.getIdeasByProject = getIdeasByProject;
 const postIdea = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        //const { userId } = req.user as AuthPayload
         const { userId } = req.user;
         const user = yield userModels_1.User.findById(userId);
         if (!user) {
