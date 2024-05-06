@@ -19,7 +19,7 @@ import useUser from '../../hooks/useUser';
 import axios from '../../utils/axios'
 
 
-const BrainStorming = ({project, ideas}) => {
+const BrainStorming = ({project, ideas, socket, onlineUsers}) => {
 
     const trashThoughts = [
       {
@@ -62,6 +62,7 @@ const BrainStorming = ({project, ideas}) => {
   const [countdownTime, setCountdownTime] = useState(5);
   const userToken = localStorage.getItem('userToken')
   const [userIdeas, setUserIdeas] = useState([])
+  const [countDownStarted, setCountDownStarted] = useState(false)
 
   // init user thoughts
   useEffect(() => { 
@@ -147,6 +148,15 @@ const BrainStorming = ({project, ideas}) => {
     const updateUserThoughtsCards = (cards) => {
 
     }
+    useEffect(()=>{
+      if(socket){
+      socket.on('counterFired',()=>{
+        console.log('your admin fired the counter')
+        setCountDownStarted(true)
+      })
+
+      }
+ }, [socket])
 
   // const handleCountdownEnd = () => {
   //   setUserArray(prevUserArray => {
@@ -176,7 +186,7 @@ const BrainStorming = ({project, ideas}) => {
         </div>
         <div className='flex items-center'>
           <div className='flex items-center justify-center gap-2 mr-4 bg-white font-medium h-10 w-32 rounded-full border border-black shadow-[0_4px_4px_rgba(0,0,0,0.2)]'>
-            <CountdownTimerBS initialMinutes={0} initialSeconds={5} onCountdownEnd={handleCountdownEnd} countdownTime={countdownTime} />left
+            <CountdownTimerBS initialMinutes={0} initialSeconds={5} onCountdownEnd={handleCountdownEnd} countdownTime={countdownTime} countDownStarted={countDownStarted} />left
           </div>
           <div className='flex bg-white border border-black items-center justify-around w-44 px-3 h-10 rounded-full shadow-[0_4px_4px_rgba(0,0,0,0.2)]'>
             <img src={Group} className='h-6'/>
@@ -205,7 +215,7 @@ const BrainStorming = ({project, ideas}) => {
         <img src={Clear} className='w-6 cursor-pointer' onClick={clearIdeas}/>
       </div>
 
-          <div className=' w-full fixed bottom-0 h-24 flex justify-center items-start'>
+         {countDownStarted &&  (<div className=' w-full fixed bottom-0 h-24 flex justify-center items-start'>
             <div className='bg-white flex items-center w-1/2 rounded-full px-2 py-1'>
               <img src={Brain} className='w-8' />
               <input
@@ -226,7 +236,7 @@ const BrainStorming = ({project, ideas}) => {
                 </div>
               </div>
             </div>
-          </div>
+          </div>)}
            
       {/* {userThoughts.length > 0 && (
         <div className="flex flex-wrap justify-start px-12 h-[55vh] w-5/6 ml-24 overflow-x-hidden overflow-y-scroll scrollbar-thin scrollbar-webkit" style={{ wordWrap: 'break-word' }}>

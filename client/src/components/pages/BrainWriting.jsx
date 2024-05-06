@@ -18,7 +18,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom';
 import useUser from '../../hooks/useUser';
 import axios from '../../utils/axios';
 
-const BrainWriting = ({project, ideas}) => {
+const BrainWriting = ({project, ideas, socket, onlineUsers}) => {
 
   const trashThoughts = [
     {

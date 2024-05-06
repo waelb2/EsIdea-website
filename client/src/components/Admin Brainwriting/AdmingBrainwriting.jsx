@@ -72,16 +72,14 @@ const AdminBrainWriting = ({project, ideas, onlineUsers, socket}) => {
     const [enlargedText, setEnlargedText] = useState('');
     const [enlargedIndex, setEnlargedIndex] = useState(null);
     const [userIdeas,setUserIdeas] = useState([])
+    const [countDownStarted, setCountDownStarted] = useState(false)
     const user = useUser();
     const userToken = localStorage.getItem('userToken')
     const [userArray, setUserArray] = useState([]);
   
     const [activeUserIndex, setActiveUserIndex] = useState(0);
 
-  // init user thoughts
-  useEffect(() => { 
-    setUserIdeas(ideas)
-  } , [ideas])
+
    // init user thoughts
    useEffect(() => { 
     setUserIdeas(ideas)
@@ -223,6 +221,16 @@ const AdminBrainWriting = ({project, ideas, onlineUsers, socket}) => {
 
     }
 
+  const fireCounter = async () => {
+  setCountDownStarted(true);
+};
+
+useEffect(() => {
+  if (countDownStarted) {
+    socket.emit('fireCounter', countDownStarted);
+  }
+}, [countDownStarted, socket]);
+
 
     const handleCombinedIdeaSend = (newIdeaText) => {
       // filter out the selected ideas from the global ideas array, then create the new idea
@@ -320,12 +328,13 @@ const AdminBrainWriting = ({project, ideas, onlineUsers, socket}) => {
                     </div>
               </div>
 
-              <div className='flex  items-center justify-center bg-skyBlue rounded-full w-40 h-10 mr-8 ml-40 cursor-pointer'>
-                <p className='mr-4 text-white text-sm font-semibold'>END Ideation</p>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4 text-skyBlue rounded-full bg-white">
-                    <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" strokeWidth="2" />
+              <div className='flex items-center justify-center bg-skyBlue rounded-full w-40 h-10 mr-8 ml-40 cursor-pointer'>
+                <p className='mr-4 text-white text-sm font-semibold' onClick={fireCounter}>Start Ideation</p>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4 text-skyBlue rounded-full bg-white">
+                <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" strokeWidth="2" />
                 </svg>
             </div>
+         
 
 
             </div>

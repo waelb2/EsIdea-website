@@ -68,6 +68,7 @@ const AdminBrainStorming = ({project, ideas, onlineUsers, socket}) => {
   const [enlargedText, setEnlargedText] = useState('');
   const [enlargedIndex, setEnlargedIndex] = useState(null);
   const [userIdeas, setUserIdeas]= useState([])
+  const [countDownStarted, setCountDownStarted] = useState(false)
   const userToken = localStorage.getItem('userToken')
 
  // init user thoughts
@@ -189,6 +190,16 @@ const AdminBrainStorming = ({project, ideas, onlineUsers, socket}) => {
 
   }
 
+  const fireCounter = async () => {
+  setCountDownStarted(true);
+};
+
+useEffect(() => {
+  if (countDownStarted) {
+    socket.emit('fireCounter', countDownStarted);
+  }
+}, [countDownStarted, socket]);
+
   const handleCombinedIdeaSend = (newIdeaText) => {
     // filter out the selected ideas from the global ideas array, then create the new idea
     const selectedIdeasTexts = selectedIdeas.map(idea => idea.text);
@@ -230,7 +241,7 @@ const AdminBrainStorming = ({project, ideas, onlineUsers, socket}) => {
         </div>
         <div className='flex items-center'>
           <div className='flex items-center justify-center mr-4 bg-white font-medium h-10 w-32 rounded-full border border-black shadow-[0_4px_4px_rgba(0,0,0,0.2)]'>
-          <CountdownTimerBS initialMinutes={0} initialSeconds={5} onCountdownEnd={handleCountdownEnd} countdownTime={countdownTime} /> left
+          <CountdownTimerBS initialMinutes={0} initialSeconds={5} onCountdownEnd={handleCountdownEnd} countdownTime={countdownTime} countDownStarted={countDownStarted} /> left
           </div>
           <div className='flex bg-white border border-black items-center justify-around w-44 px-3 h-10 rounded-full shadow-[0_4px_4px_rgba(0,0,0,0.2)]'>
             <img src={Group} className='h-6'/>
@@ -282,12 +293,12 @@ const AdminBrainStorming = ({project, ideas, onlineUsers, socket}) => {
             </div>
 
             <div className='flex items-center justify-center bg-skyBlue rounded-full w-40 h-10 mr-8 ml-40 cursor-pointer'>
-                <p className='mr-4 text-white text-sm font-semibold'>END Ideation</p>
+                <p className='mr-4 text-white text-sm font-semibold' onClick={fireCounter}>Start Ideation</p>
                 <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="w-4 h-4 text-skyBlue rounded-full bg-white">
                 <path strokeLinecap="round" strokeLinejoin="round" d="m8.25 4.5 7.5 7.5-7.5 7.5" strokeWidth="2" />
                 </svg>
             </div>
-
+        
           </div>
            
            
@@ -321,14 +332,7 @@ const AdminBrainStorming = ({project, ideas, onlineUsers, socket}) => {
             )}
 
           
-            <div className="online-users-container">
-          <h2>Online Users</h2>
-         <div className="online-users-list">
-           {onlineUsers.map((user,index) => (
-          <img key={index} src={user.profilePicUrl}  className="profile-pic m-2 w-10 h-10 rounded-full " />
-        ))}
-      </div>
-    </div>
+           
            </div> 
   )
 }
