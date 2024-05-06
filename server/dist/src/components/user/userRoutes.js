@@ -9,6 +9,7 @@ const userModels_1 = require("./userModels");
 const userControllers_1 = require("./userControllers");
 const feedbackModel_1 = require("../feedback/feedbackModel");
 const authMiddleware_1 = require("../auth/authMiddleware");
+const publicProjectRequestModel_1 = require("../publicProjectRequest/publicProjectRequestModel");
 const router = express_1.default.Router();
 router.get('/users', (req, res) => { });
 router.patch('/settings/profile/password'
@@ -19,4 +20,6 @@ router.post('/settings/feedback', (0, express_validator_1.checkSchema)(feedbackM
 router.post('/search-user-email', userControllers_1.getUserByEmail);
 router.post('/search-user-last-name', userControllers_1.getUserByLastName);
 router.get('/get-user', authMiddleware_1.authMiddleWare, userControllers_1.getUserById);
+router.post("/publicProjectRequest", (0, express_validator_1.checkSchema)(publicProjectRequestModel_1.createPublicProjectRequestValidationSchema), userControllers_1.createPublicProjectRequest);
+router.patch("/project/favourite", (0, express_validator_1.checkSchema)(userModels_1.addFavouriteProjectValidationSchema), userControllers_1.addFavouriteProject);
 exports.default = router;

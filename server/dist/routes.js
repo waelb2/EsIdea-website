@@ -14,7 +14,10 @@ const clubRoutes_1 = __importDefault(require("./src/components/club/clubRoutes")
 const moduleRoutes_1 = __importDefault(require("./src/components/module/moduleRoutes"));
 const eventRoutes_1 = __importDefault(require("./src/components/event/eventRoutes"));
 const ideaRoutes_1 = __importDefault(require("./src/components/idea/ideaRoutes"));
+const adminRoutes_1 = __importDefault(require("./src/components/admin/adminRoutes"));
+const globalUtils_1 = require("./src/utils/globalUtils");
 const router = express_1.default.Router();
+router.use(globalUtils_1.loggerMiddleware);
 router.use('/user', userRoutes_1.default);
 router.use('/home', homeRoutes_1.default);
 router.use('/auth', authRoutes_1.default);
@@ -25,4 +28,5 @@ router.use('/club', clubRoutes_1.default);
 router.use('/module', moduleRoutes_1.default);
 router.use('/event', eventRoutes_1.default);
 router.use('/idea', ideaRoutes_1.default);
+router.use('/admin', adminRoutes_1.default);
 exports.default = router;

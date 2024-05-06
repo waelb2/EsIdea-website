@@ -23,48 +23,22 @@ var __importStar = (this && this.__importStar) || function (mod) {
     return result;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.Idea = void 0;
+exports.createPublicProjectRequestValidationSchema = exports.publicProjectRequest = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
-const ideaSchema = new mongoose_1.Schema({
-    createdBy: {
-        type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: 'User',
-        required: true
-    },
+const publicProjectRequestSchema = new mongoose_1.Schema({
     projectId: {
         type: mongoose_1.default.Schema.Types.ObjectId,
         ref: 'Project',
         required: true
-    },
-    content: {
-        type: String,
-        required: true
-    },
-    creationDate: {
-        type: Date,
-        default: Date.now()
-    },
-    topic: {
-        type: mongoose_1.default.Schema.Types.ObjectId,
-        ref: 'Topic',
-        required: true
-    },
-    comments: [
-        {
-            content: String,
-            author: {
-                type: mongoose_1.default.Schema.Types.ObjectId,
-                ref: 'User'
-            }
-        }
-    ],
-    votes: {
-        type: Number,
-        default: 0
-    },
-    isBold: Boolean,
-    isItalic: Boolean,
-    color: String
+    }
 });
-const Idea = mongoose_1.default.model('Idea', ideaSchema);
-exports.Idea = Idea;
+const publicProjectRequest = mongoose_1.default.model('publicProjectRequest', publicProjectRequestSchema);
+exports.publicProjectRequest = publicProjectRequest;
+const createPublicProjectRequestValidationSchema = {
+    projectId: {
+        notEmpty: {
+            errorMessage: "Must provide the id of the project"
+        }
+    }
+};
+exports.createPublicProjectRequestValidationSchema = createPublicProjectRequestValidationSchema;

@@ -9,8 +9,12 @@ import clubRoutes from './src/components/club/clubRoutes'
 import moduleRoutes from './src/components/module/moduleRoutes'
 import eventRoutes from './src/components/event/eventRoutes'
 import ideaRoutes from './src/components/idea/ideaRoutes'
+import adminRoutes from "./src/components/admin/adminRoutes"
+import { loggerMiddleware } from "./src/utils/globalUtils"
+
 const router = express.Router()
 
+router.use(loggerMiddleware)
 router.use('/user', userRoutes)
 router.use('/home', homeRoutes)
 router.use('/auth', authRoutes)
@@ -21,5 +25,6 @@ router.use('/club', clubRoutes)
 router.use('/module', moduleRoutes)
 router.use('/event', eventRoutes)
 router.use('/idea', ideaRoutes)
+router.use('/admin', adminRoutes)
 
 export default router

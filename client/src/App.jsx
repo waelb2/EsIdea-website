@@ -36,10 +36,10 @@ const App = () => {
             <Route path='*' element={<h1>Page Not Found</h1>}/>
         </Route> */}
 
-        <Route path='/Admin' element={<RequireAuth allowedRoles={["admin"]}/>}>
+        <Route path='/Admin' element={<RequireAuth allowedRoles={["user"]}/>}>
             <Route element={<AdminDashboard/>}>
-                <Route index={true} element={<Navigate to="/Admin/General"/>}/>
-                <Route path='General' element={<General/>}/>
+                <Route index={true} element={<Navigate to="/Admin/Statistics"/>}/>
+                <Route path='Statistics' element={<General/>}/>
                 <Route path='Tags' element={<Tags/>}/>
                 <Route path='FeedBacks' element={<FeedBacks/>}/>
                 <Route path='Users' element={<Users/>}/>

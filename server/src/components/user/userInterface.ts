@@ -14,9 +14,14 @@ export interface UserInterface extends Document {
     project: ProjectInterface
     joinedAt: Date
     isTrashed: boolean
+    isFav: boolean
   }[]
   googleId: string
-  projectInvitations: InvitationInterface[]
+  projectInvitations: InvitationInterface[],
+  ban: {
+    isBan: boolean
+    banEnd: Date
+  }
   passwordResetToken?: String
   passwordResetTokenExpires?: Date
   createResetPasswordToken: Function

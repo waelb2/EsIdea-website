@@ -41,6 +41,10 @@ const projectSchema = new Schema<ProjectInterface>({
     ref: 'IdeationMethod',
     required: [true, 'Ideation method is required']
   },
+  creationDate : {
+    type : Schema.Types.Date,
+    default : () => new Date()
+  },
   status: {
     type: String,
     required: [true, 'Project status is required'],
@@ -101,11 +105,7 @@ const projectSchema = new Schema<ProjectInterface>({
       ref: 'Event'
     }
   ],
-  thumbnailUrl: String,
-  creationDate: {
-    type: Date,
-    default: Date.now()
-  }
+  thumbnailUrl: String
 })
 
 projectSchema.pre('save', function (next) {

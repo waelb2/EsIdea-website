@@ -1,8 +1,8 @@
 import { General,Users,Tags,Logs,FeedBacks } from "../../assets";
 export const AdminNavLinks = [
     {
-        title : "General",
-        path:"/Admin/General",
+        title : "Statistics",
+        path:"/Admin/Statistics",
         icon : General
     },
     {

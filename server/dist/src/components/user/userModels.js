@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.userIdValidationSchema = exports.UserRole = exports.User = void 0;
+exports.addFavouriteProjectValidationSchema = exports.userIdValidationSchema = exports.UserRole = exports.User = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
 const validator_1 = __importDefault(require("validator"));
 const crypto_1 = __importDefault(require("crypto"));
@@ -80,6 +80,10 @@ const userSchema = new mongoose_1.Schema({
             isTrashed: {
                 type: Boolean,
                 default: false
+            },
+            isFav: {
+                type: Boolean,
+                default: false
             }
         }
     ],
@@ -89,6 +93,13 @@ const userSchema = new mongoose_1.Schema({
             ref: 'Invitation'
         }
     ],
+    ban: {
+        isBan: {
+            type: mongoose_1.Schema.Types.Boolean,
+            default: false
+        },
+        banEnd: Date
+    },
     passwordResetToken: [
         {
             type: String
@@ -119,3 +130,16 @@ const userIdValidationSchema = {
     }
 };
 exports.userIdValidationSchema = userIdValidationSchema;
+const addFavouriteProjectValidationSchema = {
+    userId: {
+        notEmpty: {
+            errorMessage: "Must provide the id of the user"
+        }
+    },
+    projectId: {
+        notEmpty: {
+            errorMessage: "Must provide the id of the project"
+        }
+    }
+};
+exports.addFavouriteProjectValidationSchema = addFavouriteProjectValidationSchema;
