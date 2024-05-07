@@ -19,7 +19,7 @@ const Card = ({proj,index,openedMore,setOpenedMore,handleMoveToTrash}) => {
   timeZoneName: 'short' 
 }
   const userToken = localStorage.getItem('userToken')
-
+  
   const moveToTrash = async (projectId)=>{
       handleMoveToTrash(index);
       setOpenedMore(-1);
@@ -36,6 +36,21 @@ const Card = ({proj,index,openedMore,setOpenedMore,handleMoveToTrash}) => {
             }
         });
   }
+  const user = useUser();
+  console.log(user)
+  // const addToFavourite = async(projectId)=>{
+  //   try {
+  //     const response = await axios.delete("admin/tags", { data: { userId:user. } });
+  //     if (response.statusText === 'OK') {
+  //       console.log(response.data);
+  //     } else {
+  //       console.log(response);
+  //       throw new Error("Authentication has failed");
+  //     }
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // }
   const {setprojectToEdit,setEditProjectPopUp,setCollaborators,setCoordinator,setCollaboratorPopUp} = useContext(projectContext);
   const projectDetails = [
     {
