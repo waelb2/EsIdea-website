@@ -214,12 +214,8 @@ const getUser = async (req: Request, res: Response) => {
 }
 
 const addFavouriteProject = async (req: Request, res: Response) => {
-  const errResult = validationResult(req)
-  if(!errResult.isEmpty())
-      return res.status(400).send({ errors: errResult.array() })
   const { userId } = req.user as AuthPayload
   const { projectId } = req.body
-  
   if (!isObjectIdOrHexString(userId) || !isObjectIdOrHexString(projectId)) {
     return res
       .status(400)
@@ -234,7 +230,6 @@ const addFavouriteProject = async (req: Request, res: Response) => {
         return res.status(404).send({ error: 'User not found' })
       }
       for(const projectObj of user.projects) {
-        console.log("got in !!!\n") 
         if (projectObjectId.equals(new mongoose.Types.ObjectId(projectObj.project.toString()))) {
           user.projects[user.projects.indexOf(projectObj)].isFav = true
           await user.save()

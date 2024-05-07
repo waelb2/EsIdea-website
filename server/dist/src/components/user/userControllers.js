@@ -241,9 +241,6 @@ const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getUser = getUser;
 const addFavouriteProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const errResult = (0, express_validator_1.validationResult)(req);
-    if (!errResult.isEmpty())
-        return res.status(400).send({ errors: errResult.array() });
     const { userId } = req.user;
     const { projectId } = req.body;
     if (!(0, mongoose_1.isObjectIdOrHexString)(userId) || !(0, mongoose_1.isObjectIdOrHexString)(projectId)) {
@@ -259,7 +256,6 @@ const addFavouriteProject = (req, res) => __awaiter(void 0, void 0, void 0, func
             return res.status(404).send({ error: 'User not found' });
         }
         for (const projectObj of user.projects) {
-            console.log("got in !!!\n");
             if (projectObjectId.equals(new mongoose_1.default.Types.ObjectId(projectObj.project.toString()))) {
                 user.projects[user.projects.indexOf(projectObj)].isFav = true;
                 yield user.save();

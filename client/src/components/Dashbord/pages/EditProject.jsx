@@ -22,16 +22,16 @@ const EditProject = ({visible,closePopUp,projectToEdit}) => {
     }
     const handleUpload=(event)=>{
         setBanner(URL.createObjectURL(event.target.files[0]))
-        setImage(event.target.files[0])
+        setImage(event.target.files[0]);
     }
     const handleDrop=(event)=>{
         setBanner(URL.createObjectURL(event.dataTransfer.files[0]));
-        event.preventDefault();
+        setImage(event.dataTransfer.files[0]);
     }
     const myForm = new FormData()
     myForm.append('thumbnailUrl',image)
-    myForm.append('title', "wael");
-    myForm.append('description', "description");
+    myForm.append('title', projectName);
+    myForm.append('description', description);
     const browseRef = useRef();
     const userToken = localStorage.getItem('userToken')
     const editProject = ()=>{
@@ -84,7 +84,7 @@ const EditProject = ({visible,closePopUp,projectToEdit}) => {
                                         !banner ? <div onDrop={handleDrop} onDragOver={handleDragOver} className='flex flex-col items-center justify-center gap-1'>
                                             <h1 className='text-black'>Drag and Drop pic to upload</h1>
                                             <h1 className='text-black'>Or</h1>
-                                            <input accept='image/*' onChange={handleUpload} ref={browseRef} hidden type="file" />
+                                            <input onChange={handleUpload} ref={browseRef} hidden type="file" />
                                             <button className='bg-skyBlue py-1 px-2 rounded-xl text-realWhite' onClick={()=>{browseRef.current.click()}}>Browse</button>
                                         </div>:
                                         <div className='flex flex-col items-center justify-center gap-1'>

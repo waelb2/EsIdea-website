@@ -5,9 +5,9 @@ import { Colaborators, Edit, ExportProj, More, MoveFavorite, OpenProj, Publish, 
 import { projectContext } from '../Dashbord';
 import { useNavigate } from 'react-router-dom';
 import axios  from '../../../utils/axios';
-import useUser from '../../../hooks/useUser';
-
 const Card = ({proj,index,openedMore,setOpenedMore,handleMoveToTrash}) => {
+
+  const {displayMessageToUser} = useContext(projectContext);
   const navigate = useNavigate()
   const dataOptions  = { 
   year: 'numeric', 
@@ -36,21 +36,28 @@ const Card = ({proj,index,openedMore,setOpenedMore,handleMoveToTrash}) => {
             }
         });
   }
-  const user = useUser();
-  console.log(user)
-  // const addToFavourite = async(projectId)=>{
-  //   try {
-  //     const response = await axios.delete("admin/tags", { data: { userId:user. } });
-  //     if (response.statusText === 'OK') {
-  //       console.log(response.data);
-  //     } else {
-  //       console.log(response);
-  //       throw new Error("Authentication has failed");
-  //     }
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // }
+  const addToFavourite = async (projectId) => {
+    try {
+        const response = await axios.patch(
+            'user/project/favourite',
+            { projectId },
+            {
+                headers: {
+                    'Authorization': `Bearer ${userToken}`
+                }
+            }
+        );
+        displayMessageToUser("success","Project added to favourites successfully!")
+        // Optionally, you can handle the response here if needed.
+    } catch (error) {
+        console.error('Error:', error.response.data.error);
+        if (error.response && error.response.status === 401) {
+            navigate('/login');
+        }
+    }
+}
+
+
   const {setprojectToEdit,setEditProjectPopUp,setCollaborators,setCoordinator,setCollaboratorPopUp} = useContext(projectContext);
   const projectDetails = [
     {
@@ -74,6 +81,11 @@ const Card = ({proj,index,openedMore,setOpenedMore,handleMoveToTrash}) => {
         icon:MoveFavorite,
         line:false,
         action:()=>{
+          if(!proj.isFav){
+            addToFavourite(proj.projectId);
+          }else{
+            displayMessageToUser("error","Project is already in favourites!")
+          }
         }
     },
     {

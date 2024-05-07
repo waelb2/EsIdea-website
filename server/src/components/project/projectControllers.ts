@@ -251,9 +251,13 @@ const updateProject = async (req: Request, res: Response) => {
       req.body
 
     console.log(req.body)
-    project.title = title
-    project.description = description
-    project.thumbnailUrl = secureURL
+    console.log(req.file)
+    if (title)
+      project.title = title
+    if (description)
+      project.description = description
+    if (secureURL)
+      project.thumbnailUrl = secureURL
 
     await project.save()
     res.status(200).json({ message: 'Project updated successfully' })
@@ -263,7 +267,7 @@ const updateProject = async (req: Request, res: Response) => {
   }
 }
 const deleteProject = async (req: Request, res: Response) => {
-  const userId = '65ef22333d0a83e5abef43fd'
+  const {userId} = req.user as AuthPayload
   const { projectId } = req.params
 
   try {
@@ -386,9 +390,9 @@ const trashProject = async (req: Request, res: Response) => {
 }
 
 const restoreProject = async (req: Request, res: Response) => {
-  const userId = '662d1119ace155f48b676a7d'
+  const {userId} = req.user as AuthPayload
   const { projectId } = req.body
-
+  console.log(projectId)
   try {
     if (!projectId) {
       return res.status(400).json({
@@ -574,6 +578,7 @@ const getProjectByUserId = async (req: Request, res: Response) => {
         Events: events.map(event => event.eventName),
         ThumbnailUrl: thumbnailUrl,
         isTrashed: project.isTrashed,
+        isFav:project.isFav,
         joinedDate: project.joinedAt,
         projectStatus: project.project.status
       }

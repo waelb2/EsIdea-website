@@ -22,10 +22,10 @@ router.post(
   createProject
 )
 
-router.patch('/update-project/:projectId', authMiddleWare, updateProject)
-router.delete('/delete-project/:projectId', deleteProject)
+router.patch('/update-project/:projectId', upload.single('thumbnailUrl'),authMiddleWare, updateProject)
+router.delete('/delete-project/:projectId', authMiddleWare, deleteProject)
 router.get('/get-all-projects', authMiddleWare, getProjectByUserId)
 router.delete('/trash-project/:projectId', authMiddleWare, trashProject)
-router.post('/restore-project/', restoreProject)
+router.post('/restore-project/', authMiddleWare, restoreProject)
 
 export default router
