@@ -81,6 +81,18 @@ const deleteUser = async (req: Request, res: Response) => {
     if (!user) {
       return res.status(404).send({ error: 'User not found' })
     }
+    for (const projectObj of user.projects) {
+      const project = await Project.findById(new mongoose.Types.ObjectId(projectObj.project._id.toString()))
+      if (project) {
+        const updatedCollaborators = project.collaborators.filter(
+          collaborator => collaborator.member._id.toString() !== userId
+        )
+        project.collaborators = updatedCollaborators
+        await project.save()
+      } else {
+        return res.status(404).send({ error: 'Project of the user not found' })
+      }
+    }
     await User.deleteOne(objectId)
     return res.sendStatus(200)
   } catch (error) {
