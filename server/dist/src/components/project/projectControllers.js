@@ -56,12 +56,14 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             parentTopic: null
         });
         let subTopicsIds = [];
-        for (const topic of subTopics) {
-            const subTopic = yield topicModel_1.Topic.create({
-                topicName: topic,
-                parentTopic: parentTopic.id
-            });
-            subTopicsIds.push(subTopic.id);
+        if (subTopics) {
+            for (const topic of subTopics) {
+                const subTopic = yield topicModel_1.Topic.create({
+                    topicName: topic,
+                    parentTopic: parentTopic.id
+                });
+                subTopicsIds.push(subTopic.id);
+            }
         }
         let clubList = [];
         let moduleList = [];

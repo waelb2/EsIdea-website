@@ -173,7 +173,8 @@ const CreateNewProject = ({method,setMethod,visible,closePopUp,currentPage,nextP
         createButtonRef.current.disabled = true;
         setcreateProjectState(true);
         axios.post('project/create-project',myForm, {headers: {
-            'Authorization': `Bearer ${userToken}`
+            'Authorization': `Bearer ${userToken}`,
+            'Content-Type': 'multipart/form-data'
         },
         }).then(response => {
             closePopUp();

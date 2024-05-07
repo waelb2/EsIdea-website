@@ -36,7 +36,8 @@ const EditProject = ({visible,closePopUp,projectToEdit}) => {
     const userToken = localStorage.getItem('userToken')
     const editProject = ()=>{
         axios.patch(`project/update-project/${projectToEdit.projectId}`,myForm, {headers: {
-            'Authorization': `Bearer ${userToken}`
+            'Authorization': `Bearer ${userToken}`,
+            'Content-Type': 'multipart/form-data'
         },
         }).then(response => {
             closePopUp();

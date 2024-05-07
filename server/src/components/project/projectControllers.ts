@@ -81,13 +81,14 @@ const createProject = async (req: Request, res: Response) => {
     })
 
     let subTopicsIds: string[] = []
-
-    for (const topic of subTopics) {
-      const subTopic = await Topic.create({
-        topicName: topic,
-        parentTopic: parentTopic.id
-      })
-      subTopicsIds.push(subTopic.id)
+    if (subTopics) {
+      for (const topic of subTopics) {
+        const subTopic = await Topic.create({
+          topicName: topic,
+          parentTopic: parentTopic.id
+        })
+        subTopicsIds.push(subTopic.id)
+      }
     }
 
     let clubList: ClubInterface[] = []
