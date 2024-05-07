@@ -17,6 +17,7 @@ import Send from '../../assets/Send.png';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import useUser from '../../hooks/useUser';
 import axios from '../../utils/axios';
+import Chat from '../ChatBot/Chat';
 
 const BrainWriting = ({project, ideas, socket, onlineUsers}) => {
 
@@ -274,7 +275,7 @@ const BrainWriting = ({project, ideas, socket, onlineUsers}) => {
         ))}
         {showComment && <IdeaComment onClose={toggleCommentPopup} />}
       </div>
-
+      <Chat/>
     </div>
   );
 };

@@ -20,6 +20,7 @@ import { useNavigate, useSearchParams } from 'react-router-dom'
 import useUser from '../../hooks/useUser'
 import User from '../Avatar/User'
 import axios from '../../utils/axios';
+import Chat from '../ChatBot/Chat'
 
 
 const AdminBrainWriting = ({project, ideas, onlineUsers, socket}) => {
@@ -380,7 +381,7 @@ useEffect(() => {
                 {showExtendPopUp && <Extend onClose={toggleExtendPopUp} enlargedText={enlargedText} enlargedIndex={enlargedIndex} userThoughts={userThoughts} updateUserThoughts={setUserThoughts} />}
               </div>
             )}
-  
+        <Chat/>
       </div>  
     )
 }

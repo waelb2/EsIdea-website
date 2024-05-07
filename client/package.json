@@ -11,6 +11,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@google/generative-ai": "^0.10.0",
     "@material-tailwind/react": "^2.1.9",
     "@tanstack/react-table": "^8.15.3",
     "axios": "^1.6.8",

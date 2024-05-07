@@ -19,6 +19,7 @@ import Extend from '../Extend/Extend'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 import useUser from '../../hooks/useUser'
 import axios from '../../utils/axios'
+import Chat from '../ChatBot/Chat'
 
 
 const AdminBrainStorming = ({project, ideas, onlineUsers, socket}) => {
@@ -332,9 +333,7 @@ useEffect(() => {
                 {showExtendPopUp && <Extend onClose={toggleExtendPopUp} enlargedText={enlargedText} enlargedIndex={enlargedIndex} userIdeas={userIdeas} updateUserThoughts={setUserIdeas} />}
               </div>
             )}
-
-          
-           
+            <Chat/>
            </div> 
   )
 }

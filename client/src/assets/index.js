@@ -66,8 +66,10 @@ import RemoveRed from './RemoveRed.svg'
 import NotFoundPic from './NotFound.svg'
 import UploadProjectPic from './UploadProj.svg'
 import whiteLogo from './whiteLogo.svg'
+import profilePic from './profile-pic.png'
+import aiProfilePic from './ai-profile-pic.png'
 export {
-    add,OpenProj,Colaborators,hidePassword,ResetPasswordImage,ExportProj,Publish,TrashBlack,MoveFavorite,Edit,chart1,Restore,RemoveRed,UploadProjectPic,
+    add,OpenProj,profilePic,aiProfilePic,Colaborators,hidePassword,ResetPasswordImage,ExportProj,Publish,TrashBlack,MoveFavorite,Edit,chart1,Restore,RemoveRed,UploadProjectPic,
     General,Users,Logs,ForgotPasswordImage,FeedBacks,Tags,chart2,chart3,ChangePFP,ChangePassIcon,LogoutIcon,HelpIcon,FeedBackIcon,DashboardImage,
     brainstorming,whiteLogo,
     BrainstormingMethodIcon,NotFoundPic,
