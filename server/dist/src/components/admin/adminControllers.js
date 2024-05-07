@@ -116,6 +116,17 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         if (!user) {
             return res.status(404).send({ error: 'User not found' });
         }
+        for (const projectObj of user.projects) {
+            const project = yield projectModels_1.Project.findById(new mongoose_1.default.Types.ObjectId(projectObj.project._id.toString()));
+            if (project) {
+                const updatedCollaborators = project.collaborators.filter(collaborator => collaborator.member._id.toString() !== userId);
+                project.collaborators = updatedCollaborators;
+                yield project.save();
+            }
+            else {
+                return res.status(404).send({ error: 'Project of the user not found' });
+            }
+        }
         yield userModels_1.User.deleteOne(objectId);
         return res.sendStatus(200);
     }
