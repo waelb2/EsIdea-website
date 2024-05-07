@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState,useEffect,useMemo } from 'react';
 import { Routes,Route, Navigate } from 'react-router-dom';
-import { LoginPage,Dashbord,Projects,Recents,Favorites,Public,Trash, LandingPage, AdminDashboard, General, Tags, Logs, Users, FeedBacks, ForgotPassword, ResetPassword, AddPassword, ChangePassword, BrainStorming, BrainWriting, AdminBrainStorming, AdminBrainWriting } from './components';
+import { LoginPage,Dashbord,Projects,Recents,Favorites,Public,Trash, LandingPage, AdminDashboard, General, Tags, Logs, Users, FeedBacks, ForgotPassword, ResetPassword, AddPassword, ChangePassword, BrainStorming, BrainWriting, AdminBrainStorming, AdminBrainWriting, Whiteboard } from './components';
 import RequireAuth from './components/auth/RequireAuth';
 import UnauthorizedPage from './components/auth/UnauthorizedPage';
 import NotFound from './components/NotFoundPage/NotFound';
@@ -36,7 +36,7 @@ const App = () => {
             <Route path='*' element={<h1>Page Not Found</h1>}/>
         </Route> */}
 
-        <Route path='/Admin' element={<RequireAuth allowedRoles={["user"]}/>}>
+        <Route path='/Admin' element={<RequireAuth allowedRoles={["admin"]}/>}>
             <Route element={<AdminDashboard/>}>
                 <Route index={true} element={<Navigate to="/Admin/Statistics"/>}/>
                 <Route path='Statistics' element={<General/>}/>
@@ -72,6 +72,7 @@ const App = () => {
         <Route path='/brainwriting' element={<BrainWriting/>}></Route>
         <Route path='/adminbrainStorming' element={<AdminBrainStorming/>}></Route>
         <Route path='/adminbrainWriting' element={<AdminBrainWriting/>}></Route>
+        <Route path='/whiteboard' element={<Whiteboard/>}></Route>
         <Route path='*' element={<NotFound/>}/>
       </Routes>
 

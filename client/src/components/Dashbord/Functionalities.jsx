@@ -3,7 +3,9 @@ import React,{useState} from 'react'
 import CreateNewProject from './pages/CreateNewProject'
 import { add,Folder,BrainstormingMethodIcon,BrainwritingMethodIcon,Flipboard } from '../../assets';
 import UploadProject from './pages/UploadProject';
+import { useNavigate } from 'react-router-dom';
 const Functionalities = () => {
+    const navigate = useNavigate();
     const [createProjectVisible,setCreateProjectVisible] = useState(false);
     const [uploadProjectVisible,setUploadProjectVisible] = useState(false);
     const [currentPage,setCurrentPage] = useState(1);
@@ -57,7 +59,7 @@ const Functionalities = () => {
             icon:Flipboard,
             title:"White board",
             action: () => {
-                 
+                 navigate("/whiteboard");
             }
         }
     ]
