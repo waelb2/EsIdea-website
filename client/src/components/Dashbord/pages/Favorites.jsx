@@ -11,7 +11,7 @@ const Favorites = () => {
     const [openedMore,setOpenedMore] = useState(-1);
     const [Projects,setProjects] = useState([]);
     useEffect(()=>{
-        const filteredProjects = allProjects.filter(project => !project.isTrashed)
+        const filteredProjects = allProjects.filter(project => project.isFav && !project.isTrashed)
         setProjects(filteredProjects);
     },[allProjects])
 

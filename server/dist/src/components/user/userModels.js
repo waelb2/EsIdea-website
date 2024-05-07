@@ -131,11 +131,6 @@ const userIdValidationSchema = {
 };
 exports.userIdValidationSchema = userIdValidationSchema;
 const addFavouriteProjectValidationSchema = {
-    userId: {
-        notEmpty: {
-            errorMessage: "Must provide the id of the user"
-        }
-    },
     projectId: {
         notEmpty: {
             errorMessage: "Must provide the id of the project"

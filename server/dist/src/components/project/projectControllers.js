@@ -58,12 +58,14 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             parentTopic: null
         });
         let subTopicsIds = [];
-        for (const topic of subTopics) {
-            const subTopic = yield topicModel_1.Topic.create({
-                topicName: topic,
-                parentTopic: parentTopic.id
-            });
-            subTopicsIds.push(subTopic.id);
+        if (subTopics) {
+            for (const topic of subTopics) {
+                const subTopic = yield topicModel_1.Topic.create({
+                    topicName: topic,
+                    parentTopic: parentTopic.id
+                });
+                subTopicsIds.push(subTopic.id);
+            }
         }
         let clubList = [];
         let moduleList = [];
@@ -200,9 +202,13 @@ const updateProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         }
         const { title, description } = req.body;
         console.log(req.body);
-        project.title = title;
-        project.description = description;
-        project.thumbnailUrl = secureURL;
+        console.log(req.file);
+        if (title)
+            project.title = title;
+        if (description)
+            project.description = description;
+        if (secureURL)
+            project.thumbnailUrl = secureURL;
         yield project.save();
         res.status(200).json({ message: 'Project updated successfully' });
     }
@@ -213,7 +219,7 @@ const updateProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
 });
 exports.updateProject = updateProject;
 const deleteProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const userId = '65ef22333d0a83e5abef43fd';
+    const { userId } = req.user;
     const { projectId } = req.params;
     try {
         if (!projectId) {
@@ -309,8 +315,9 @@ const trashProject = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 });
 exports.trashProject = trashProject;
 const restoreProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const userId = '662d1119ace155f48b676a7d';
+    const { userId } = req.user;
     const { projectId } = req.body;
+    console.log(projectId);
     try {
         if (!projectId) {
             return res.status(400).json({
@@ -470,6 +477,7 @@ const getProjectByUserId = (req, res) => __awaiter(void 0, void 0, void 0, funct
                 Events: events.map(event => event.eventName),
                 ThumbnailUrl: thumbnailUrl,
                 isTrashed: project.isTrashed,
+                isFav: project.isFav,
                 joinedDate: project.joinedAt,
                 projectStatus: project.project.status
             };

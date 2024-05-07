@@ -51,7 +51,6 @@ const Dashbord = () => {
              'Authorization': `Bearer ${userToken}`
           },
         });
-
         if (response.statusText == 'OK') {
           setAllProjects(response.data);
           setLoading(false)

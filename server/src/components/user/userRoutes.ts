@@ -46,6 +46,6 @@ router.get('/get-user', authMiddleWare, getUserById)
 router.post("/publicProjectRequest", checkSchema(createPublicProjectRequestValidationSchema),
   createPublicProjectRequest)
 
-router.patch("/project/favourite", checkSchema(addFavouriteProjectValidationSchema), addFavouriteProject)
+router.patch("/project/favourite", authMiddleWare, addFavouriteProject)
 
 export default router

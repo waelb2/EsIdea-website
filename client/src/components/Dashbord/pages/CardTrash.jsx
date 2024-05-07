@@ -9,8 +9,8 @@ const CardTrash = ({proj,index,openedMore,setOpenedMore}) => {
   const navigate = useNavigate();
   const {displayMessageToUser} = useContext(projectContext)
   const userToken = localStorage.getItem('userToken');
-  const deleteProject = ()=>{
-    axios.delete(`project/delete-project/${proj.projectId}`, {headers: {
+  const deleteProject = (projectId)=>{
+    axios.delete(`project/delete-project/${projectId}`, {headers: {
             'Authorization': `Bearer ${userToken}`
         },
         }).then(response => {
@@ -23,8 +23,8 @@ const CardTrash = ({proj,index,openedMore,setOpenedMore}) => {
             }
         });
   }
-  const restoreProject = ()=>{
-    axios.post(`project/restore-project/${proj.projectId}`, {headers: {
+  const restoreProject = (projectId)=>{
+    axios.post(`project/restore-project`,{projectId} ,{headers: {
             'Authorization': `Bearer ${userToken}`
         },
         }).then(response => {
@@ -43,7 +43,7 @@ const CardTrash = ({proj,index,openedMore,setOpenedMore}) => {
             icon:Restore,
             line:false,
             action:()=>{
-              restoreProject();
+              restoreProject(proj.projectId);
               setOpenedMore(-1);
             }
         },
@@ -52,7 +52,7 @@ const CardTrash = ({proj,index,openedMore,setOpenedMore}) => {
             icon:RemoveRed,
             line:false,
             action:()=>{
-              deleteProject();
+              deleteProject(proj.projectId);
               setOpenedMore(-1);
             }
         }
