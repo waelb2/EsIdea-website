@@ -188,9 +188,10 @@ const BrainStorming = ({project, ideas, socket, onlineUsers}) => {
           <div className='flex items-center justify-center gap-2 mr-4 bg-white font-medium h-10 w-32 rounded-full border border-black shadow-[0_4px_4px_rgba(0,0,0,0.2)]'>
             <CountdownTimerBS initialMinutes={0} initialSeconds={5} onCountdownEnd={handleCountdownEnd} countdownTime={countdownTime} countDownStarted={countDownStarted} />left
           </div>
-          <div className='flex bg-white border border-black items-center justify-around w-44 px-3 h-10 rounded-full shadow-[0_4px_4px_rgba(0,0,0,0.2)]'>
-            <img src={Group} className='h-6'/>
-            <img className='rounded-full h-6' src={user.profilePicUrl}/>
+          <div className='flex bg-white border border-black items-center justify-around  px-3 h-10 rounded-full shadow-[0_4px_4px_rgba(0,0,0,0.2)]'>
+           <div className='flex items-center gap-2'>
+            {onlineUsers.map(user=><img key={user.email} src={user.profilePicUrl} className='h-7 rounded-full'/>)}
+            </div> 
           </div>
         </div>
       </div>

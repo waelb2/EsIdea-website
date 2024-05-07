@@ -5,7 +5,8 @@ import {
   deleteProject,
   getProjectByUserId,
   trashProject,
-  restoreProject
+  restoreProject,
+  deleteProjectManyIdeas,
 } from './projectControllers'
 
 import multer from 'multer'
@@ -27,5 +28,6 @@ router.delete('/delete-project/:projectId', deleteProject)
 router.get('/get-all-projects', authMiddleWare, getProjectByUserId)
 router.delete('/trash-project/:projectId', authMiddleWare, trashProject)
 router.post('/restore-project/', restoreProject)
+router.delete('/:projectId/ideas', deleteProjectManyIdeas )
 
 export default router

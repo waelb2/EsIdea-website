@@ -22,36 +22,7 @@ import axios from '../../utils/axios'
 
 
 const AdminBrainStorming = ({project, ideas, onlineUsers, socket}) => {
-  const trashThoughts = [
-    {
-      text: "feu",
-      isBold: false,
-      isItalic: false,
-      color: "#000",
-      selected: false,
-    },
-    {
-      text: "jardin",
-      isBold: false,
-      isItalic: false,
-      color: "#000",
-      selected: false,
-    },
-    {
-      text: "zino",
-      isBold: false,
-      isItalic: false,
-      color: "#000",
-      selected: false,
-    },
-    {
-      text: "good luck l7bib",
-      isBold: false,
-      isItalic: false,
-      color: "#000",
-      selected: false,
-    },
-  ]
+  
 
   const [textInput, setTextInput] = useState('');
   const [userThoughts, setUserThoughts] = useState([]);
@@ -200,26 +171,49 @@ useEffect(() => {
   }
 }, [countDownStarted, socket]);
 
-  const handleCombinedIdeaSend = (newIdeaText) => {
+  const handleCombinedIdeaSend =async (newIdeaText) => {
     const coordinator = localStorage.getItem('user')
     // filter out the selected ideas from the global ideas array, then create the new idea
     const selectedIdeasTexts = selectedIdeas.map(idea => idea.content);
-    const newThoughtsState = [...userIdeas.filter(userThought => !selectedIdeasTexts.includes(userThought.content)), {
-      content: newIdeaText,
-      ideaId : selectedIdeas[0].ideaId,
-      createdBy :{
-        email : coordinator.email,
-        firstName :  coordinator.firstName,
-        profilePicUrl : coordinator.profilePicUrl
-      } ,
-      color: '#000',
-      isBold: false,
-      isItalic: false,
-      selected: false,
-    }]
+    let newThoughtsState = []
+     newThoughtsState = [...userIdeas.filter(userThought => !selectedIdeasTexts.includes(userThought.content))]
+  
+    // posting the idea 
+    try {
+       const response = await axios.post('/idea/post-idea', {
+          projectId: project.projectId,
+          topicId: project.MainTopicId,
+          content: newIdeaText,
+          isBold: false,
+          isItalic:false,
+          color: '#000',
+          selected: false
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userToken}`
+          }
+        }
+      )
+      socket.emit('newIdea', { idea: response.data, projectId: project.projectId });
+      newThoughtsState = [...newThoughtsState, response.data]
+
+      const ideaIds = selectedIdeas.map(idea=>idea.ideaId)
+      await axios.delete(`/project/${project.projectId}/ideas`,
+      { data:  {ideaIds}},
+        {
+          headers: {
+            Authorization: `Bearer ${userToken}`
+          }
+        }
+      )
+
+    } catch (error) {
+      throw Error(error)
+    }
+  
 
     setUserIdeas(newThoughtsState);
-    console.log(newThoughtsState)
 
     updateUserThoughtsCards(newThoughtsState)
     // clear out the selectedIdeas state
@@ -250,9 +244,10 @@ useEffect(() => {
           <div className='flex items-center justify-center mr-4 bg-white font-medium h-10 w-32 rounded-full border border-black shadow-[0_4px_4px_rgba(0,0,0,0.2)]'>
           <CountdownTimerBS initialMinutes={0} initialSeconds={5} onCountdownEnd={handleCountdownEnd} countdownTime={countdownTime} countDownStarted={countDownStarted} /> left
           </div>
-          <div className='flex bg-white border border-black items-center justify-around w-44 px-3 h-10 rounded-full shadow-[0_4px_4px_rgba(0,0,0,0.2)]'>
-            <img src={Group} className='h-6'/>
-            <img  src={user.profilePicUrl} className='h-8 rounded-full'/>
+          <div className='flex bg-white border border-black items-center justify-around  px-3 h-10 rounded-full shadow-[0_4px_4px_rgba(0,0,0,0.2)]'>
+           <div className='flex items-center gap-2'>
+            {onlineUsers.map(user=><img key={user.email} src={user.profilePicUrl} className='h-7 rounded-full'/>)}
+            </div> 
           </div>
         </div>
       </div>

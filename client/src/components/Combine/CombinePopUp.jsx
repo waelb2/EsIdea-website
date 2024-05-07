@@ -9,7 +9,6 @@ const CombinePopUp = ({ onClose, selectedIdeas , onSend , setUserIdeas }) => {
   const [combinedIdea, setCombinedIdea] = useState('');
 
   const handleSend = () => {
-    console.log(combinedIdea)
     if (combinedIdea.trim() !== '') {
       setCombinedIdea('');
       onSend(combinedIdea);

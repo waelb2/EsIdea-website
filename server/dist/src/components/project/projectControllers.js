@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.restoreProject = exports.trashProject = exports.getProjectByUserId = exports.deleteProject = exports.updateProject = exports.createProject = void 0;
+exports.deleteProjectManyIdeas = exports.restoreProject = exports.trashProject = exports.getProjectByUserId = exports.deleteProject = exports.updateProject = exports.createProject = void 0;
 const projectModels_1 = require("./projectModels");
 const userModels_1 = require("../user/userModels");
 const ideationMethodModel_1 = require("../idea/ideationMethodModel");
@@ -24,6 +24,8 @@ const invitationModel_1 = require("../invitation/invitationModel");
 const sendInvitationEmail_1 = __importDefault(require("../../utils/sendInvitationEmail"));
 const cloudConfig_1 = __importDefault(require("../../config/cloudConfig"));
 const fs_1 = __importDefault(require("fs"));
+const mongoose_1 = __importDefault(require("mongoose"));
+const ideaModels_1 = require("../idea/ideaModels");
 const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.user;
     let secureURL = '';
@@ -476,8 +478,34 @@ const getProjectByUserId = (req, res) => __awaiter(void 0, void 0, void 0, funct
         res.status(200).json(projectStrings);
     }
     catch (error) {
-        console.error('Error deleting project:', error);
+        console.error('Error fetching projects:', error);
         res.status(500).json({ error: 'Internal Server Error' });
     }
 });
 exports.getProjectByUserId = getProjectByUserId;
+const deleteProjectManyIdeas = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const { projectId } = req.params;
+        const { ideaIds } = req.body;
+        if (!ideaIds || !Array.isArray(ideaIds)) {
+            return res.status(400).json({ error: 'Invalid input. Idea IDs must be provided in an array.' });
+        }
+        // Fetch the project document
+        const project = yield projectModels_1.Project.findById(projectId);
+        if (!project) {
+            console.error('Project not found');
+            return; // Exit the function if project is not found
+        }
+        const filteredIdeas = project.ideas.filter(idea => !ideaIds.includes(idea.toString()));
+        const ideaObjectIds = ideaIds.map(id => new mongoose_1.default.Types.ObjectId(id));
+        project.ideas = filteredIdeas;
+        yield ideaModels_1.Idea.deleteMany({ _id: { $in: ideaObjectIds } });
+        yield project.save();
+        res.status(200).json({ message: 'Ideas deleted successfully.' });
+    }
+    catch (error) {
+        console.error('Error deleting ideas:', error);
+        res.status(500).json({ error: 'An error occurred while deleting ideas.' });
+    }
+});
+exports.deleteProjectManyIdeas = deleteProjectManyIdeas;

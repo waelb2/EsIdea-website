@@ -23,6 +23,8 @@ import fs from 'fs'
 import path from 'path'
 import { model } from 'mongoose'
 import { AuthPayload } from '../auth/authInterface'
+import mongoose from 'mongoose'
+import { Idea } from '../idea/ideaModels'
 
 const createProject = async (req: Request, res: Response) => {
   const { userId } = req.user as AuthPayload
@@ -583,15 +585,52 @@ const getProjectByUserId = async (req: Request, res: Response) => {
 
     res.status(200).json(projectStrings)
   } catch (error) {
-    console.error('Error deleting project:', error)
+    console.error('Error fetching projects:', error)
     res.status(500).json({ error: 'Internal Server Error' })
   }
 }
+const deleteProjectManyIdeas = async (req : Request, res:Response)=>{
+  try {
+    const {projectId} = req.params;
+    const { ideaIds } = req.body;
+    if (!ideaIds || !Array.isArray(ideaIds)) {
+      return res.status(400).json({ error: 'Invalid input. Idea IDs must be provided in an array.' });
+    }
+
+    // Fetch the project document
+        const project = await Project.findById(projectId);
+
+        if (!project) {
+            console.error('Project not found');
+            return; // Exit the function if project is not found
+        }
+
+        const filteredIdeas = project.ideas.filter(idea => !ideaIds.includes(idea.toString()));
+        const ideaObjectIds = ideaIds.map(id => new mongoose.Types.ObjectId(id));
+
+
+        project.ideas = filteredIdeas;
+
+        await Idea.deleteMany({_id:{$in:ideaObjectIds}})
+
+        await project.save();
+
+
+    res.status(200).json({ message: 'Ideas deleted successfully.' });
+  } catch (error) {
+    console.error('Error deleting ideas:', error);
+    res.status(500).json({ error: 'An error occurred while deleting ideas.' });
+  }
+}
+
+
+
 export {
   createProject,
   updateProject,
   deleteProject,
   getProjectByUserId,
   trashProject,
-  restoreProject
+  restoreProject,
+  deleteProjectManyIdeas
 }

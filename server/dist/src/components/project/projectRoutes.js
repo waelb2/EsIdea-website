@@ -15,4 +15,5 @@ router.delete('/delete-project/:projectId', projectControllers_1.deleteProject);
 router.get('/get-all-projects', authMiddleware_1.authMiddleWare, projectControllers_1.getProjectByUserId);
 router.delete('/trash-project/:projectId', authMiddleware_1.authMiddleWare, projectControllers_1.trashProject);
 router.post('/restore-project/', projectControllers_1.restoreProject);
+router.delete('/:projectId/ideas', projectControllers_1.deleteProjectManyIdeas);
 exports.default = router;
