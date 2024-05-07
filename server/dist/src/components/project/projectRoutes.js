@@ -11,13 +11,9 @@ const upload = (0, multer_1.default)({ dest: 'uploads/' });
 const router = express_1.default.Router();
 router.post('/create-project', upload.single('projectThumbnail'), authMiddleware_1.authMiddleWare, projectControllers_1.createProject);
 router.patch('/update-project/:projectId', upload.single('thumbnailUrl'), authMiddleware_1.authMiddleWare, projectControllers_1.updateProject);
-router.delete('/delete-project/:projectId', authMiddleware_1.authMiddleWare, projectControllers_1.deleteProject);
+router.delete('/delete-project/:projectId', projectControllers_1.deleteProject);
 router.get('/get-all-projects', authMiddleware_1.authMiddleWare, projectControllers_1.getProjectByUserId);
 router.delete('/trash-project/:projectId', authMiddleware_1.authMiddleWare, projectControllers_1.trashProject);
-<<<<<<< HEAD
 router.post('/restore-project/', projectControllers_1.restoreProject);
 router.delete('/:projectId/ideas', projectControllers_1.deleteProjectManyIdeas);
-=======
-router.post('/restore-project/', authMiddleware_1.authMiddleWare, projectControllers_1.restoreProject);
->>>>>>> 2fc1cd1516f8c0502478abdf548f86e1be08ed67
 exports.default = router;

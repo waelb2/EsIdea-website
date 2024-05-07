@@ -499,6 +499,7 @@ const deleteProjectManyIdeas = (req, res) => __awaiter(void 0, void 0, void 0, f
             return res.status(400).json({ error: 'Invalid input. Idea IDs must be provided in an array.' });
         }
         // Fetch the project document
+        console.log('here');
         const project = yield projectModels_1.Project.findById(projectId);
         if (!project) {
             console.error('Project not found');
