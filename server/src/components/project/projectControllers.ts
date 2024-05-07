@@ -253,8 +253,6 @@ const updateProject = async (req: Request, res: Response) => {
     const { title, description }: { title: string; description: string } =
       req.body
 
-    console.log(req.body)
-    console.log(req.file)
     if (title)
       project.title = title
     if (description)
@@ -395,7 +393,7 @@ const trashProject = async (req: Request, res: Response) => {
 const restoreProject = async (req: Request, res: Response) => {
   const {userId} = req.user as AuthPayload
   const { projectId } = req.body
-  console.log(projectId)
+  
   try {
     if (!projectId) {
       return res.status(400).json({

@@ -201,8 +201,6 @@ const updateProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             });
         }
         const { title, description } = req.body;
-        console.log(req.body);
-        console.log(req.file);
         if (title)
             project.title = title;
         if (description)
@@ -317,7 +315,6 @@ exports.trashProject = trashProject;
 const restoreProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.user;
     const { projectId } = req.body;
-    console.log(projectId);
     try {
         if (!projectId) {
             return res.status(400).json({
@@ -499,7 +496,6 @@ const deleteProjectManyIdeas = (req, res) => __awaiter(void 0, void 0, void 0, f
             return res.status(400).json({ error: 'Invalid input. Idea IDs must be provided in an array.' });
         }
         // Fetch the project document
-        console.log('here');
         const project = yield projectModels_1.Project.findById(projectId);
         if (!project) {
             console.error('Project not found');
