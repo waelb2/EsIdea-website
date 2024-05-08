@@ -22,4 +22,5 @@ router.get("/feedbacks", adminControllers_1.getFeedbacks);
 router.patch("/feedbacks/reply", (0, express_validator_1.checkSchema)(adminInterface_1.feedbackReplyValidationSchema), adminControllers_1.replyFeedback);
 router.get("/publicProjectRequest", adminControllers_1.getPublicProjectRequests);
 router.patch("/publicProjectRequest/approve", (0, express_validator_1.checkSchema)(adminInterface_1.publicProjectRequestApproveValidationSchema), adminControllers_1.approvePublicProjectRequest);
+router.get("/logs", adminControllers_1.getLogs);
 exports.default = router;

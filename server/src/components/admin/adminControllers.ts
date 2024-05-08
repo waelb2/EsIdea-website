@@ -14,6 +14,7 @@ import { Event } from '../event/eventModel'
 import { feedback } from '../feedback/feedbackModel'
 import { publicProjectRequest } from '../publicProjectRequest/publicProjectRequestModel'
 import { IdeationMethod } from '../idea/ideationMethodModel'
+import { readFile } from 'fs'
 
 const getStats = async (req: Request, res: Response) => {
   let stats: Statistics = {
@@ -452,6 +453,36 @@ const approvePublicProjectRequest = async (req: Request, res: Response) => {
   }
 }
 
+const getLogs = (req: Request, res: Response) => {
+  readFile("./access.log", 'utf8', (error, data) => {
+    if (error) {
+      console.log(error)
+      return res.status(500).send({ error: 'Error in reading logs file' })
+    }
+    const lines: string[] = data.split('\n')
+    
+    const parsedLogs: {date: Date, requestType: string, route: string}[] = []
+
+    lines.forEach((line) => {
+        // Split the line to extract date, request type, and route
+        if(line) {
+          const [date, requestInfo] = line.split(' - ')
+          const [requestType, route] = requestInfo.split(' ')
+
+          // Create an object for the log entry
+          const logEntry = {
+              date: new Date(date.trim()),
+              requestType: requestType.trim(),
+              route: route.trim()
+          }
+          // Push the object to the array
+          parsedLogs.push(logEntry)
+        }
+    })
+    return res.status(200).send(parsedLogs)
+  })
+}
+
 export {
   getStats,
   getUsers,
@@ -466,5 +497,6 @@ export {
   getFeedbacks,
   replyFeedback,
   getPublicProjectRequests,
-  approvePublicProjectRequest
+  approvePublicProjectRequest,
+  getLogs
 }

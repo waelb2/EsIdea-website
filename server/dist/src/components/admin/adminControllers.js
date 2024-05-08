@@ -43,7 +43,7 @@ var __rest = (this && this.__rest) || function (s, e) {
     return t;
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.approvePublicProjectRequest = exports.getPublicProjectRequests = exports.replyFeedback = exports.getFeedbacks = exports.modifyTag = exports.deleteTag = exports.createTag = exports.getTags = exports.forceUnbanUser = exports.unbanUser = exports.banUser = exports.deleteUser = exports.getUsers = exports.getStats = void 0;
+exports.getLogs = exports.approvePublicProjectRequest = exports.getPublicProjectRequests = exports.replyFeedback = exports.getFeedbacks = exports.modifyTag = exports.deleteTag = exports.createTag = exports.getTags = exports.forceUnbanUser = exports.unbanUser = exports.banUser = exports.deleteUser = exports.getUsers = exports.getStats = void 0;
 const userModels_1 = require("../user/userModels");
 const projectModels_1 = require("../project/projectModels");
 const adminInterface_1 = require("./adminInterface");
@@ -56,6 +56,7 @@ const eventModel_1 = require("../event/eventModel");
 const feedbackModel_1 = require("../feedback/feedbackModel");
 const publicProjectRequestModel_1 = require("../publicProjectRequest/publicProjectRequestModel");
 const ideationMethodModel_1 = require("../idea/ideationMethodModel");
+const fs_1 = require("fs");
 const getStats = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let stats = {
         nbUsers: 0,
@@ -468,3 +469,30 @@ const approvePublicProjectRequest = (req, res) => __awaiter(void 0, void 0, void
     }
 });
 exports.approvePublicProjectRequest = approvePublicProjectRequest;
+const getLogs = (req, res) => {
+    (0, fs_1.readFile)("./access.log", 'utf8', (error, data) => {
+        if (error) {
+            console.log(error);
+            return res.status(500).send({ error: "Error in reading logs file" });
+        }
+        const lines = data.split('\n');
+        const parsedLogs = [];
+        lines.forEach((line) => {
+            // Split the line to extract date, request type, and route
+            if (line) {
+                const [date, requestInfo] = line.split(' - ');
+                const [requestType, route] = requestInfo.split(' ');
+                // Create an object for the log entry
+                const logEntry = {
+                    date: new Date(date.trim()),
+                    requestType: requestType.trim(),
+                    route: route.trim()
+                };
+                // Push the object to the array
+                parsedLogs.push(logEntry);
+            }
+        });
+        return res.status(200).send(parsedLogs);
+    });
+};
+exports.getLogs = getLogs;
