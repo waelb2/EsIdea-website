@@ -11,7 +11,6 @@ const Logs = () => {
     try {
       const response = await axios.get("admin/logs");
       if (response.statusText == 'OK') {
-        console.log(response.data)
         setData(response.data);
       } else {
           console.log(response)
@@ -56,13 +55,26 @@ const Logs = () => {
     },
     onGlobalFilterChange:setSearchInput
   })
-  const tdStyle="py-2 text-center border-lightGrey border"
+  const tdStyle="py-2 text-center border-lightGrey border";
+  const emptyLogs = async()=>{
+    try {
+      const response = await axios.delete("admin/logs");
+      if (response.statusText == 'OK') {
+        getLogs();
+      } else {
+          console.log(response)
+          throw new Error ("Authentication has failed")
+      }
+      } catch (error) {
+          console.log(error);
+      }
+  }
   return (
     <>
       <AdminNavBar location='Logs'/>
       <div className='flex justify-between flex-col gap-2 ss:gap-0 ss:flex-row items-center'>
         <SearchCat setSearchInput={setSearchInput}/>
-        <button className='bg-lightGrey px-3 self-stretch rounded-2xl shadow-md'>
+        <button onClick={emptyLogs} className='bg-lightGrey px-3 self-stretch rounded-2xl shadow-md'>
             Empty Logs
         </button>
       </div>
