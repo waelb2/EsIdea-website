@@ -14,7 +14,7 @@ import { Event } from '../event/eventModel'
 import { feedback } from '../feedback/feedbackModel'
 import { publicProjectRequest } from '../publicProjectRequest/publicProjectRequestModel'
 import { IdeationMethod } from '../idea/ideationMethodModel'
-import { readFile } from 'fs'
+import fs from 'fs'
 
 const getStats = async (req: Request, res: Response) => {
   let stats: Statistics = {
@@ -454,7 +454,7 @@ const approvePublicProjectRequest = async (req: Request, res: Response) => {
 }
 
 const getLogs = (req: Request, res: Response) => {
-  readFile("./access.log", 'utf8', (error, data) => {
+  fs.readFile("./access.log", 'utf8', (error, data) => {
     if (error) {
       console.log(error)
       return res.status(500).send({ error: 'Error in reading logs file' })
@@ -483,6 +483,15 @@ const getLogs = (req: Request, res: Response) => {
   })
 }
 
+const deleteLogs = (req: Request, res: Response) => {
+  fs.writeFile("./access.log", '', (error) => {
+    if (error) {
+        return res.status(500).send({ msg: 'Error deleting file content', error })
+    }
+    return res.sendStatus(200)
+  })
+}
+
 export {
   getStats,
   getUsers,
@@ -498,5 +507,6 @@ export {
   replyFeedback,
   getPublicProjectRequests,
   approvePublicProjectRequest,
-  getLogs
+  getLogs,
+  deleteLogs
 }

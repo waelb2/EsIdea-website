@@ -23,4 +23,5 @@ router.patch("/feedbacks/reply", (0, express_validator_1.checkSchema)(adminInter
 router.get("/publicProjectRequest", adminControllers_1.getPublicProjectRequests);
 router.patch("/publicProjectRequest/approve", (0, express_validator_1.checkSchema)(adminInterface_1.publicProjectRequestApproveValidationSchema), adminControllers_1.approvePublicProjectRequest);
 router.get("/logs", adminControllers_1.getLogs);
+router.delete("/logs", adminControllers_1.deleteLogs);
 exports.default = router;
