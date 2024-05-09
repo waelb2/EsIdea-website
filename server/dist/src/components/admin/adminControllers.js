@@ -473,7 +473,7 @@ const getLogs = (req, res) => {
     (0, fs_1.readFile)("./access.log", 'utf8', (error, data) => {
         if (error) {
             console.log(error);
-            return res.status(500).send({ error: "Error in reading logs file" });
+            return res.status(500).send({ error: 'Error in reading logs file' });
         }
         const lines = data.split('\n');
         const parsedLogs = [];
