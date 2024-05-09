@@ -109,9 +109,13 @@ const createPublicProjectRequest = async (req: Request, res: Response) => {
     if (!project) {
       return res.status(404).send({ error: "The project of the publication request is not found" });
     }
-    const ppr = new publicProjectRequest({ projectId })
-    await ppr.save()
-    return res.status(201).send(ppr)
+    const existReq = await publicProjectRequest.findOne({projectId: objectId})
+    if (!existReq) {
+      const ppr = new publicProjectRequest({ projectId })
+      await ppr.save()
+      return res.status(201).send(ppr)
+    }
+    return res.status(400).send({ error: 'Public project request already exists' })
   } catch (error) {
     console.log(error)
     return res.sendStatus( 400)
