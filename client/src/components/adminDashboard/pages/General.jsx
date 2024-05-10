@@ -37,7 +37,6 @@ const General = () => {
     try {
       const response = await axios.get("admin/stats");
       if (response.statusText == 'OK') {
-        console.log(response.data)
         setData(response.data);
       } else {
           console.log(response)

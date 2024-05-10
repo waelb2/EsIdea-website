@@ -1,6 +1,6 @@
 import express from "express"
 import { checkSchema } from "express-validator"
-import { approvePublicProjectRequest, banUser, createTag, deleteTag, deleteUser, forceUnbanUser, getFeedbacks, getPublicProjectRequests, getStats, getTags, getUsers, modifyTag, replyFeedback, unbanUser } from "./adminControllers"
+import { approvePublicProjectRequest, banUser, createTag, deleteLogs, deleteTag, deleteUser, forceUnbanUser, getFeedbacks, getLogs, getPublicProjectRequests, getStats, getTags, getUsers, modifyTag, replyFeedback, unbanUser } from "./adminControllers"
 import { feedbackReplyValidationSchema, publicProjectRequestApproveValidationSchema, tagTypeIdValidationSchema, tagTypeValidationSchema, userBanValidationSchema, userIdValidationSchema } from "./adminInterface"
 
 const router = express.Router()
@@ -32,5 +32,9 @@ router.patch("/feedbacks/reply", checkSchema(feedbackReplyValidationSchema), rep
 router.get("/publicProjectRequest", getPublicProjectRequests)
 
 router.patch("/publicProjectRequest/approve", checkSchema(publicProjectRequestApproveValidationSchema), approvePublicProjectRequest)
+
+router.get("/logs", getLogs)
+
+router.delete("/logs", deleteLogs)
 
 export default router

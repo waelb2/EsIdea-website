@@ -55,7 +55,7 @@ const App = () => {
             <Route path='Public' element={<Public/>}/>
             <Route path='Trash' element={<Trash/>}/>
         </Route> */}
-        <Route path='/Home' element={<RequireAuth allowedRoles={["user"]}/>}>
+        <Route path='/Home' element={<RequireAuth allowedRoles={["user","admin"]}/>}>
             <Route element={<Dashbord/>}>
                 <Route index={true} element={<Navigate to="/Home/Projects"/>}/>
                 <Route path='Projects' element={<Projects/>}/>

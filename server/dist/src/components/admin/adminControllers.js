@@ -42,8 +42,11 @@ var __rest = (this && this.__rest) || function (s, e) {
         }
     return t;
 };
+var __importDefault = (this && this.__importDefault) || function (mod) {
+    return (mod && mod.__esModule) ? mod : { "default": mod };
+};
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.approvePublicProjectRequest = exports.getPublicProjectRequests = exports.replyFeedback = exports.getFeedbacks = exports.modifyTag = exports.deleteTag = exports.createTag = exports.getTags = exports.forceUnbanUser = exports.unbanUser = exports.banUser = exports.deleteUser = exports.getUsers = exports.getStats = void 0;
+exports.deleteLogs = exports.getLogs = exports.approvePublicProjectRequest = exports.getPublicProjectRequests = exports.replyFeedback = exports.getFeedbacks = exports.modifyTag = exports.deleteTag = exports.createTag = exports.getTags = exports.forceUnbanUser = exports.unbanUser = exports.banUser = exports.deleteUser = exports.getUsers = exports.getStats = void 0;
 const userModels_1 = require("../user/userModels");
 const projectModels_1 = require("../project/projectModels");
 const adminInterface_1 = require("./adminInterface");
@@ -56,6 +59,7 @@ const eventModel_1 = require("../event/eventModel");
 const feedbackModel_1 = require("../feedback/feedbackModel");
 const publicProjectRequestModel_1 = require("../publicProjectRequest/publicProjectRequestModel");
 const ideationMethodModel_1 = require("../idea/ideationMethodModel");
+const fs_1 = __importDefault(require("fs"));
 const getStats = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     let stats = {
         nbUsers: 0,
@@ -335,13 +339,13 @@ const modifyTag = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const errResult = (0, express_validator_1.validationResult)(req);
     if (!errResult.isEmpty())
         return res.status(400).send({ errors: errResult.array() });
-    const _b = req.body, { id, type } = _b, tag = __rest(_b, ["id", "type"]);
+    const { id, type, tag } = req.body;
     if (!(0, mongoose_1.isObjectIdOrHexString)(id)) {
         return res
             .status(400)
             .send({ error: 'Bad id must be 24 character hex string' });
     }
-    const objectId = new mongoose_1.default.Types.ObjectId(id);
+    const objectId = mongoose_1.default.Types.ObjectId.createFromHexString(id);
     try {
         switch (type.toLowerCase()) {
             case 'club':
@@ -468,3 +472,39 @@ const approvePublicProjectRequest = (req, res) => __awaiter(void 0, void 0, void
     }
 });
 exports.approvePublicProjectRequest = approvePublicProjectRequest;
+const getLogs = (req, res) => {
+    fs_1.default.readFile("./access.log", 'utf8', (error, data) => {
+        if (error) {
+            console.log(error);
+            return res.status(500).send({ error: 'Error in reading logs file' });
+        }
+        const lines = data.split('\n');
+        const parsedLogs = [];
+        lines.forEach((line) => {
+            // Split the line to extract date, request type, and route
+            if (line) {
+                const [date, requestInfo] = line.split(' - ');
+                const [requestType, route] = requestInfo.split(' ');
+                // Create an object for the log entry
+                const logEntry = {
+                    date: new Date(date.trim()),
+                    requestType: requestType.trim(),
+                    route: route.trim()
+                };
+                // Push the object to the array
+                parsedLogs.push(logEntry);
+            }
+        });
+        return res.status(200).send(parsedLogs);
+    });
+};
+exports.getLogs = getLogs;
+const deleteLogs = (req, res) => {
+    fs_1.default.writeFile("./access.log", '', (error) => {
+        if (error) {
+            return res.status(500).send({ msg: 'Error deleting file content', error });
+        }
+        return res.sendStatus(200);
+    });
+};
+exports.deleteLogs = deleteLogs;

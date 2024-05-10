@@ -7,7 +7,7 @@ import axios from '../../../utils/axios'
 import { projectContext } from '../Dashbord'
 const CardTrash = ({proj,index,openedMore,setOpenedMore}) => {
   const navigate = useNavigate();
-  const {displayMessageToUser} = useContext(projectContext)
+  const {displayMessageToUser,getProjects} = useContext(projectContext)
   const userToken = localStorage.getItem('userToken');
   const deleteProject = (projectId)=>{
     axios.delete(`project/delete-project/${projectId}`, {headers: {
@@ -15,6 +15,7 @@ const CardTrash = ({proj,index,openedMore,setOpenedMore}) => {
         },
         }).then(response => {
             displayMessageToUser("success","Project removed succesfully.");
+            getProjects();
         })
         .catch(error => { 
             console.error('Error:', error.response.data.error);
@@ -29,6 +30,7 @@ const CardTrash = ({proj,index,openedMore,setOpenedMore}) => {
         },
         }).then(response => {
             displayMessageToUser("success","Project restored succesfully.");
+            getProjects();
         })
         .catch(error => { 
             console.error('Error:', error.response.data.error);

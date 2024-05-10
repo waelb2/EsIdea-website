@@ -130,9 +130,13 @@ const createPublicProjectRequest = (req, res) => __awaiter(void 0, void 0, void 
         if (!project) {
             return res.status(404).send({ error: "The project of the publication request is not found" });
         }
-        const ppr = new publicProjectRequestModel_1.publicProjectRequest({ projectId });
-        yield ppr.save();
-        return res.status(201).send(ppr);
+        const existReq = yield publicProjectRequestModel_1.publicProjectRequest.findOne({ projectId: objectId });
+        if (!existReq) {
+            const ppr = new publicProjectRequestModel_1.publicProjectRequest({ projectId });
+            yield ppr.save();
+            return res.status(201).send(ppr);
+        }
+        return res.status(400).send({ error: 'Public project request already exists' });
     }
     catch (error) {
         console.log(error);

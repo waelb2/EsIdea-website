@@ -4,29 +4,49 @@ import propTypes from 'prop-types'
 import {notification,blackClose, ChangePFP, ChangePassIcon, HelpIcon, FeedBackIcon, LogoutIcon } from '../../../assets'
 import { Link } from 'react-router-dom'
 import useUser from '../../../hooks/useUser'
+import ChangePfp from '../../Dashbord/ChangePfp'
 const AdminNavBar = ({location}) => {
     const { user } = useUser()
+    const [changePfpVisible,setChangePfpVisible] = useState(false);
+    const closePopUp = ()=>{
+        setChangePfpVisible(false);
+    }
+    const openPopUp = ()=>{
+        setChangePfpVisible(true);
+    }
     const userDetails = [
         {
             icon:ChangePFP,
             title:"Change pfp",
-            path:""
+            path:"",
+            action:()=>{
+                openPopUp();
+            }
         },{
             icon:ChangePassIcon,
             title:"Change password",
-            path:""
+            path:"/ChangePassword"
         },{
             icon:HelpIcon,
             title:"Help",
-            path:""
+            path:"",
+            action:()=>{
+
+            }
         },{
             icon:FeedBackIcon,
             title:"Feedback",
-            path:"/"
+            path:"/",
+            action:()=>{
+
+            }
         },{
             icon:LogoutIcon,
             title:"Log out",
-            path: import.meta.env.VITE_API_URL + "/auth/logout" 
+            path: import.meta.env.VITE_API_URL + "/auth/logout",
+            action:()=>{
+
+            }
         }
     ]
   const [toggle,setToggle] = useState(false);
@@ -44,9 +64,9 @@ const AdminNavBar = ({location}) => {
                         <p>{user.email}</p>
                     </div>
                     <ul className='list-none flex justify-end items-start flex-1 flex-col'>
-                        {userDetails.map((det,ind) =><div className='w-full' key={det.title}>
+                    {userDetails.map((det,ind) =><div className='w-full' key={det.title}>
                             <li className={`w-full rounded-md transition-all hover:bg-[#d9e9f6]`}>
-                                <Link className='flex w-full items-center  p-2'>
+                                <Link onClick={det.action} to={det.path} className='flex w-full items-center  p-2'>
                                     <img className='mr-3 w-5 h-5 object-contain' src={det.icon} alt={det.title} />
                                     <p className='flex-grow'>{det.title}</p>
                                 </Link>
@@ -56,6 +76,7 @@ const AdminNavBar = ({location}) => {
                     </ul>
                 </div>
         </div>
+        <ChangePfp visible={changePfpVisible} closePopUp={closePopUp}/>
     </nav>
   )
 }

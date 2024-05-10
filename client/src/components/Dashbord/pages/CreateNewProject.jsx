@@ -12,112 +12,104 @@ import {
 } from '../../../assets'
 import propTypes from 'prop-types'
 import Select from './Select'
-import { useDebounce } from '../constants'
-import { ColorRing, ThreeDots } from 'react-loader-spinner'
-import axios from '../../../utils/axios'
-import { useNavigate } from 'react-router-dom'
-import { useContext } from 'react'
-import { projectContext } from '../Dashbord'
+import { useDebounce } from '../constants';
+import { ColorRing, ThreeDots } from 'react-loader-spinner';
+import axios from '../../../utils/axios';
+import { useNavigate } from 'react-router-dom';
+import { useContext } from 'react';
+import { projectContext } from '../Dashbord';
 import Chat from '../../ChatBot/Chat'
-export const DependenciesContext = createContext()
-const CreateNewProject = ({
-  method,
-  setMethod,
-  visible,
-  closePopUp,
-  currentPage,
-  nextPage,
-  prevPage
-}) => {
-  const { getProjects, displayMessageToUser } = useContext(projectContext)
-  const navigate = useNavigate()
-  const [image, setImage] = useState(null)
-  const [clubs, setClubs] = useState(null)
-  const [modules, setModules] = useState(null)
-  const [events, setEvents] = useState(null)
-  const [projectName, setProjectName] = useState('')
-  const [description, setDescription] = useState('')
-  const [tags, setTags] = useState([])
-  const [tagsDisplayed, setTagsDisplayed] = useState([])
-  const [mainTopic, setMainTopic] = useState('')
-  const [subTopics, setSubTopics] = useState([])
-  const [addSubTopicState, setAddSubTopicState] = useState(false)
-  const [subTopicInputValue, setSubTopicInputValue] = useState('')
-  const [banner, setBanner] = useState(null)
-  const [loading, setLoading] = useState(false)
-  const [searchColl, setSearchColl] = useState('')
-  const [displayedCollaborators, setDisplayedCollaborators] = useState([])
-  const [collaborators, setCollaborators] = useState([])
-  const debouncedSearch = useDebounce(searchColl, 500)
-  const [active, setActive] = useState('')
-  const [inputValue, setInputValue] = useState('')
-  const [projectTimer, setProjectTimer] = useState(0)
-  const browseRef = useRef()
-  const userToken = localStorage.getItem('userToken')
-  const methods = [
-    {
-      Id: 'BrainstormingMethodIcon_btn',
-      icon: BrainstormingMethodIcon,
-      title: 'Brainstorming',
-      action: function () {
-        setMethod('Brainstorming')
-        nextPage()
-      }
-    },
-    {
-      Id: 'BrainwritingMethodIcon_btn',
-      icon: BrainwritingMethodIcon,
-      title: 'Brainwriting',
-      action: function () {
-        setMethod('Brainwriting')
-        nextPage()
-      }
-    }
-  ]
-  const createButtonRef = useRef()
-  const displayedMethods = methods.filter(method =>
-    method.title.toLocaleLowerCase().includes(inputValue.toLocaleLowerCase())
-  )
-  const formattedTags = tags.map(tag => {
-    return { tagType: tag.tagType, tagId: tag.tagId }
-  })
-  const [createProjectState, setcreateProjectState] = useState(false)
-  // creating the project data object
-  const myForm = new FormData()
-  myForm.append('projectThumbnail', image)
-  myForm.append('projectTitle', projectName)
-  myForm.append('description', description)
-  myForm.append('ideationMethodName', method)
-  myForm.append('timer', projectTimer)
-  collaborators.forEach(collaborator => {
-    myForm.append('collaborators[]', collaborator.email)
-  })
-  myForm.append('mainTopic', mainTopic)
-  subTopics.forEach(subTopic => {
-    myForm.append('subTopics[]', subTopic)
-  })
-  formattedTags.forEach(tag => {
-    myForm.append('tags[]', JSON.stringify(tag))
-  })
-  ////////////////////:::::Methods::::://///////////////////////////
-  const getTags = async (tagPath, callback) => {
-    try {
-      const userToken = localStorage.getItem('userToken')
-      const response = await axios.get(`${tagPath}`, {
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          Authorization: `Bearer ${userToken}`
+export const DependenciesContext = createContext();
+const CreateNewProject = ({method,setMethod,visible,closePopUp,currentPage,nextPage,prevPage}) => {
+    const {getProjects,displayMessageToUser} = useContext(projectContext)
+    const navigate = useNavigate()
+    const [image, setImage] = useState(null)
+    const [clubs,setClubs] = useState(null);
+    const [modules,setModules] = useState(null);
+    const [events,setEvents] = useState(null);
+    const [projectName,setProjectName] = useState("");
+    const [description,setDescription] = useState("");
+    const [tags,setTags] = useState([]);
+    const [tagsDisplayed,setTagsDisplayed] = useState([]);
+    const [mainTopic,setMainTopic] = useState("");
+    const [subTopics,setSubTopics] = useState([]);
+    const [addSubTopicState,setAddSubTopicState] = useState(false);
+    const [subTopicInputValue,setSubTopicInputValue] = useState("");
+    const [banner,setBanner] = useState(null);
+    const [loading,setLoading] = useState(false);
+    const [searchColl,setSearchColl] = useState("");
+    const [displayedCollaborators,setDisplayedCollaborators] = useState([]);
+    const [collaborators,setCollaborators] = useState([]);
+    const debouncedSearch = useDebounce(searchColl,500);
+    const [active,setActive] = useState("");
+    const [inputValue,setInputValue] = useState("");
+    const browseRef = useRef();
+    const userToken = localStorage.getItem('userToken')
+    const methods = [{
+            Id:"BrainstormingMethodIcon_btn",
+            icon:BrainstormingMethodIcon,
+            title:"Brainstorming",
+            action:function(){
+                setMethod("Brainstorming")
+                nextPage();
+            }
+        },
+        {
+            Id:"BrainwritingMethodIcon_btn",
+            icon:BrainwritingMethodIcon,
+            title:"Brainwriting",
+            action:function(){
+                setMethod("Brainwriting");
+                nextPage();
+            }
         }
-      })
-      if (response.status === 200) {
-        callback(response.data)
-      } else {
-        throw new Error('Authentication has failed!')
-      }
-    } catch (error) {
-      console.log(error)
-      throw new Error()
+    ]
+    const createButtonRef = useRef();
+    const displayedMethods = methods.filter(method=>method.title.toLocaleLowerCase().includes(inputValue.toLocaleLowerCase()))
+    const formattedTags = tags.map(tag=>{
+        return (
+            {tagType : tag.tagType,
+            tagId : tag.tagId
+            }
+        )
+    })
+    const [createProjectState,setcreateProjectState] = useState(false);
+    // creating the project data object
+    const myForm = new FormData()
+    myForm.append('projectThumbnail',image)
+    myForm.append('projectTitle', projectName);
+    myForm.append('description', description);
+    myForm.append('ideationMethodName', method);
+    collaborators.forEach(collaborator => {
+        myForm.append('collaborators[]', collaborator.email);
+    });
+    myForm.append('mainTopic', mainTopic);
+    subTopics.forEach(subTopic => {
+        myForm.append('subTopics[]', subTopic);
+    });
+    formattedTags.forEach(tag => {
+        myForm.append('tags[]',JSON.stringify( tag));
+    });
+    ////////////////////:::::Methods::::://///////////////////////////
+    const getTags = async (tagPath,callback) =>{
+        try {
+            const userToken = localStorage.getItem('userToken')
+            const response = await axios.get(`${tagPath}`, {
+            headers: {
+            Accept: "application/json",
+            "Content-Type": "application/json",
+             'Authorization': `Bearer ${userToken}`
+          },
+        });
+        if (response.status === 200) {
+            callback(response.data);
+        } else {
+          throw new Error("Authentication has failed!");
+        } 
+        } catch (error) {
+            console.log(error) 
+            throw new Error 
+        }
     }
   }
   useEffect(() => {

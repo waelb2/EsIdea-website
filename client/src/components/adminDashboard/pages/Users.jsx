@@ -5,14 +5,18 @@ import SearchCat from './SearchCat'
 import axios from '../../../utils/axios'
 import {useReactTable,flexRender,getCoreRowModel,getPaginationRowModel,getFilteredRowModel} from '@tanstack/react-table'
 import { Hammer, Remove, View } from '../../../assets'
+import { MagnifyingGlass } from 'react-loader-spinner'
 const Users = () => {
   const [searchInput,setSearchInput] = useState("");
-  const [data,setData] = useState([])
+  const [data,setData] = useState([]);
+  const [loading,setLoading] = useState(true);
   const getUsers = async()=>{
+    setLoading(true);
     try {
     const response = await axios.get("http://localhost:3000/admin/users");
     if (response.statusText == 'OK') {
       setData(response.data);
+      setLoading(false);
     } else {
         console.log(response)
         throw new Error ("Authentication has failed")
@@ -50,7 +54,7 @@ const deleteUser = async (id) => {
   try {
     const response = await axios.delete("admin/users", { data: { id } });
     if (response.statusText === 'OK') {
-      console.log(response.data);
+      getUsers();
     } else {
       console.log(response);
       throw new Error("Authentication has failed");
@@ -137,7 +141,20 @@ return (
           </div>
 
         </div>
-      </>:null}
+      </>:loading ?<div className='h-full w-full flex justify-center items-center'>
+            <MagnifyingGlass
+                visible={true}
+                height="80"
+                width="80"
+                ariaLabel="magnifying-glass-loading"
+                wrapperStyle={{}}
+                wrapperClass="magnifying-glass-wrapper"
+                glassColor="#c0efff"
+                color="#59AEF8"
+                />
+            </div>:<div className='h-full w-full flex justify-center items-center'>
+                  <h1 className='font-semibold text-lg'>No users</h1>
+              </div>}
     </>
   )
 }

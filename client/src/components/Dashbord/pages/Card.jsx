@@ -5,9 +5,9 @@ import { Colaborators, Edit, ExportProj, More, MoveFavorite, OpenProj, Publish, 
 import { projectContext } from '../Dashbord';
 import { useNavigate } from 'react-router-dom';
 import axios  from '../../../utils/axios';
-const Card = ({proj,index,openedMore,setOpenedMore,handleMoveToTrash}) => {
+const Card = ({proj,index,openedMore,setOpenedMore}) => {
 
-  const {displayMessageToUser} = useContext(projectContext);
+  const {displayMessageToUser,getProjects} = useContext(projectContext);
   const navigate = useNavigate()
   const dataOptions  = { 
   year: 'numeric', 
@@ -21,13 +21,13 @@ const Card = ({proj,index,openedMore,setOpenedMore,handleMoveToTrash}) => {
   const userToken = localStorage.getItem('userToken')
   
   const moveToTrash = async (projectId)=>{
-      handleMoveToTrash(index);
       setOpenedMore(-1);
       axios.delete(`project/trash-project/${projectId}`, {headers: {
             'Authorization': `Bearer ${userToken}`
         },
         }).then(response => {
-          
+          displayMessageToUser("success","Project moved to trash successfully")
+          getProjects();
         })
         .catch(error => { 
             console.error('Error:', error.response.data.error);
@@ -48,7 +48,7 @@ const Card = ({proj,index,openedMore,setOpenedMore,handleMoveToTrash}) => {
             }
         );
         displayMessageToUser("success","Project added to favourites successfully!")
-        // Optionally, you can handle the response here if needed.
+        getProjects();
     } catch (error) {
         console.error('Error:', error.response.data.error);
         if (error.response && error.response.status === 401) {
@@ -171,7 +171,6 @@ Card.propTypes = {
     proj:PropTypes.object,
     index:PropTypes.number.isRequired,
     openedMore:PropTypes.number.isRequired,
-    setOpenedMore:PropTypes.func.isRequired,
-    handleMoveToTrash: PropTypes.func
+    setOpenedMore:PropTypes.func.isRequired
 };
 export default Card
