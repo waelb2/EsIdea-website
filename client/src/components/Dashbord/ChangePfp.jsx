@@ -6,13 +6,21 @@ const ChangePfp = ({visible,closePopUp}) => {
     const handleDragOver = (event)=>{
         event.preventDefault();
     }
+    const [image,setImage] = useState();
     const handleDrop=(event)=>{
         setProfilePic(URL.createObjectURL(event.dataTransfer.files[0]));
+        setImage(event.dataTransfer.files[0]);
         event.preventDefault();
     }
     const [profilePic,setProfilePic] = useState(null);
+    const handleUpload=(event)=>{
+        setProfilePic(URL.createObjectURL(event.target.files[0]))
+        setImage(event.target.files[0]);
+    }
     const browseRef = useRef();
-  return (
+    const myForm = new FormData()
+    myForm.append('profilePic',image);
+    return (
     <div onClick={closePopUp} className={`fixed top-0 left-0 bg-black bg-opacity-40 w-screen min-h-screen backdrop-blur z-50 duration-500  transition-opacity ease-in-out flex justify-center items-center  ${visible?"Pop-up-Active":"Pop-up-notActive"}`}>
                 <div onClick={(e)=>{e.stopPropagation();}} className='bg-white max-w-full w-[37.5rem]  rounded-2xl shadow-md  px-3 py-4 sm:py-7 sm:px-9 m-4'>
                     
@@ -25,7 +33,7 @@ const ChangePfp = ({visible,closePopUp}) => {
                                     <img className='w-64' src={dragdropfiles} alt="files" />
                                     <h1 className='text-black font-bold'>Drag and Drop pic to upload</h1>
                                     <h1 className='text-black font-semibold'>Or</h1>
-                                    <input accept='image/*' onChange={(event)=>{setProfilePic(URL.createObjectURL(event.target.files[0]));}}  ref={browseRef} hidden type="file" />
+                                    <input onChange={handleUpload}  ref={browseRef} hidden type="file" />
                                     <button onClick={()=>{browseRef.current.click()}} className='bg-skyBlue py-1 px-2 rounded-xl text-realWhite'>Browse</button>
                                 </div>:<div className='flex flex-col gap-5 border-2 border-gray-600 rounded-md p-2 justify-center items-center flex-grow'>
                                         <h1 className='text-black font-semibold text-lg'>Selected picture:</h1>

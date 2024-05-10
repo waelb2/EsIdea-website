@@ -56,8 +56,20 @@ const Card = ({proj,index,openedMore,setOpenedMore}) => {
         }
     }
 }
-
-
+const addToPublic = async(projectId)=>{
+  try {
+    const response = await axios.post("user/publicProjectRequest",{projectId});
+    if (response.status === 201) {
+      displayMessageToUser("success","Public request sent successfully");
+    } else {
+      throw new Error("Authentication has failed");
+    }
+  } catch (error) {
+    if(error.response.status === 400){
+      displayMessageToUser("error","Public project request already sent");
+    }
+  }
+}
   const {setprojectToEdit,setEditProjectPopUp,setCollaborators,setCoordinator,setCollaboratorPopUp} = useContext(projectContext);
   const projectDetails = [
     {
@@ -101,6 +113,7 @@ const Card = ({proj,index,openedMore,setOpenedMore}) => {
         icon:Publish,
         line:true,
         action:()=>{
+          addToPublic(proj.projectId);
         }
     },
     {
@@ -108,7 +121,6 @@ const Card = ({proj,index,openedMore,setOpenedMore}) => {
         icon:ExportProj,
         line:true,
         action:()=>{
-          
         }
     },
     {
@@ -155,7 +167,7 @@ const Card = ({proj,index,openedMore,setOpenedMore}) => {
           <div className={`${index !== openedMore ?"hidden":"bg-realWhite min-w-[10.625rem] absolute shadow-2xl bottom-8 right-4 border p-3 rounded-lg border-black slideTop"} overflow-hidden`}>
               <ul>
                   {projectDetails.map(pd=><li key={pd.title}>
-                    <button onClick={()=>{pd.action(index)}}  className={`flex px-2 py-1 items-center hover:bg-[#d9e9f6] w-full  rounded-md transition-all`}>
+                    <button onClick={()=>{pd.action()}}  className={`flex px-2 py-1 items-center hover:bg-[#d9e9f6] w-full  rounded-md transition-all`}>
                       <img className='mr-2' src={pd.icon} alt={pd.title} />
                       <p>{pd.title}</p>
                     </button>
