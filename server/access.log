@@ -401,7 +401,6 @@
 2024-05-06T21:45:18.733Z - GET /admin/tags?type=club
 2024-05-06T21:45:38.897Z - GET /admin/tags?type=club
 2024-05-06T21:45:41.881Z - GET /admin/tags?type=club
-<<<<<<< HEAD
 2024-05-06T22:56:05.889Z - GET /auth/google
 2024-05-06T23:13:46.460Z - GET /auth/google/callback?code=4%2F0AdLIrYewaZVUz_0I3wiZRDpnq9myQ3IyHQLy03USsEDw3fpWujpH_WdgYbDRhlfuloXCTw&scope=email+profile+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.email+https%3A%2F%2Fwww.googleapis.com%2Fauth%2Fuserinfo.profile+openid&authuser=1&hd=esi.dz&prompt=consent
 2024-05-06T23:13:47.201Z - GET /dashboard
@@ -567,7 +566,6 @@
 2024-05-07T01:39:59.657Z - GET /idea/get-ideas/6638c56819e76a2edaa3b854
 2024-05-07T02:01:16.881Z - GET /idea/get-ideas/6638c56819e76a2edaa3b854
 2024-05-07T02:01:17.104Z - GET /idea/get-ideas/6638c56819e76a2edaa3b854
-=======
 2024-05-06T21:52:17.560Z - GET /admin/users
 2024-05-06T21:52:21.684Z - GET /admin/tags?type=club
 2024-05-06T21:57:04.896Z - GET /admin/tags?type=club
@@ -2114,6 +2112,7 @@
 2024-05-10T17:39:07.792Z - GET /idea/get-ideas/663e500c405c9f33377f72c0
 2024-05-10T17:39:11.913Z - GET /idea/get-ideas/663e500c405c9f33377f72c0
 2024-05-10T17:40:27.231Z - POST /idea/post-idea
+<<<<<<< HEAD
 2024-05-10T17:44:08.930Z - GET /idea/get-ideas/663e500c405c9f33377f72c0
 2024-05-10T17:44:27.094Z - GET /club/getClubs
 2024-05-10T17:44:27.102Z - GET /module/getModules
@@ -2231,3 +2230,10 @@
 2024-05-10T18:15:09.036Z - DELETE /idea/delete-idea/663e642bcb908152fe1969ef
 2024-05-10T18:15:27.163Z - DELETE /project/663e5ff919ce6d12e458b59e/ideas
 2024-05-10T18:15:27.546Z - POST /idea/post-idea
+2024-05-10T17:58:06.104Z - GET /admin/stats
+2024-05-10T17:58:08.555Z - GET /club/getClubs
+2024-05-10T17:58:08.571Z - GET /module/getModules
+2024-05-10T17:58:08.579Z - GET /event/getEvents
+2024-05-10T17:58:08.616Z - POST /user/search-user-email
+2024-05-10T17:58:08.624Z - GET /project/get-all-projects
+2024-05-10T17:59:45.623Z - GET /admin/tags?type=module
