@@ -58,7 +58,12 @@ const Card = ({proj,index,openedMore,setOpenedMore}) => {
 }
 const addToPublic = async(projectId)=>{
   try {
-    const response = await axios.post("user/publicProjectRequest",{projectId});
+    const response = await axios.post("user/publicProjectRequest",{projectId},
+    {
+        headers: {
+            'Authorization': `Bearer ${userToken}`
+        }
+    });
     if (response.status === 201) {
       displayMessageToUser("success","Public request sent successfully");
     } else {
@@ -66,9 +71,10 @@ const addToPublic = async(projectId)=>{
     }
   } catch (error) {
     if(error.response.status === 400){
-      displayMessageToUser("error","Public project request already sent");
+      displayMessageToUser("error",error.response.data.error);
     }
   }
+  setOpenedMore(-1);
 }
   const {setprojectToEdit,setEditProjectPopUp,setCollaborators,setCoordinator,setCollaboratorPopUp} = useContext(projectContext);
   const projectDetails = [

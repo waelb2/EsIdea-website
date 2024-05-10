@@ -416,7 +416,7 @@ const approvePublicProjectRequest = async (req: Request, res: Response) => {
     }
     project.visibility = ProjectVisibility.PUBLIC
     await project.save()
-    return res.status(200).send({ msg: 'The public' })
+    return res.status(200).send({ msg: "The public project request has been approved" })
   } catch (error) {
     console.log(error)
     return res.sendStatus(500)

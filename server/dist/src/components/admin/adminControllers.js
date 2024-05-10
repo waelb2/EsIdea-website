@@ -441,7 +441,7 @@ const approvePublicProjectRequest = (req, res) => __awaiter(void 0, void 0, void
         }
         project.visibility = projectModels_1.ProjectVisibility.PUBLIC;
         yield project.save();
-        return res.status(200).send({ msg: 'The public' });
+        return res.status(200).send({ msg: "The public project request has been approved" });
     }
     catch (error) {
         console.log(error);

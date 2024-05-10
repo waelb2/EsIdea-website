@@ -109,7 +109,7 @@ const createPublicProjectRequest = async (req: Request, res: Response) => {
       return res.status(404).send({ error: "The project of the publication request is not found" });
     }
     if (!(userId == project.coordinator.toString()))
-      return res.status(400).send({ error: "The user is not the coordinator of the project" });
+      return res.status(400).send({ error: "Your are not the coordinator of the project" });
     const existReq = await publicProjectRequest.findOne({projectId: objectId})
     if (!existReq) {
       const ppr = new publicProjectRequest({ projectId })

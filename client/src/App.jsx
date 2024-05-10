@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
 import React, { useState,useEffect,useMemo } from 'react';
 import { Routes,Route, Navigate } from 'react-router-dom';
-import { LoginPage,Dashbord,Projects,Recents,Favorites,Public,Trash, LandingPage, AdminDashboard, General, Tags, Logs, Users, FeedBacks, ForgotPassword, ResetPassword, AddPassword, ChangePassword, BrainStorming, BrainWriting, AdminBrainStorming, AdminBrainWriting, Whiteboard } from './components';
+import { LoginPage,Dashbord,Projects,Recents,Favorites,Public,Trash, LandingPage, AdminDashboard, General, Tags, Logs, Users, FeedBacks, ForgotPassword, ResetPassword, AddPassword, ChangePassword, BrainStorming, BrainWriting, AdminBrainStorming, AdminBrainWriting, Whiteboard, PublicProjectRequests } from './components';
 import RequireAuth from './components/auth/RequireAuth';
 import UnauthorizedPage from './components/auth/UnauthorizedPage';
 import NotFound from './components/NotFoundPage/NotFound';
@@ -44,6 +44,7 @@ const App = () => {
                 <Route path='FeedBacks' element={<FeedBacks/>}/>
                 <Route path='Users' element={<Users/>}/>
                 <Route path='Logs' element={<Logs/>}/>
+                <Route path='PublicProjectRequests' element={<PublicProjectRequests/>}/>
             </Route>
         </Route>
         {/* <Route path='/Home' element={<RequireAuth allowedRoles={["user"]}/>}>

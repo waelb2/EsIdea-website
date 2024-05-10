@@ -1,4 +1,4 @@
-import { General,Users,Tags,Logs,FeedBacks } from "../../assets";
+import { General,Users,Tags,Logs,FeedBacks, request } from "../../assets";
 export const AdminNavLinks = [
     {
         title : "Statistics",
@@ -24,5 +24,9 @@ export const AdminNavLinks = [
         title : "Logs",
         path:"/Admin/Logs",
         icon : Logs
+    },{
+        title : "Public projects requests",
+        path:"/Admin/PublicProjectRequests",
+        icon : request
     }
 ];

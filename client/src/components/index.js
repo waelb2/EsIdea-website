@@ -21,6 +21,7 @@ import BrainWriting from './pages/BrainWriting'
 import AdminBrainStorming from './Admin Brainstorming/AdminBrainstorming'
 import AdminBrainWriting from './Admin Brainwriting/AdmingBrainwriting'
 import Whiteboard from '../components/WhiteBoard/whiteboard'
+import PublicProjectRequests from "./adminDashboard/PublicProjectRequests";
 export {
     LoginPage,
     Dashbord,
@@ -44,5 +45,6 @@ export {
     BrainWriting,
     AdminBrainStorming,
     AdminBrainWriting,
-    Whiteboard
+    Whiteboard,
+    PublicProjectRequests
 }
