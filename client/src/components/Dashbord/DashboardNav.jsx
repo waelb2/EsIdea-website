@@ -2,43 +2,19 @@
 import React,{useRef, useState,useContext} from 'react'
 import {More, Search,blackClose, ChangePFP, ChangePassIcon, HelpIcon, FeedBackIcon, LogoutIcon} from '../../assets';
 import propTypes from 'prop-types';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import useUser from '../../hooks/useUser';
 import ChangePfp from './ChangePfp';
-import axios from '../../utils/axios'
-import { projectContext } from './Dashbord';
+import SendFeedBackPopUp from './SendFeedBackPopUp';
 const DashboardNav = ({currentLoc,action}) => {
-    const {displayMessageToUser} = useContext(projectContext)
     const { user } = useUser();
-    const navigate = useNavigate();
     const [changePfpVisible,setChangePfpVisible] = useState(false);
+    const [sendFeedbackVisible,setSendFeedbackVisible] = useState(false);
     const closePopUp = ()=>{
         setChangePfpVisible(false);
     }
     const openPopUp = ()=>{
         setChangePfpVisible(true);
-    }
-    const [title,setTitle] = useState("test feedback");
-    const [description,setDescription] = useState("test description");
-    const userToken = localStorage.getItem('userToken');
-    const sendFeedback = async()=>{
-        try {
-            const response = await axios.post(
-                'user/settings/feedback',
-                 {title,description} ,
-                {
-                    headers: {
-                        'Authorization': `Bearer ${userToken}`
-                    }
-                }
-            );
-            displayMessageToUser("success","Feedback sent successfully");
-        } catch (error) {
-            console.log(error);
-            if (error.response && error.response.status === 401) {
-                navigate('/login');
-            }
-        }
     }
     const userDetails = [
         {
@@ -64,7 +40,7 @@ const DashboardNav = ({currentLoc,action}) => {
             title:"Feedback",
             path:"",
             action:()=>{
-                sendFeedback();
+                setSendFeedbackVisible(true);
             }
         },{
             icon:LogoutIcon,
@@ -112,6 +88,9 @@ const DashboardNav = ({currentLoc,action}) => {
             </div>
         </div>
         <ChangePfp visible={changePfpVisible} closePopUp={closePopUp}/>
+        <SendFeedBackPopUp visible={sendFeedbackVisible} closePopUp={()=>{
+            setSendFeedbackVisible(false);
+        }} />
     </nav>
   )
 }

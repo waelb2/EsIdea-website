@@ -42,7 +42,6 @@ const Form = () => {
             },
           })
             .then((response) => {
-            console.log(response)
              const {user, userToken} = response.data;
              
               localStorage.setItem('userToken', userToken);

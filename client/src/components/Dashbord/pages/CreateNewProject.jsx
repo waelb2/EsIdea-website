@@ -18,7 +18,6 @@ import axios from '../../../utils/axios'
 import { useNavigate } from 'react-router-dom'
 import { useContext } from 'react'
 import { projectContext } from '../Dashbord'
-import Chat from '../../ChatBot/Chat'
 export const DependenciesContext = createContext()
 const CreateNewProject = ({
   method,
