@@ -101,38 +101,38 @@ const ResetPassword = () => {
 
   return (
     <div className="bg-white w-full overflow-hidden min-h-screen flex flex-col">
-        <div className="sm:px-16 px-6 flex justify-center items-center">
+        <div className="sm:px-11 px-6 py-3 flex justify-center items-center">
             <div className="xl:max-w-[80rem] w-full">
-                <nav className='w-full flex justify-between items-center py-3'>
-                    <Link to="/">
-                        <img className='w-[7.75rem] h-10' src={blackLogo} alt="ESIdea_logo" />
-                    </Link>
-                    <div className='flex gap-2 relative items-center'>
-                        <img className='w-8 h-8 cursor-pointer' src={notification} alt="Notification" />
-                        <img onClick={()=>{setToggle(prev => !prev)}} className='w-10 h-10 cursor-pointer rounded-full border-2 border-skyBlue p-0.5' src={user.profilePicUrl} alt="User" />
-                        <div className={`${!toggle ? "hidden":"flex border-2"} p-4 bg-realWhite absolute z-20 top-10 right-0 shadow-xl min-w-[15.625rem] rounded-xl slideDown flex-col overflow-hidden`}>
-                        <img onClick={()=>{setToggle(prev => !prev)}} className='w-5 h-5 object-contain cursor-pointer absolute top-2 right-3' src={blackClose} alt="Close"/>
-                    <div className='flex flex-col items-center mb-3'>
-                        <img className='w-20 h-20 object-contain rounded-full border-2 border-skyBlue p-0.5' src={user.profilePicUrl} alt="UserPic" />
-                        <p className='font-medium'>{`${user.firstName} ${user.lastName}`}</p>
-                        <p>{user.email}</p>
+            <nav className='flex items-center justify-between'>
+                <Link to="/">
+                    <img className='w-[7.75rem] h-10' src={blackLogo} alt="ESIdea_logo" />
+                </Link>
+                <div className='flex gap-2 items-center'>
+                    <img className='w-8 h-8 cursor-pointer' src={notification} alt="Notification" />
+                    <img onClick={()=>{setToggle(prev => !prev)}} className='w-10 h-10 cursor-pointer rounded-full border-2 border-skyBlue p-0.5' src={user.profilePicUrl} alt="User" />
+                    <div className={`${!toggle ? "hidden":"flex border-[2px]"} p-4 bg-realWhite shadow-xl absolute z-20 top-11 right-6 mx-4 my-2 min-w-[250px] rounded-xl slideDown overflow-hidden flex-col`}>
+                        <img onClick={()=>{setToggle(prev => !prev)}} className='w-5 h-5 object-contain cursor-pointer fixed top-2 right-3' src={blackClose} alt="Close"/>
+                        <div className='flex flex-col items-center mb-3'>
+                            <img className='w-20 h-20 object-contain rounded-full border-2 border-skyBlue p-0.5' src={user.profilePicUrl} alt="UserPic" />
+                            <p className='font-medium'>{`${user.firstName} ${user.lastName}`}</p>
+                            <p>{user.email}</p>
+                        </div>
+                        <ul className='list-none flex justify-end items-start flex-1 flex-col'>
+                            {userDetails.map((det,ind) =><div className='w-full' key={det.title}>
+                                    <li className={`w-full rounded-md transition-all hover:bg-[#d9e9f6]`}>
+                                        <Link onClick={det.action} to={det.path} className='flex w-full items-center  p-2'>
+                                            <img className='mr-3 w-5 h-5 object-contain' src={det.icon} alt={det.title} />
+                                            <p className='flex-grow'>{det.title}</p>
+                                        </Link>
+                                    </li>
+                                    {ind === userDetails.length -2 && <hr className='my-2 border-t-2 border-gray-300 w-full'/>}
+                                </div>)}
+                        </ul>
                     </div>
-                    <ul className='list-none flex justify-end items-start flex-1 flex-col'>
-                    {userDetails.map((det,ind) =><div className='w-full' key={det.title}>
-                            <li className={`w-full rounded-md transition-all hover:bg-[#d9e9f6]`}>
-                                <Link onClick={det.action} to={det.path} className='flex w-full items-center  p-2'>
-                                    <img className='mr-3 w-5 h-5 object-contain' src={det.icon} alt={det.title} />
-                                    <p className='flex-grow'>{det.title}</p>
-                                </Link>
-                            </li>
-                            {ind === userDetails.length -2 && <hr className='my-2 border-t-2 border-gray-300 w-full'/>}
-                        </div>)}
-                    </ul>
                 </div>
+            </nav>
         </div>
-                </nav>
-            </div>
-        </div>
+    </div>
           <div className='sm:px-16 px-6 flex justify-center items-center h-full flex-grow'>
                 <div className='xl:max-w-[80rem] w-full h-full flex md:flex-row md:justify-center gap-6 flex-col items-center'>
                     <div className='shadow-md rounded-lg px-7 py-8  max-w-[28.125rem] w-full mt-5 md:mt-0 border-2 border-[rgba(0,0,0,0.1)] flex flex-col items-center gap-3' >
