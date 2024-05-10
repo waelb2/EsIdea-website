@@ -1,8 +1,13 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useRef, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import propTypes from 'prop-types'
 import { blackClose, dragdropfiles } from '../../assets';
+import axios  from '../../utils/axios';
+import { useNavigate } from 'react-router-dom';
+import { projectContext } from './Dashbord';
 const ChangePfp = ({visible,closePopUp}) => {
+    const navigate = useNavigate();
+    const {displayMessageToUser} = useContext(projectContext);
     const handleDragOver = (event)=>{
         event.preventDefault();
     }
@@ -20,6 +25,27 @@ const ChangePfp = ({visible,closePopUp}) => {
     const browseRef = useRef();
     const myForm = new FormData()
     myForm.append('profilePic',image);
+    const userToken = localStorage.getItem('userToken')
+    const changeProfile = async()=>{
+        try {
+            const response = await axios.patch(
+                'user/settings/profile/picture',
+                { myForm },
+                {
+                    headers: {
+                        'Authorization': `Bearer ${userToken}`,
+                        'Content-Type': 'multipart/form-data'
+                    }
+                }
+            );
+            displayMessageToUser("success","Profile picture updated successfully")
+        } catch (error) {
+            console.error('Error:', error.response.data.error);
+            if (error.response && error.response.status === 401) {
+                navigate('/login');
+            }
+        }
+    }
     return (
     <div onClick={closePopUp} className={`fixed top-0 left-0 bg-black bg-opacity-40 w-screen min-h-screen backdrop-blur z-50 duration-500  transition-opacity ease-in-out flex justify-center items-center  ${visible?"Pop-up-Active":"Pop-up-notActive"}`}>
                 <div onClick={(e)=>{e.stopPropagation();}} className='bg-white max-w-full w-[37.5rem]  rounded-2xl shadow-md  px-3 py-4 sm:py-7 sm:px-9 m-4'>
@@ -42,7 +68,7 @@ const ChangePfp = ({visible,closePopUp}) => {
                                     </div>}
                         </div>
                         <div className={`w-full self-end flex justify-end`}>
-                                <button  className={`bg-skyBlue px-3 py-1 rounded-md text-white`}>Change</button>
+                                <button onClick={changeProfile}  className={`bg-skyBlue px-3 py-1 rounded-md text-white`}>Change</button>
                         </div>
                     </div>
                 </div>
