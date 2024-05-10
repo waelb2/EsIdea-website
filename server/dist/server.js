@@ -72,15 +72,23 @@ io.on('connection', socket => {
     // Handle receiving a new idea
     socket.on('newIdea', data => {
         const { idea, projectId } = data;
-        socket.broadcast.to(projectId).emit('newIdea', idea);
+        io.to(projectId).emit('newIdea', idea);
         console.log(`New idea ${JSON.stringify(idea.ideaId)} broadcasted to room: ${projectId}`);
+    });
+    socket.on('deleteIdea', data => {
+        const { ideaId, projectId } = data;
+        io.to(projectId).emit('deleteId', ideaId);
+    });
+    socket.on('deleteManyIdeas', data => {
+        const { newIdeas, projectId } = data;
+        console.log(newIdeas);
+        socket.broadcast.to(projectId).emit('deleteManyIdeas', newIdeas);
     });
     // handle firing counter
     socket.on('fireCounter', counterFired => {
-        console.log('Counter fired  : ', counterFired);
         socket.broadcast.emit('counterFired', counterFired);
     });
-    socket.on('fireCounterBw', (data) => {
+    socket.on('fireCounterBw', data => {
         const { concernedUser, counterFired } = data;
         const socketId = Object.keys(connectedUsers).find(id => connectedUsers[id].email === concernedUser.email);
         if (socketId) {
@@ -98,8 +106,8 @@ const start = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         yield (0, db_1.connectDB)(String(process.env.DATABASE_URI));
         console.log('DATABASE CONNECTED');
-        server.listen(PORT, () => {
-            console.log(`Server starting at http://localhost:${PORT}`);
+        server.listen(3000, () => {
+            console.log(`Server starting at ${HOST}:${PORT}`);
         });
     }
     catch (error) {

@@ -56,6 +56,31 @@ body{
   -webkit-animation: slide-down 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94) both ;
 }
 
+.message {
+  position: fixed;
+  top: -100px; 
+  left: 50%;
+  transform: translateX(-50%);
+  background-color: rgba(97, 245, 86, 0.9); 
+  border-radius: 90%;
+  color: rgb(12, 3, 60);
+  padding: 20px;
+  font-weight: 600;
+  border-radius: 5px;
+  animation: slideIn 2.5s ease-out forwards; 
+}
+
+@keyframes slideIn {
+  from {
+    top: -100px; 
+    opacity: 0; 
+  }
+  to {
+    top:40%; 
+    opacity: 1; 
+  }
+}
+
 @-webkit-keyframes slide-down {
   0% {
     max-height: 0rem;

@@ -37,7 +37,7 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             secureURL = cloudImage.secure_url;
             fs_1.default.unlinkSync(req.file.path);
         }
-        const { projectTitle, description, ideationMethodName, collaborators, mainTopic, subTopics, tags } = req.body;
+        const { projectTitle, description, ideationMethodName, collaborators, mainTopic, subTopics, tags, timer } = req.body;
         // Getting and validating project metadata
         const coordinator = yield userModels_1.User.findById(userId);
         if (!coordinator) {
@@ -126,7 +126,8 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             clubs: clubList,
             modules: moduleList,
             events: eventList,
-            thumbnailUrl: secureURL
+            thumbnailUrl: secureURL,
+            timer
         });
         const normalized_collaborators = collaborators.map(email => email.toLowerCase().trim());
         // creating and sending invitations
@@ -476,7 +477,8 @@ const getProjectByUserId = (req, res) => __awaiter(void 0, void 0, void 0, funct
                 isTrashed: project.isTrashed,
                 isFav: project.isFav,
                 joinedDate: project.joinedAt,
-                projectStatus: project.project.status
+                projectStatus: project.project.status,
+                timer: project.project.timer
             };
             return formattedProject;
         });
@@ -493,19 +495,23 @@ const deleteProjectManyIdeas = (req, res) => __awaiter(void 0, void 0, void 0, f
         const { projectId } = req.params;
         const { ideaIds } = req.body;
         if (!ideaIds || !Array.isArray(ideaIds)) {
-            return res.status(400).json({ error: 'Invalid input. Idea IDs must be provided in an array.' });
+            return res
+                .status(400)
+                .json({
+                error: 'Invalid input. Idea IDs must be provided in an array.'
+            });
         }
         // Fetch the project document
-        const project = yield projectModels_1.Project.findById(projectId);
+        const project = yield projectModels_1.Project.findById(projectId).populate('ideas');
         if (!project) {
             console.error('Project not found');
             return; // Exit the function if project is not found
         }
-        const filteredIdeas = project.ideas.filter(idea => !ideaIds.includes(idea.toString()));
+        const filteredIdeas = project.ideas.filter(idea => !ideaIds.includes(idea.id));
         const ideaObjectIds = ideaIds.map(id => new mongoose_1.default.Types.ObjectId(id));
         project.ideas = filteredIdeas;
-        yield ideaModels_1.Idea.deleteMany({ _id: { $in: ideaObjectIds } });
         yield project.save();
+        yield ideaModels_1.Idea.deleteMany({ _id: { $in: ideaObjectIds } });
         res.status(200).json({ message: 'Ideas deleted successfully.' });
     }
     catch (error) {

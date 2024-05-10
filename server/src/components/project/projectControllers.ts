@@ -46,7 +46,8 @@ const createProject = async (req: Request, res: Response) => {
       collaborators,
       mainTopic,
       subTopics,
-      tags
+      tags,
+      timer
     }: {
       projectTitle: string
       description: string
@@ -55,6 +56,7 @@ const createProject = async (req: Request, res: Response) => {
       mainTopic: string
       subTopics: string[]
       tags: string[]
+      timer: number
     } = req.body
 
     // Getting and validating project metadata
@@ -157,7 +159,8 @@ const createProject = async (req: Request, res: Response) => {
       clubs: clubList,
       modules: moduleList,
       events: eventList,
-      thumbnailUrl: secureURL
+      thumbnailUrl: secureURL,
+      timer
     })
 
     const normalized_collaborators = collaborators.map(email =>
@@ -253,12 +256,9 @@ const updateProject = async (req: Request, res: Response) => {
     const { title, description }: { title: string; description: string } =
       req.body
 
-    if (title)
-      project.title = title
-    if (description)
-      project.description = description
-    if (secureURL)
-      project.thumbnailUrl = secureURL
+    if (title) project.title = title
+    if (description) project.description = description
+    if (secureURL) project.thumbnailUrl = secureURL
 
     await project.save()
     res.status(200).json({ message: 'Project updated successfully' })
@@ -268,7 +268,7 @@ const updateProject = async (req: Request, res: Response) => {
   }
 }
 const deleteProject = async (req: Request, res: Response) => {
-  const {userId} = req.user as AuthPayload
+  const { userId } = req.user as AuthPayload
   const { projectId } = req.params
 
   try {
@@ -391,9 +391,9 @@ const trashProject = async (req: Request, res: Response) => {
 }
 
 const restoreProject = async (req: Request, res: Response) => {
-  const {userId} = req.user as AuthPayload
+  const { userId } = req.user as AuthPayload
   const { projectId } = req.body
-  
+
   try {
     if (!projectId) {
       return res.status(400).json({
@@ -520,7 +520,7 @@ const getProjectByUserId = async (req: Request, res: Response) => {
         error: 'User not found'
       })
     }
-  
+
     const projects = user.projects.map(project => project)
     const projectStrings = projects.map(project => {
       const {
@@ -572,16 +572,17 @@ const getProjectByUserId = async (req: Request, res: Response) => {
         CollaboratorsCount: collaboratorsCount.toString(),
         collaborators: formattedCollaborators,
         MainTopic: mainTopic?.topicName || '',
-        MainTopicId : mainTopic?.id,
+        MainTopicId: mainTopic?.id,
         SubTopics: formattedSubTopics,
         Clubs: clubs.map(club => club.clubName),
         Modules: modules.map(module => module.moduleName),
         Events: events.map(event => event.eventName),
         ThumbnailUrl: thumbnailUrl,
         isTrashed: project.isTrashed,
-        isFav:project.isFav,
+        isFav: project.isFav,
         joinedDate: project.joinedAt,
-        projectStatus: project.project.status
+        projectStatus: project.project.status,
+        timer: project.project.timer
       }
 
       return formattedProject
@@ -593,41 +594,42 @@ const getProjectByUserId = async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Internal Server Error' })
   }
 }
-const deleteProjectManyIdeas = async (req : Request, res:Response)=>{
+const deleteProjectManyIdeas = async (req: Request, res: Response) => {
   try {
-    const {projectId} = req.params;
-    const { ideaIds } = req.body;
+    const { projectId } = req.params
+    const { ideaIds } = req.body
     if (!ideaIds || !Array.isArray(ideaIds)) {
-      return res.status(400).json({ error: 'Invalid input. Idea IDs must be provided in an array.' });
+      return res
+        .status(400)
+        .json({
+          error: 'Invalid input. Idea IDs must be provided in an array.'
+        })
     }
 
     // Fetch the project document
-        const project = await Project.findById(projectId);
+    const project = await Project.findById(projectId).populate('ideas')
 
-        if (!project) {
-            console.error('Project not found');
-            return; // Exit the function if project is not found
-        }
+    if (!project) {
+      console.error('Project not found')
+      return // Exit the function if project is not found
+    }
 
-        const filteredIdeas = project.ideas.filter(idea => !ideaIds.includes(idea.toString()));
-        const ideaObjectIds = ideaIds.map(id => new mongoose.Types.ObjectId(id));
+    const filteredIdeas = project.ideas.filter(
+      idea => !ideaIds.includes(idea.id)
+    )
+    const ideaObjectIds = ideaIds.map(id => new mongoose.Types.ObjectId(id))
 
+    project.ideas = filteredIdeas
 
-        project.ideas = filteredIdeas;
+    await project.save()
+    await Idea.deleteMany({ _id: { $in: ideaObjectIds } })
 
-        await Idea.deleteMany({_id:{$in:ideaObjectIds}})
-
-        await project.save();
-
-
-    res.status(200).json({ message: 'Ideas deleted successfully.' });
+    res.status(200).json({ message: 'Ideas deleted successfully.' })
   } catch (error) {
-    console.error('Error deleting ideas:', error);
-    res.status(500).json({ error: 'An error occurred while deleting ideas.' });
+    console.error('Error deleting ideas:', error)
+    res.status(500).json({ error: 'An error occurred while deleting ideas.' })
   }
 }
-
-
 
 export {
   createProject,

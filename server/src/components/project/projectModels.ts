@@ -19,94 +19,98 @@ enum projectAssociation {
 }
 
 // project schema
-const projectSchema = new Schema<ProjectInterface>({
-  coordinator: {
-    type: mongoose.Types.ObjectId,
-    ref: 'User',
-    required: [true, 'Project coordinator (creator) is required']
-  },
-  title: {
-    type: String,
-    required: [true, 'Project title is required']
-  },
-  description: {
-    type: String
-  },
-  template: {
-    type: mongoose.Types.ObjectId,
-    ref: 'Template'
-  },
-  ideationMethod: {
-    type: mongoose.Types.ObjectId,
-    ref: 'IdeationMethod',
-    required: [true, 'Ideation method is required']
-  },
-  creationDate : {
-    type : Schema.Types.Date,
-    default : () => new Date()
-  },
-  status: {
-    type: String,
-    required: [true, 'Project status is required'],
-    enum: Object.values(ProjectStatus),
-    default: ProjectStatus.InProgress
-  },
-  visibility: {
-    type: String,
-    required: [true, 'Project visibility is required'],
-    enum: Object.values(ProjectVisibility),
-    default: ProjectVisibility.PRIVATE
-  },
-  collaboratorsCount: {
-    type: Number,
-    default: 0
-  },
-  collaborators: [
-    {
-      member: {
+const projectSchema = new Schema<ProjectInterface>(
+  {
+    coordinator: {
+      type: mongoose.Types.ObjectId,
+      ref: 'User',
+      required: [true, 'Project coordinator (creator) is required']
+    },
+    title: {
+      type: String,
+      required: [true, 'Project title is required']
+    },
+    description: {
+      type: String
+    },
+    template: {
+      type: mongoose.Types.ObjectId,
+      ref: 'Template'
+    },
+    ideationMethod: {
+      type: mongoose.Types.ObjectId,
+      ref: 'IdeationMethod',
+      required: [true, 'Ideation method is required']
+    },
+    creationDate: {
+      type: Schema.Types.Date,
+      default: () => new Date()
+    },
+    status: {
+      type: String,
+      required: [true, 'Project status is required'],
+      enum: Object.values(ProjectStatus),
+      default: ProjectStatus.InProgress
+    },
+    visibility: {
+      type: String,
+      required: [true, 'Project visibility is required'],
+      enum: Object.values(ProjectVisibility),
+      default: ProjectVisibility.PRIVATE
+    },
+    collaboratorsCount: {
+      type: Number,
+      default: 0
+    },
+    collaborators: [
+      {
+        member: {
+          type: mongoose.Types.ObjectId,
+          ref: 'User'
+        },
+        joinedAt: Date
+      }
+    ],
+    ideas: [
+      {
         type: mongoose.Types.ObjectId,
-        ref: 'User'
-      },
-      joinedAt: Date
-    }
-  ],
-  ideas: [
-    {
+        ref: 'Idea'
+      }
+    ],
+    mainTopic: {
       type: mongoose.Types.ObjectId,
-      ref: 'Idea'
-    }
-  ],
-  mainTopic: {
-    type: mongoose.Types.ObjectId,
-    ref: 'Topic',
-    required: [true, 'Main topic is required']
+      ref: 'Topic',
+      required: [true, 'Main topic is required']
+    },
+    subTopics: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: 'Topic'
+      }
+    ],
+    clubs: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: 'Club'
+      }
+    ],
+    modules: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: 'Module'
+      }
+    ],
+    events: [
+      {
+        type: mongoose.Types.ObjectId,
+        ref: 'Event'
+      }
+    ],
+    thumbnailUrl: String,
+    timer: Number
   },
-  subTopics: [
-    {
-      type: mongoose.Types.ObjectId,
-      ref: 'Topic'
-    }
-  ],
-  clubs: [
-    {
-      type: mongoose.Types.ObjectId,
-      ref: 'Club'
-    }
-  ],
-  modules: [
-    {
-      type: mongoose.Types.ObjectId,
-      ref: 'Module'
-    }
-  ],
-  events: [
-    {
-      type: mongoose.Types.ObjectId,
-      ref: 'Event'
-    }
-  ],
-  thumbnailUrl: String
-})
+  { versionKey: 'version' }
+)
 
 projectSchema.pre('save', function (next) {
   if (

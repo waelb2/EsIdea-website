@@ -128,8 +128,9 @@ const projectSchema = new mongoose_1.Schema({
             ref: 'Event'
         }
     ],
-    thumbnailUrl: String
-});
+    thumbnailUrl: String,
+    timer: Number
+}, { versionKey: 'version' });
 projectSchema.pre('save', function (next) {
     if (this.clubs.length === 0 &&
         this.modules.length == 0 &&

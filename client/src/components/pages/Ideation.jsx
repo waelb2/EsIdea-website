@@ -1,4 +1,4 @@
-import { useLocation } from "react-router-dom";
+import { useFetcher, useLocation } from "react-router-dom";
 import useUser from "../../hooks/useUser"
 import AdminBrainStorming from "../Admin Brainstorming/AdminBrainstorming";
 import AdminBrainWriting from "../Admin Brainwriting/AdmingBrainwriting";
@@ -31,6 +31,7 @@ const Ideation = () => {
         }
     }
 
+
     useEffect(()=>{
         getProjectIdeas()
         // Connecting to the server 
@@ -54,6 +55,14 @@ const Ideation = () => {
                socket.on('newIdea', (idea) => {
                setIdeas((prevIdeas) => [...prevIdeas, idea]);
                 });
+
+                socket.on('deleteId', (ideaId)=>{
+                    setIdeas((prevIdeas)=>prevIdeas.filter(idea=>idea.ideaId!==ideaId))
+                })
+
+                socket.on('deleteManyIdeas',(newIdeas)=>{
+                    setIdeas(newIdeas)
+                })
              socket.on('connectedUsers',(connectedUsers )=>{
                 const sortedUsers = connectedUsers.sort((a,b)=>{
                 return a.email.localeCompare(b.email);
@@ -62,7 +71,9 @@ const Ideation = () => {
              })
         }
     },[socket])
-
+    useEffect(()=>{
+        console.log(ideas)
+    },ideas)
     return (
         <>
             {

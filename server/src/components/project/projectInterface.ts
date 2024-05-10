@@ -32,4 +32,5 @@ export interface ProjectInterface extends Document {
   modules: ModuleInterface[]
   events: EventInterface[]
   thumbnailUrl: string
+  timer: number
 }
