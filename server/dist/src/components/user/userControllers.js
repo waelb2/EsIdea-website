@@ -35,7 +35,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.createPublicProjectRequest = exports.addFavouriteProject = exports.getUserById = exports.getUserByLastName = exports.getUserByEmail = exports.getUser = exports.createFeedback = exports.modifyProfilePicture = exports.upload = void 0;
+exports.getPublicProjects = exports.createPublicProjectRequest = exports.addFavouriteProject = exports.getUserById = exports.getUserByLastName = exports.getUserByEmail = exports.getUser = exports.createFeedback = exports.modifyProfilePicture = exports.upload = void 0;
 const express_validator_1 = require("express-validator");
 const mongoose_1 = __importStar(require("mongoose"));
 const cloudConfig_1 = __importDefault(require("../../config/cloudConfig"));
@@ -274,3 +274,14 @@ const addFavouriteProject = (req, res) => __awaiter(void 0, void 0, void 0, func
     }
 });
 exports.addFavouriteProject = addFavouriteProject;
+const getPublicProjects = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    try {
+        const publicProjects = yield projectModels_1.Project.find({ visibility: 'public' });
+        return res.status(200).send(publicProjects);
+    }
+    catch (error) {
+        console.log(error);
+        return res.sendStatus(500);
+    }
+});
+exports.getPublicProjects = getPublicProjects;

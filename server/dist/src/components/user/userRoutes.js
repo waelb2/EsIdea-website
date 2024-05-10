@@ -21,4 +21,5 @@ router.post('/search-user-last-name', userControllers_1.getUserByLastName);
 router.get('/get-user', authMiddleware_1.authMiddleWare, userControllers_1.getUserById);
 router.post("/publicProjectRequest", (0, express_validator_1.checkSchema)(publicProjectRequestModel_1.createPublicProjectRequestValidationSchema), userControllers_1.createPublicProjectRequest);
 router.patch("/project/favourite", authMiddleware_1.authMiddleWare, userControllers_1.addFavouriteProject);
+router.get('/publicProjects', userControllers_1.getPublicProjects);
 exports.default = router;

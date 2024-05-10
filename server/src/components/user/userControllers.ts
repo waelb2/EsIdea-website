@@ -245,6 +245,16 @@ const addFavouriteProject = async (req: Request, res: Response) => {
   }
 }
 
+const getPublicProjects = async (req: Request, res: Response) => {
+  try {
+    const publicProjects = await Project.find({visibility: 'public'})
+    return res.status(200).send(publicProjects)
+  } catch (error) {
+    console.log(error)
+    return res.sendStatus(500)
+  }
+}
+
 export {
   upload,
   modifyProfilePicture,
@@ -254,6 +264,7 @@ export {
   getUserByLastName,
   getUserById,
   addFavouriteProject,
-  createPublicProjectRequest
+  createPublicProjectRequest,
+  getPublicProjects
 }
 

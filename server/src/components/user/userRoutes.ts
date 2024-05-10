@@ -7,6 +7,7 @@ import {
   addFavouriteProject,
   createFeedback,
   createPublicProjectRequest,
+  getPublicProjects,
   getUserByEmail,
   getUserById,
   getUserByLastName,
@@ -48,5 +49,7 @@ router.post("/publicProjectRequest", checkSchema(createPublicProjectRequestValid
   createPublicProjectRequest)
 
 router.patch("/project/favourite", authMiddleWare, addFavouriteProject)
+
+router.get('/publicProjects', getPublicProjects)
 
 export default router
