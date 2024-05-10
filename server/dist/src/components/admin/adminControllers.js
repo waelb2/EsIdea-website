@@ -339,13 +339,13 @@ const modifyTag = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const errResult = (0, express_validator_1.validationResult)(req);
     if (!errResult.isEmpty())
         return res.status(400).send({ errors: errResult.array() });
-    const _b = req.body, { id, type } = _b, tag = __rest(_b, ["id", "type"]);
+    const { id, type, tag } = req.body;
     if (!(0, mongoose_1.isObjectIdOrHexString)(id)) {
         return res
             .status(400)
             .send({ error: 'Bad id must be 24 character hex string' });
     }
-    const objectId = new mongoose_1.default.Types.ObjectId(id);
+    const objectId = mongoose_1.default.Types.ObjectId.createFromHexString(id);
     try {
         switch (type.toLowerCase()) {
             case 'club':

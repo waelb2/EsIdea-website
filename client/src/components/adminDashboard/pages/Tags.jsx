@@ -1,11 +1,14 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import AdminNavBar from './AdminNavBar'
 import SearchCat from './SearchCat'
 import axios from '../../../utils/axios'
 import {useReactTable,flexRender,getCoreRowModel,getPaginationRowModel,getFilteredRowModel} from '@tanstack/react-table'
 import {Remove } from '../../../assets'
+import PopUpTags from './PopUpTags'
+import { MessageToUserContext } from '../AdminDashboard'
 const Tags = () => {
+  const displayMessageToUser = useContext(MessageToUserContext)
   const [data,setData] = useState([]);
   const [searchInput,setSearchInput] = useState("");
   const [type,setType] = useState("module");
@@ -13,7 +16,6 @@ const Tags = () => {
     try {
       const response = await axios.get("admin/tags", { params: { type:type } });
       if (response.status === 200) {
-        console.log(response.data)
         setData(response.data);
       } else {
         console.log(response);
@@ -58,6 +60,13 @@ const Tags = () => {
       accessorKey:'description.numberOfEvents',
     }
 ]
+  const eventColumns = [{
+    header:"Event name",
+    accessorKey:"eventName"
+  },{
+    header:"Description",
+    accessorKey:"description"
+  }]
   const [columns,setColumns] = useState(moduleColumns)
   const table = useReactTable({
     data,
@@ -75,20 +84,8 @@ const Tags = () => {
     try {
       const response = await axios.delete("admin/tags", { data: { id,type } });
       if (response.statusText === 'OK') {
-        console.log(response.data);
-      } else {
-        console.log(response);
-        throw new Error("Authentication has failed");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
-  const updateTag = async(id)=>{
-    try {
-      const response = await axios.patch("admin/tags", { data: { id,type } });
-      if (response.statusText === 'OK') {
-        console.log(response.data);
+        getTags();
+        displayMessageToUser("success","Tag deleted successfully")
       } else {
         console.log(response);
         throw new Error("Authentication has failed");
@@ -120,54 +117,16 @@ const Tags = () => {
       action:()=>{
         setType("event");
         setActive(false);
+        setColumns(eventColumns);
       }
     }
   ]
   const [visible,setVisible] = useState(false);
-  // module tag to add
-  const moduleObject = {
-    description: {
-        title: "Architectures logicielles",
-        field: "Ingénierie du Logiciel",
-        credit: 4,
-        coef: 4,
-        edition: "2012",
-        courseHours: "30.00",
-        tdHours: "30.00",
-        tpHours: "—"
-    },
-    moduleName: "AL",
-}
-// club object to add
-const clubObject = {
-  description: {
-      imageUrl: "https://www.esi.dz/wp-content/uploads/2021/05/SourireESI-300x121.png",
-      creationDate: "2008",
-      field: "Charité",
-      numberOfEvents: 32,
-      majorEvents: [
-          "ArtDay ",
-          " Qoufat Ramadhan ",
-          " Collecte de vêtements"
-      ]
-  },
-  clubName: "Sourire à l'innocence",
-}
-  const addTag = async ()=>{
-    try {
-      const response = await axios.post("admin/tags",{type,...clubObject });
-      if (response.status === 201) {
-        console.log(response.data);
-      } else {
-        console.log(response);
-        throw new Error("Authentication has failed");
-      }
-    } catch (error) {
-      console.log(error);
-    }
-  }
+  const [operation,setOperation] = useState("");
+  const [tagToModify,setTagToModify] = useState({});
   return (
     <>
+      <PopUpTags visible={visible} closePopUp={()=>{setVisible(false)}} operation={operation} type={type} tagToModify={tagToModify} getTags={getTags}/>
       <AdminNavBar location='Tags'/>
       <div className='flex justify-between flex-col gap-2 ss:gap-0 ss:flex-row items-center'>
         <div className='flex gap-7 w-4/5 items-center'>
@@ -180,7 +139,10 @@ const clubObject = {
           </div>
         </div>
         
-        <button onClick={addTag} className='px-2 rounded-lg self-stretch bg-skyBlue text-white flex  items-center justify-between'>
+        <button onClick={()=>{
+          setOperation("Add");
+          setVisible(true);
+        }} className='px-2 rounded-lg self-stretch bg-skyBlue text-white flex  items-center justify-between'>
           <p>Add new {type} &nbsp;</p>
          <span className='text-3xl'>+</span>
         </button>
@@ -211,7 +173,7 @@ const clubObject = {
                   </td>
                 ))}
                 <td key={row.id} className={`${tdStyle} flex justify-between px-2`}>
-                <svg className='cursor-pointer' stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z"></path></svg>
+                <svg onClick={()=>{setOperation("Modify");setTagToModify(row.original);setVisible(true)}} className='cursor-pointer' stroke="currentColor" fill="currentColor" strokeWidth="0" viewBox="0 0 512 512" height="1em" width="1em" xmlns="http://www.w3.org/2000/svg"><path d="M362.7 19.3L314.3 67.7 444.3 197.7l48.4-48.4c25-25 25-65.5 0-90.5L453.3 19.3c-25-25-65.5-25-90.5 0zm-71 71L58.6 323.5c-10.4 10.4-18 23.3-22.2 37.4L1 481.2C-1.5 489.7 .8 498.8 7 505s15.3 8.5 23.7 6.1l120.3-35.4c14.1-4.2 27-11.8 37.4-22.2L421.7 220.3 291.7 90.3z"></path></svg>
                   <img onClick={()=>{
                       deleteTag(row.original._id,type)
                   }}   className='cursor-pointer' src={Remove} alt="Remove" />

@@ -314,16 +314,13 @@ const modifyTag = async (req: Request, res: Response) => {
   const errResult = validationResult(req)
   if (!errResult.isEmpty())
     return res.status(400).send({ errors: errResult.array() })
-
-  const { id, type, ...tag } = req.body
-
+  const { id, type, tag } = req.body
   if (!isObjectIdOrHexString(id)) {
     return res
       .status(400)
       .send({ error: 'Bad id must be 24 character hex string' })
   }
-  const objectId = new mongoose.Types.ObjectId(id)
-
+  const objectId = mongoose.Types.ObjectId.createFromHexString(id);
   try {
     switch (type.toLowerCase()) {
       case 'club':
@@ -344,7 +341,7 @@ const modifyTag = async (req: Request, res: Response) => {
         }
         if (tag.moduleName) module.moduleName = tag.moduleName
         if (tag.description)
-          module.description = { ...module.description, ...tag.description }
+          module.description = {...module.description,...tag.description }
         await module.save()
         break
 
