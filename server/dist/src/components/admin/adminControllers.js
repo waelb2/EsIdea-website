@@ -405,7 +405,8 @@ const getFeedbacks = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 exports.getFeedbacks = getFeedbacks;
 const getPublicProjectRequests = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const ppRequests = yield publicProjectRequestModel_1.publicProjectRequest.find({});
+        const ppRequests = yield publicProjectRequestModel_1.publicProjectRequest.find({})
+            .populate('projectId');
         return res.status(200).send(ppRequests);
     }
     catch (error) {

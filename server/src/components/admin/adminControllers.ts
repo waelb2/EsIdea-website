@@ -378,6 +378,7 @@ const getFeedbacks = async (req: Request, res: Response) => {
 const getPublicProjectRequests = async (req: Request, res: Response) => {
   try {
     const ppRequests = await publicProjectRequest.find({})
+      .populate('projectId')
     return res.status(200).send(ppRequests)
   } catch (error) {
     console.log(error)

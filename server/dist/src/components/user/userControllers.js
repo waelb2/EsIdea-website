@@ -119,6 +119,7 @@ const createPublicProjectRequest = (req, res) => __awaiter(void 0, void 0, void 
     if (!errResult.isEmpty())
         return res.status(400).send({ errors: errResult.array() });
     const { projectId } = req.body;
+    const { userId } = req.user;
     if (!(0, mongoose_1.isObjectIdOrHexString)(projectId)) {
         return res
             .status(400)
@@ -130,6 +131,8 @@ const createPublicProjectRequest = (req, res) => __awaiter(void 0, void 0, void 
         if (!project) {
             return res.status(404).send({ error: "The project of the publication request is not found" });
         }
+        if (!(userId == project.coordinator.toString()))
+            return res.status(400).send({ error: "The user is not the coordinator of the project" });
         const existReq = yield publicProjectRequestModel_1.publicProjectRequest.findOne({ projectId: objectId });
         if (!existReq) {
             const ppr = new publicProjectRequestModel_1.publicProjectRequest({ projectId });

@@ -45,7 +45,9 @@ router.post('/search-user-email', getUserByEmail)
 router.post('/search-user-last-name', getUserByLastName)
 router.get('/get-user', authMiddleWare, getUserById)
 
-router.post("/publicProjectRequest", checkSchema(createPublicProjectRequestValidationSchema),
+router.post("/publicProjectRequest",
+  checkSchema(createPublicProjectRequestValidationSchema),
+  authMiddleWare,
   createPublicProjectRequest)
 
 router.patch("/project/favourite", authMiddleWare, addFavouriteProject)
