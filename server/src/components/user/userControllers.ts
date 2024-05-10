@@ -18,15 +18,12 @@ const modifyProfilePicture = async (
   res: Response,
   image: Express.Multer.File | undefined
 ) => {
-  const errResult = validationResult(req)
-  if (!errResult.isEmpty())
-    return res.status(400).send({ errors: errResult.array() })
   if (!image)
     return res
       .status(400)
       .send({ error: 'Must provide the new profile picture' })
 
-  const userId: string = req.body.id
+  const { userId } = req.user as AuthPayload
 
   if (!isObjectIdOrHexString(userId))
     return res
@@ -41,7 +38,8 @@ const modifyProfilePicture = async (
       return res.status(404).send({ error: 'User not found' })
     }
     const result = await cloudinary.uploader.upload(image.path, {
-      public_id: userId
+      public_id: userId,
+      folder: 'profilesPictures'
     })
     const secure_url = result.secure_url
     user.profilePicUrl = secure_url
@@ -64,17 +62,17 @@ const createFeedback = async (req: Request, res: Response) => {
   const errResult = validationResult(req)
   if (!errResult.isEmpty())
     return res.status(400).send({ errors: errResult.array() })
-
-  const { created_by, description, title } = req.body
-
-  if (!isObjectIdOrHexString(created_by)) {
+  const { userId } = req.user as AuthPayload
+  const { title, description } = req.body
+  
+  if (!isObjectIdOrHexString(userId)) {
     return res
       .status(400)
       .send({ error: 'Bad id must be 24 character hex string' })
   }
-  const objectId = new mongoose.Types.ObjectId(created_by)
+  const objectId = new mongoose.Types.ObjectId(userId)
 
-  const fdb = { created_by, title, description }
+  const fdb = { created_by: userId, title, description }
 
   try {
     const user = await User.findById(objectId)

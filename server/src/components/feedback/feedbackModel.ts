@@ -25,11 +25,6 @@ const feedbackSchema = new Schema<feedbackInterface>({
 const feedback = mongoose.model<feedbackInterface>('feedback', feedbackSchema)
 
 const createFeedbackValidationSchema = {
-  created_by: {
-      notEmpty: {
-        errorMessage: "Must provide the id of the user"
-      }
-  },
   title: {
     isString: {
       errorMessage: "The title of the feedback must be a string"

@@ -48,14 +48,11 @@ const userModels_1 = require("./userModels");
 const upload = (0, multer_1.default)({ dest: 'uploads/' });
 exports.upload = upload;
 const modifyProfilePicture = (req, res, image) => __awaiter(void 0, void 0, void 0, function* () {
-    const errResult = (0, express_validator_1.validationResult)(req);
-    if (!errResult.isEmpty())
-        return res.status(400).send({ errors: errResult.array() });
     if (!image)
         return res
             .status(400)
             .send({ error: 'Must provide the new profile picture' });
-    const userId = req.body.id;
+    const { userId } = req.user;
     if (!(0, mongoose_1.isObjectIdOrHexString)(userId))
         return res
             .status(400)
@@ -67,7 +64,8 @@ const modifyProfilePicture = (req, res, image) => __awaiter(void 0, void 0, void
             return res.status(404).send({ error: 'User not found' });
         }
         const result = yield cloudConfig_1.default.uploader.upload(image.path, {
-            public_id: userId
+            public_id: userId,
+            folder: 'profilesPictures'
         });
         const secure_url = result.secure_url;
         user.profilePicUrl = secure_url;
@@ -91,14 +89,15 @@ const createFeedback = (req, res) => __awaiter(void 0, void 0, void 0, function*
     const errResult = (0, express_validator_1.validationResult)(req);
     if (!errResult.isEmpty())
         return res.status(400).send({ errors: errResult.array() });
-    const { created_by, description, title } = req.body;
-    if (!(0, mongoose_1.isObjectIdOrHexString)(created_by)) {
+    const { userId } = req.user;
+    const { title, description } = req.body;
+    if (!(0, mongoose_1.isObjectIdOrHexString)(userId)) {
         return res
             .status(400)
             .send({ error: 'Bad id must be 24 character hex string' });
     }
-    const objectId = new mongoose_1.default.Types.ObjectId(created_by);
-    const fdb = { created_by, title, description };
+    const objectId = new mongoose_1.default.Types.ObjectId(userId);
+    const fdb = { created_by: userId, title, description };
     try {
         const user = yield userModels_1.User.findById(objectId);
         if (!user) {

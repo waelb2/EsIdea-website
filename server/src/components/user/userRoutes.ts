@@ -28,14 +28,15 @@ router.patch(
 
 router.patch(
   '/settings/profile/picture',
-  upload.single('profilePicture'),
-  checkSchema(userIdValidationSchema),
+  upload.single('profilePic'),
+  authMiddleWare,
   (req: Request, res: Response) => modifyProfilePicture(req, res, req.file)
 )
 
 router.post(
   '/settings/feedback',
   checkSchema(createFeedbackValidationSchema),
+  authMiddleWare,
   createFeedback
 )
 
