@@ -4,6 +4,7 @@ import { ChangePFP, ChangePassIcon, Eye, FeedBackIcon, HelpIcon, LogoutIcon, Res
 import { Link, useNavigate } from 'react-router-dom'
 import axios from '../../utils/axios'
 import useUser from '../../hooks/useUser';
+import ChangePfp from '../Dashbord/ChangePfp';
 
 const ResetPassword = () => {
     const { user } = useUser()
@@ -55,28 +56,46 @@ const ResetPassword = () => {
         }
       };
     const [toggle,setToggle] = useState(false);
-    
+    const [changePfpVisible,setChangePfpVisible] = useState(false);
+    const closePopUp = ()=>{
+        setChangePfpVisible(false);
+    }
+    const openPopUp = ()=>{
+        setChangePfpVisible(true);
+    }
     const userDetails = [
         {
             icon:ChangePFP,
             title:"Change pfp",
-            path:"/"
+            path:"",
+            action:()=>{
+                openPopUp();
+            }
         },{
             icon:ChangePassIcon,
             title:"Change password",
-            path:"/"
+            path:"/ChangePassword"
         },{
             icon:HelpIcon,
             title:"Help",
-            path:"/ChangePassword"
+            path:"",
+            action:()=>{
+
+            }
         },{
             icon:FeedBackIcon,
             title:"Feedback",
-            path:"/"
+            path:"/",
+            action:()=>{
+
+            }
         },{
             icon:LogoutIcon,
             title:"Log out",
-            path: import.meta.env.VITE_API_URL + "/auth/logout"
+            path: import.meta.env.VITE_API_URL + "/auth/logout",
+            action:()=>{
+
+            }
         }
     ]
 
@@ -88,20 +107,20 @@ const ResetPassword = () => {
                     <Link to="/">
                         <img className='w-[7.75rem] h-10' src={blackLogo} alt="ESIdea_logo" />
                     </Link>
-                    <div className='flex gap-2 items-center'>
-                    <img className='w-8 h-8 cursor-pointer' src={notification} alt="Notification" />
-                    <img onClick={()=>{setToggle(prev => !prev)}} className='w-10 h-10 cursor-pointer rounded-full border-2 border-skyBlue p-0.5' src={user.profilePicUrl} alt="User" />
-                    <div className={`${!toggle ? "hidden":"flex border-2"} p-4 bg-white absolute z-20 top-12 right-10 mx-4 my-2 min-w-[15.625rem] rounded-xl sidebar flex-col`}>
-                    <img onClick={()=>{setToggle(prev => !prev)}} className='w-5 h-5 object-contain cursor-pointer fixed top-2 right-3' src={blackClose} alt="Close"/>
+                    <div className='flex gap-2 relative items-center'>
+                        <img className='w-8 h-8 cursor-pointer' src={notification} alt="Notification" />
+                        <img onClick={()=>{setToggle(prev => !prev)}} className='w-10 h-10 cursor-pointer rounded-full border-2 border-skyBlue p-0.5' src={user.profilePicUrl} alt="User" />
+                        <div className={`${!toggle ? "hidden":"flex border-2"} p-4 bg-realWhite absolute z-20 top-10 right-0 shadow-xl min-w-[15.625rem] rounded-xl slideDown flex-col overflow-hidden`}>
+                        <img onClick={()=>{setToggle(prev => !prev)}} className='w-5 h-5 object-contain cursor-pointer absolute top-2 right-3' src={blackClose} alt="Close"/>
                     <div className='flex flex-col items-center mb-3'>
                         <img className='w-20 h-20 object-contain rounded-full border-2 border-skyBlue p-0.5' src={user.profilePicUrl} alt="UserPic" />
                         <p className='font-medium'>{`${user.firstName} ${user.lastName}`}</p>
                         <p>{user.email}</p>
                     </div>
                     <ul className='list-none flex justify-end items-start flex-1 flex-col'>
-                        {userDetails.map((det,ind) =><div className='w-full' key={det.title}>
-                            <li className={`w-full rounded-md transition-all hover:bg-lightGrey`}>
-                                <Link className='flex w-full items-center  p-2'>
+                    {userDetails.map((det,ind) =><div className='w-full' key={det.title}>
+                            <li className={`w-full rounded-md transition-all hover:bg-[#d9e9f6]`}>
+                                <Link onClick={det.action} to={det.path} className='flex w-full items-center  p-2'>
                                     <img className='mr-3 w-5 h-5 object-contain' src={det.icon} alt={det.title} />
                                     <p className='flex-grow'>{det.title}</p>
                                 </Link>
@@ -148,6 +167,7 @@ const ResetPassword = () => {
                     <img className='w-[28.125rem] h-[28.125rem] object-cover mt-3 md:mt-0 p-6 ' src={ResetPasswordImage} alt="ForgotPasswordImage" />
                 </div>
           </div>
+          <ChangePfp visible={changePfpVisible} closePopUp={closePopUp}/>
     </div>
   )
 }

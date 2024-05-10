@@ -7,16 +7,20 @@ import {useReactTable,flexRender,getCoreRowModel,getPaginationRowModel,getFilter
 import {Remove } from '../../../assets'
 import PopUpTags from './PopUpTags'
 import { MessageToUserContext } from '../AdminDashboard'
+import { MagnifyingGlass } from 'react-loader-spinner'
 const Tags = () => {
+  const [loading,setLoading] = useState(true);
   const displayMessageToUser = useContext(MessageToUserContext)
   const [data,setData] = useState([]);
   const [searchInput,setSearchInput] = useState("");
   const [type,setType] = useState("module");
   const getTags = async () => {
+    setLoading(true);
     try {
       const response = await axios.get("admin/tags", { params: { type:type } });
       if (response.status === 200) {
         setData(response.data);
+        setLoading(false);
       } else {
         console.log(response);
         throw new Error("Authentication has failed");
@@ -210,7 +214,20 @@ const Tags = () => {
           </div>
 
         </div>
-      </>:null}
+      </>:loading ?<div className='h-full w-full flex justify-center items-center'>
+            <MagnifyingGlass
+                visible={true}
+                height="80"
+                width="80"
+                ariaLabel="magnifying-glass-loading"
+                wrapperStyle={{}}
+                wrapperClass="magnifying-glass-wrapper"
+                glassColor="#c0efff"
+                color="#59AEF8"
+                />
+            </div>:<div className='h-full w-full flex justify-center items-center'>
+                  <h1 className='font-semibold text-lg'>No {type}s</h1>
+              </div>}
     </>
   )
 }

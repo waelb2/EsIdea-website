@@ -4,14 +4,18 @@ import AdminNavBar from './AdminNavBar'
 import SearchCat from './SearchCat'
 import axios from '../../../utils/axios'
 import {useReactTable,flexRender,getCoreRowModel,getPaginationRowModel,getFilteredRowModel} from '@tanstack/react-table'
+import { MagnifyingGlass } from 'react-loader-spinner'
 const Logs = () => {
+  const [loading,setLoading] = useState(true);
   const [searchInput,setSearchInput] = useState("");
   const [data,setData] = useState([]);
   const getLogs = async ()=>{
+    setLoading(true);
     try {
       const response = await axios.get("admin/logs");
       if (response.statusText == 'OK') {
         setData(response.data);
+        setLoading(false);
       } else {
           console.log(response)
           throw new Error ("Authentication has failed")
@@ -134,7 +138,20 @@ const Logs = () => {
           </div>
 
         </div>
-      </>:null}
+      </>:loading ?<div className='h-full w-full flex justify-center items-center'>
+            <MagnifyingGlass
+                visible={true}
+                height="80"
+                width="80"
+                ariaLabel="magnifying-glass-loading"
+                wrapperStyle={{}}
+                wrapperClass="magnifying-glass-wrapper"
+                glassColor="#c0efff"
+                color="#59AEF8"
+                />
+            </div>:<div className='h-full w-full flex justify-center items-center'>
+                  <h1 className='font-semibold text-lg'>No Logs</h1>
+              </div>}
     </>
   )
 }
