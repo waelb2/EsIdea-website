@@ -368,6 +368,7 @@ const modifyTag = async (req: Request, res: Response) => {
 const getFeedbacks = async (req: Request, res: Response) => {
   try {
     const fbs = await feedback.find({})
+      .populate('created_by')
     return res.status(200).send(fbs)
   } catch (error) {
     console.log(error)

@@ -394,7 +394,8 @@ const modifyTag = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.modifyTag = modifyTag;
 const getFeedbacks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const fbs = yield feedbackModel_1.feedback.find({});
+        const fbs = yield feedbackModel_1.feedback.find({})
+            .populate('created_by');
         return res.status(200).send(fbs);
     }
     catch (error) {
