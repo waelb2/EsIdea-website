@@ -4,13 +4,39 @@ import propTypes from 'prop-types'
 import { blackClose, dragdropfiles } from '../../assets';
 import axios  from '../../utils/axios';
 import { useNavigate } from 'react-router-dom';
-import { projectContext } from './Dashbord';
+import { ThreeDots } from 'react-loader-spinner';
+import { toast,ToastContainer } from 'react-toastify';
 const ChangePfp = ({visible,closePopUp}) => {
+    const displayMessageToUser = (type,message)=>{
+        if(type === "success"){
+          toast.success(message, {
+            position: "top-center",
+            autoClose: 8000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: false,
+            progress: undefined,
+            theme: "colored",
+            });
+        }else if(type === "error"){
+          toast.error(message, {
+            position: "top-center",
+            autoClose: 8000,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: false,
+            progress: undefined,
+            theme: "colored",
+            });
+        }
+      }
     const navigate = useNavigate();
-    const {displayMessageToUser} = useContext(projectContext);
     const handleDragOver = (event)=>{
         event.preventDefault();
     }
+    const changeButtonRef = useRef();
     const [image,setImage] = useState();
     const handleDrop=(event)=>{
         setProfilePic(URL.createObjectURL(event.dataTransfer.files[0]));
@@ -26,11 +52,14 @@ const ChangePfp = ({visible,closePopUp}) => {
     const myForm = new FormData()
     myForm.append('profilePic',image);
     const userToken = localStorage.getItem('userToken')
+    const [changeProfileState,setChangeProfileState] = useState(false);
     const changeProfile = async()=>{
+        changeButtonRef.current.disabled = true;
+        setChangeProfileState(true);
         try {
             const response = await axios.patch(
                 'user/settings/profile/picture',
-                { myForm },
+                 myForm ,
                 {
                     headers: {
                         'Authorization': `Bearer ${userToken}`,
@@ -38,7 +67,9 @@ const ChangePfp = ({visible,closePopUp}) => {
                     }
                 }
             );
-            displayMessageToUser("success","Profile picture updated successfully")
+            closePopUp();
+            displayMessageToUser("success","Profile picture updated successfully");
+            setChangeProfileState(false);
         } catch (error) {
             console.error('Error:', error.response.data.error);
             if (error.response && error.response.status === 401) {
@@ -68,9 +99,22 @@ const ChangePfp = ({visible,closePopUp}) => {
                                     </div>}
                         </div>
                         <div className={`w-full self-end flex justify-end`}>
-                                <button onClick={changeProfile}  className={`bg-skyBlue px-3 py-1 rounded-md text-white`}>Change</button>
+                                <button ref={changeButtonRef} onClick={changeProfile}  className={`bg-skyBlue px-3 py-1 rounded-md text-white`}>{changeProfileState ? (
+                                        <ThreeDots
+                                            visible={true}
+                                            height='20'
+                                            width='40'
+                                            color='#fff'
+                                            radius='9'
+                                            ariaLabel='three-dots-loading'
+                                            wrapperStyle={{}}
+                                            wrapperClass=''
+                                            />
+                                        ) : ('Change')}
+                                </button>
                         </div>
                     </div>
+                    <ToastContainer/>
                 </div>
     </div>
   )
