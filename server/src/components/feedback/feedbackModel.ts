@@ -1,12 +1,19 @@
 import mongoose , { Schema } from "mongoose";
 import { feedbackInterface } from "./feedbackIntefrace";
-import { isString } from "util";
 
 const feedbackSchema = new Schema<feedbackInterface>({
   created_by: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User', 
-    required: true
+    firstName: {
+      type: String,
+      required: [true, 'First name is required']
+    },
+    lastName: {
+      type: String,
+      required: [true, 'Last name is required']
+    },
+    profilePicUrl: {
+      type: String
+    }
   },
   title : {
     type: String,
@@ -16,9 +23,9 @@ const feedbackSchema = new Schema<feedbackInterface>({
     type: String,
     required: true
   },
-  adminResponse : {
-    type: String,
-    default: ""
+  creationDate : {
+    type: Date,
+    required: [true, 'feedback creation date is required']
   }
 });
 

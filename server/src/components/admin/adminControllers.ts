@@ -368,38 +368,9 @@ const modifyTag = async (req: Request, res: Response) => {
 const getFeedbacks = async (req: Request, res: Response) => {
   try {
     const fbs = await feedback.find({})
-      .populate('created_by')
     return res.status(200).send(fbs)
   } catch (error) {
     console.log(error)
-    return res.sendStatus(500)
-  }
-}
-
-const replyFeedback = async (req: Request, res: Response) => {
-  const errResult = validationResult(req)
-  if (!errResult.isEmpty())
-    return res.status(400).send({ errors: errResult.array() })
-
-  const fbId: string = req.body.id,
-    adminRes: string = req.body.response
-
-  if (!isObjectIdOrHexString(fbId))
-    return res
-      .status(400)
-      .send({ error: 'Bad id: must be 24 character hex string' })
-
-  const fbObjectId = new mongoose.Types.ObjectId(fbId)
-
-  try {
-    const fb = await feedback.findById(fbObjectId)
-    if (!fb) {
-      return res.status(404).send({ error: 'feedback not found' })
-    }
-    fb.adminResponse = adminRes
-    await fb.save()
-    return res.sendStatus(200)
-  } catch (error) {
     return res.sendStatus(500)
   }
 }
@@ -502,7 +473,6 @@ export {
   deleteTag,
   modifyTag,
   getFeedbacks,
-  replyFeedback,
   getPublicProjectRequests,
   approvePublicProjectRequest,
   getLogs,

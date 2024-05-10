@@ -72,13 +72,13 @@ const createFeedback = async (req: Request, res: Response) => {
   }
   const objectId = new mongoose.Types.ObjectId(userId)
 
-  const fdb = { created_by: userId, title, description }
-
   try {
     const user = await User.findById(objectId)
     if (!user) {
       return res.status(404).send({ error: 'User not found' })
     }
+    const { firstName, lastName, profilePicUrl } = user
+    const fdb = { created_by: {firstName, lastName, profilePicUrl}, title, description, creationDate: new Date() }
     const fb = new feedback(fdb)
     await fb.save()
     return res.status(201).send(fb)

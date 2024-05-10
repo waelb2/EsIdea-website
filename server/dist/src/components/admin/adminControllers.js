@@ -46,7 +46,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteLogs = exports.getLogs = exports.approvePublicProjectRequest = exports.getPublicProjectRequests = exports.replyFeedback = exports.getFeedbacks = exports.modifyTag = exports.deleteTag = exports.createTag = exports.getTags = exports.forceUnbanUser = exports.unbanUser = exports.banUser = exports.deleteUser = exports.getUsers = exports.getStats = void 0;
+exports.deleteLogs = exports.getLogs = exports.approvePublicProjectRequest = exports.getPublicProjectRequests = exports.getFeedbacks = exports.modifyTag = exports.deleteTag = exports.createTag = exports.getTags = exports.forceUnbanUser = exports.unbanUser = exports.banUser = exports.deleteUser = exports.getUsers = exports.getStats = void 0;
 const userModels_1 = require("../user/userModels");
 const projectModels_1 = require("../project/projectModels");
 const adminInterface_1 = require("./adminInterface");
@@ -394,8 +394,7 @@ const modifyTag = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.modifyTag = modifyTag;
 const getFeedbacks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const fbs = yield feedbackModel_1.feedback.find({})
-            .populate('created_by');
+        const fbs = yield feedbackModel_1.feedback.find({});
         return res.status(200).send(fbs);
     }
     catch (error) {
@@ -404,30 +403,6 @@ const getFeedbacks = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.getFeedbacks = getFeedbacks;
-const replyFeedback = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    const errResult = (0, express_validator_1.validationResult)(req);
-    if (!errResult.isEmpty())
-        return res.status(400).send({ errors: errResult.array() });
-    const fbId = req.body.id, adminRes = req.body.response;
-    if (!(0, mongoose_1.isObjectIdOrHexString)(fbId))
-        return res
-            .status(400)
-            .send({ error: 'Bad id: must be 24 character hex string' });
-    const fbObjectId = new mongoose_1.default.Types.ObjectId(fbId);
-    try {
-        const fb = yield feedbackModel_1.feedback.findById(fbObjectId);
-        if (!fb) {
-            return res.status(404).send({ error: 'feedback not found' });
-        }
-        fb.adminResponse = adminRes;
-        yield fb.save();
-        return res.sendStatus(200);
-    }
-    catch (error) {
-        return res.sendStatus(500);
-    }
-});
-exports.replyFeedback = replyFeedback;
 const getPublicProjectRequests = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const ppRequests = yield publicProjectRequestModel_1.publicProjectRequest.find({});
