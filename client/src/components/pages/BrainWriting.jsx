@@ -14,7 +14,7 @@ import Color from '../../assets/Color Mode.png'
 import Line1 from '../../assets/Line 1.png'
 import Brain from '../../assets/Brain.png'
 import Send from '../../assets/Send.png'
-import { useNavigate, useSearchParams } from 'react-router-dom'
+import { useFetcher, useNavigate, useSearchParams } from 'react-router-dom'
 import useUser from '../../hooks/useUser'
 import axios from '../../utils/axios'
 import Chat from '../ChatBot/Chat'
@@ -36,7 +36,7 @@ const BrainWriting = ({ project, ideas, socket, onlineUsers }) => {
   const userToken = localStorage.getItem('userToken')
   const [userIdeas, setUserIdeas] = useState([])
   const [countDownStarted, setCountDownStarted] = useState(false)
-
+  const [showMessage, setShowMessage] = useState(false)
   const [userArray, setUserArray] = useState([])
 
   const [activeUserIndex, setActiveUserIndex] = useState(0)
@@ -119,14 +119,15 @@ const BrainWriting = ({ project, ideas, socket, onlineUsers }) => {
   }
 
   const handleDelete = async (index, ideaId) => {
-    const updatedIdeas = userIdeas.filter((_, i) => i !== index)
-    setUserIdeas(updatedIdeas)
     try {
       const response = await axios.delete(`idea/delete-idea/${ideaId}`, {
         headers: {
           Authorization: `Bearer ${userToken}`
         }
       })
+      socket.emit('deleteIdea', { ideaId, projectId: project.projectId })
+      const updatedIdeas = userIdeas.filter((_, i) => i !== index)
+      setUserIdeas(updatedIdeas)
     } catch (error) {
       console.log(error)
     }
@@ -154,6 +155,8 @@ const BrainWriting = ({ project, ideas, socket, onlineUsers }) => {
       socket.on('counterFiredBw', () => {
         setActiveUserIndex(previousIndex => previousIndex + 1)
         setCountDownStarted(true)
+        setShowMessage(true)
+        setTimeout(() => setShowMessage(false), 2000)
       })
     }
   }, [socket])
@@ -164,6 +167,13 @@ const BrainWriting = ({ project, ideas, socket, onlineUsers }) => {
   const navigate = useNavigate()
   return (
     <div className='h-screen bg-[#F1F6FB] relative py-36'>
+      <div>
+        {showMessage && (
+          <div className={showMessage ? 'message show' : 'message'}>
+            <p>Your turn now !</p>
+          </div>
+        )}
+      </div>
       <div className='flex justify-between items-center py-4 px-5 fixed top-0 left-0 right-0'>
         <div className='bg-white border border-black flex justify-between items-center px-2 w-56 h-10 rounded-full shadow-[0_4px_4px_rgba(0,0,0,0.2)]'>
           <img

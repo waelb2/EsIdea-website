@@ -41,8 +41,8 @@ passport.use(
       //to check if the email ends with @esi.dz
       if (
         profile.emails &&
-        profile.emails.length > 0 // &&
-        /*profile.emails[0].value.endsWith('@esi.dz') */
+        profile.emails.length > 0 &&  
+        profile.emails[0].value.endsWith('@esi.dz') 
       ) {
         User.findOne({ email: profile.emails[0].value }).then(user => {
           if (user) {

@@ -128,14 +128,15 @@ const AdminBrainWriting = ({ project, ideas, onlineUsers, socket }) => {
   }
 
   const handleDelete = async (index, ideaId) => {
-    const updatedIdeas = userIdeas.filter((_, i) => i !== index)
-    setUserIdeas(updatedIdeas)
     try {
       const response = await axios.delete(`idea/delete-idea/${ideaId}`, {
         headers: {
           Authorization: `Bearer ${userToken}`
         }
       })
+      socket.emit('deleteIdea', { ideaId, projectId: project.projectId })
+      const updatedIdeas = userIdeas.filter((_, i) => i !== index)
+      setUserIdeas(updatedIdeas)
     } catch (error) {
       console.log(error)
     }
@@ -210,41 +211,72 @@ const AdminBrainWriting = ({ project, ideas, onlineUsers, socket }) => {
     }
   }, [socket])
 
-  const handleCombinedIdeaSend = newIdeaText => {
+  const handleCombinedIdeaSend = async newIdeaText => {
+    const coordinator = localStorage.getItem('user')
     // filter out the selected ideas from the global ideas array, then create the new idea
-    const selectedIdeasTexts = selectedIdeas.map(idea => idea.text)
-
-    const newThoughtsState = [
-      ...userThoughts.filter(
-        userThought => !selectedIdeasTexts.includes(userThought.text)
-      ),
-      {
-        text: newIdeaText,
-        color: '#000',
-        isBold: false,
-        isItalic: false,
-        selected: false
-      }
+    const selectedIdeasTexts = selectedIdeas.map(idea => idea.content)
+    let newThoughtsState = []
+    newThoughtsState = [
+      ...userIdeas.filter(
+        userThought => !selectedIdeasTexts.includes(userThought.content)
+      )
     ]
 
-    setUserThoughts(newThoughtsState)
+    // posting the idea
+    try {
+      const ideaIds = selectedIdeas.map(idea => idea.ideaId)
+      await axios.delete(
+        `/project/${project.projectId}/ideas`,
+        { data: { ideaIds } },
+        {
+          headers: {
+            Authorization: `Bearer ${userToken}`
+          }
+        }
+      )
 
-    updateUserThoughtsCards(newThoughtsState)
-    // clear out the selectedIdeas state
-    setSelectedIdeas([])
+      const response = await axios.post(
+        '/idea/post-idea',
+        {
+          projectId: project.projectId,
+          topicId: project.MainTopicId,
+          content: newIdeaText,
+          isBold: false,
+          isItalic: false,
+          color: '#000',
+          selected: false
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${userToken}`
+          }
+        }
+      )
 
-    // close the popup
-    setShowCombinePopUp(false)
+      newThoughtsState = [...newThoughtsState, response.data]
+      setUserIdeas(newThoughtsState)
+
+      updateUserThoughtsCards(newThoughtsState)
+      setSelectedIdeas([])
+
+      // close the popup
+      setShowCombinePopUp(false)
+
+      socket.emit('deleteManyIdeas', {
+        newIdeas: newThoughtsState,
+        projectId: project.projectId
+      })
+    } catch (error) {
+      throw Error(error)
+    }
   }
-
   const handleEnlarge = text => {
     setEnlargedText(text)
     toggleExtendPopUp()
-    setUserThoughts(prevUserThoughts =>
+    setUserIdeas(prevUserThoughts =>
       prevUserThoughts.filter(idea => idea.text !== text)
     )
   }
-
   const navigate = useNavigate()
   return (
     <div className='h-screen bg-[#F1F6FB] relative py-36'>
@@ -334,33 +366,35 @@ const AdminBrainWriting = ({ project, ideas, onlineUsers, socket }) => {
         <img src={Clear} className='w-6' onClick={clearIdeas} />
       </div>
 
-     
-        <div className=' w-full fixed bottom-0 h-24 flex justify-center items-start'>
-          {(countDownStarted && !countdownEnded &&<div className='bg-white flex items-center w-1/2 rounded-full px-2 py-1'>
-            <img src={Brain} className='w-8' />
-            <input
-              type='text'
-              placeholder='What’s in your mind?...'
-              className='w-full  outline-none focus:outline-none'
-              value={textInput}
-              onChange={e => setTextInput(e.target.value)}
-              onKeyPress={handleKeyPress}
-              style={{
-                fontWeight: isBold ? 'bold' : 'normal',
-                fontStyle: isItalic ? 'italic' : 'normal'
-              }}
-            />
-            <div className='flex items-center '>
-              <div
-                className='flex items-center justify-center rounded-full bg-[#59AEF8] p-2'
-                onClick={handleSend}
-              >
-                <img src={Send} className='w-6' />
+      <div className=' w-full fixed bottom-0 h-24 flex justify-center items-start'>
+        {countDownStarted &&
+          user.user.email == onlineUsers[activeUserIndex].email && (
+            <div className='bg-white flex items-center w-1/2 rounded-full px-2 py-1'>
+              <img src={Brain} className='w-8' />
+              <input
+                type='text'
+                placeholder='What’s in your mind?...'
+                className='w-full  outline-none focus:outline-none'
+                value={textInput}
+                onChange={e => setTextInput(e.target.value)}
+                onKeyPress={handleKeyPress}
+                style={{
+                  fontWeight: isBold ? 'bold' : 'normal',
+                  fontStyle: isItalic ? 'italic' : 'normal'
+                }}
+              />
+              <div className='flex items-center '>
+                <div
+                  className='flex items-center justify-center rounded-full bg-[#59AEF8] p-2'
+                  onClick={handleSend}
+                >
+                  <img src={Send} className='w-6' />
+                </div>
               </div>
             </div>
-          </div>)}
+          )}
 
-          {!countDownStarted && (
+        {!countDownStarted && (
           <div className='flex items-center justify-center bg-skyBlue rounded-full w-40 h-10 mr-8 ml-40 cursor-pointer'>
             <p
               className='mr-4 text-white text-sm font-semibold'
@@ -385,7 +419,7 @@ const AdminBrainWriting = ({ project, ideas, onlineUsers, socket }) => {
             </svg>
           </div>
         )}
-        </div>
+      </div>
 
       {userIdeas.length > 0 && (
         <div

@@ -234,7 +234,7 @@ const AdminBrainStorming = ({ project, ideas, onlineUsers, socket }) => {
   const handleEnlarge = text => {
     setEnlargedText(text)
     toggleExtendPopUp()
-    setUserThoughts(prevUserThoughts =>
+    setUserIdeas(prevUserThoughts =>
       prevUserThoughts.filter(idea => idea.text !== text)
     )
   }
