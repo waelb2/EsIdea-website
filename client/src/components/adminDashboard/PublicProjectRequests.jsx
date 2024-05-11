@@ -26,7 +26,8 @@ const PublicProjectRequests = () => {
         try {
             const response = await axios.patch("admin/publicProjectRequest/approve",{id});
             if (response.statusText == 'OK') {
-                displayMessageToUser("success","The public project request has been approved")
+                displayMessageToUser("success","The public project request has been approved");
+                getPublicProjectRequests();
             } else {
                 console.log(response)
                 throw new Error ("Authentication has failed")
