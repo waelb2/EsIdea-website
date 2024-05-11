@@ -41,7 +41,7 @@ const PublicProjectRequests = () => {
     },[])
     return (
         <>
-        <AdminNavBar location='Public projects Request'/>
+        <AdminNavBar location='Public projects Requests'/>
         {data.length !== 0 ?<div className='grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-2'>
             {data.map(req => <div className='flex flex-col ss:flex-row gap-x-4 bg-realWhite rounded-md overflow-hidden hover:shadow-xl border-2 border-transparent hover:border-slate-400 transition-all duration-500 cursor-pointer' key={req._id}>
                 <img className='ss:w-48 ss:h-48 w-full h-32 p-2 object-contain bg-realWhite' src={req.projectId.thumbnailUrl === ""?"https://img.freepik.com/free-vector/startup-success-launch-business-project_107791-4758.jpg?t=st=1714342322~exp=1714345922~hmac=81d1a808f2b5abda57ed89b74489360abce54b3c9bdc7816ecd6a489f3339b35&w=1380":req.projectId.thumbnailUrl} alt="Banner" />

@@ -264,3 +264,5 @@
 2024-05-11T13:34:59.970Z - GET /event/getEvents
 2024-05-11T13:34:59.973Z - POST /user/search-user-email
 2024-05-11T13:34:59.977Z - GET /project/get-all-projects
+2024-05-11T13:35:30.080Z - GET /admin/publicProjectRequest
+2024-05-11T13:39:39.913Z - GET /admin/publicProjectRequest
