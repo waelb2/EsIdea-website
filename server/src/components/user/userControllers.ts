@@ -121,7 +121,7 @@ const createPublicProjectRequest = async (req: Request, res: Response) => {
     return res.status(400).send({ error: 'Public project request already exists' })
   } catch (error) {
     console.log(error)
-    return res.sendStatus( 400)
+    return res.sendStatus(500)
   }
 }
 
