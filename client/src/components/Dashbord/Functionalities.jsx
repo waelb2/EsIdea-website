@@ -17,6 +17,7 @@ const Functionalities = () => {
     }
     const closePopUp = ()=>{
         setCreateProjectVisible(false);
+        setCurrentPage(1);
     }
     const functionality = [
         {
