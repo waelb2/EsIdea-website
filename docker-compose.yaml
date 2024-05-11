@@ -1,0 +1,14 @@
+version: '3'
+services:
+  backend:
+    build: ./server
+    container_name: esidea-backend-container
+    ports:
+      - '3000:3000'
+  frontend:
+    build: ./client
+    container_name: esidea-frontend-container
+    ports:
+      - '5174:5174'
+    stdin_open: true
+    tty: true
