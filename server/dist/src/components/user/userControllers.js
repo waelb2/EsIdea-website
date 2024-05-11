@@ -279,8 +279,88 @@ const addFavouriteProject = (req, res) => __awaiter(void 0, void 0, void 0, func
 exports.addFavouriteProject = addFavouriteProject;
 const getPublicProjects = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const publicProjects = yield projectModels_1.Project.find({ visibility: 'public' });
-        return res.status(200).send(publicProjects);
+        const publicProjects = yield projectModels_1.Project.find({ visibility: 'public' })
+            .populate({
+            path: 'subTopics',
+            model: 'Topic'
+        })
+            .populate({
+            path: 'collaborators.member',
+            model: 'User'
+        })
+            .populate({
+            path: 'mainTopic',
+            model: 'Topic'
+        })
+            .populate({
+            path: 'clubs',
+            model: 'Club'
+        })
+            .populate({
+            path: 'events',
+            model: 'Event'
+        })
+            .populate({
+            path: 'modules',
+            model: 'Module'
+        })
+            .populate({
+            path: 'ideationMethod',
+            model: 'IdeationMethod'
+        })
+            .populate({
+            path: 'coordinator',
+            model: 'User'
+        });
+        const publicProjectsStrings = publicProjects.map(project => {
+            const { title, description, creationDate, visibility, collaboratorsCount, collaborators, mainTopic, subTopics, clubs, modules, events, thumbnailUrl } = project;
+            const formattedSubTopics = subTopics === null || subTopics === void 0 ? void 0 : subTopics.map(topic => {
+                return {
+                    topicId: topic._id,
+                    topicName: topic.topicName
+                };
+            });
+            const formattedCollaborators = collaborators === null || collaborators === void 0 ? void 0 : collaborators.map(collaborator => {
+                if (collaborator.member) {
+                    const { firstName, lastName, email, profilePicUrl } = collaborator.member;
+                    return {
+                        firstName,
+                        lastName,
+                        email,
+                        profilePicUrl
+                    };
+                }
+                return null;
+            });
+            const coordinator = {
+                firstName: project.coordinator.firstName,
+                lastName: project.coordinator.lastName,
+                email: project.coordinator.email,
+                profilePicUrl: project.coordinator.profilePicUrl
+            };
+            const formattedProject = {
+                projectId: project.id,
+                IdeationMethod: project.ideationMethod.methodName,
+                ProjectTitle: title,
+                Description: description,
+                coordinator,
+                Visibility: visibility,
+                CollaboratorsCount: collaboratorsCount.toString(),
+                collaborators: formattedCollaborators,
+                MainTopic: (mainTopic === null || mainTopic === void 0 ? void 0 : mainTopic.topicName) || '',
+                MainTopicId: mainTopic === null || mainTopic === void 0 ? void 0 : mainTopic.id,
+                SubTopics: formattedSubTopics,
+                Clubs: clubs.map(club => club.clubName),
+                Modules: modules.map(module => module.moduleName),
+                Events: events.map(event => event.eventName),
+                ThumbnailUrl: thumbnailUrl,
+                joinedDate: creationDate,
+                projectStatus: project.status,
+                timer: project.timer
+            };
+            return formattedProject;
+        });
+        res.status(200).json(publicProjectsStrings);
     }
     catch (error) {
         console.log(error);

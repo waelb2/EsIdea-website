@@ -251,7 +251,105 @@ const addFavouriteProject = async (req: Request, res: Response) => {
 const getPublicProjects = async (req: Request, res: Response) => {
   try {
     const publicProjects = await Project.find({visibility: 'public'})
-    return res.status(200).send(publicProjects)
+    .populate({
+        path: 'subTopics',
+        model: 'Topic'
+      })
+    .populate({
+        path: 'collaborators.member',
+        model: 'User'
+      })
+    .populate({
+        path: 'mainTopic',
+        model: 'Topic'
+      })
+    .populate({
+        path: 'clubs',
+        model: 'Club'
+      })
+    .populate({
+        path: 'events',
+        model: 'Event'
+      })
+    .populate({
+        path: 'modules',
+        model: 'Module'
+      })
+    .populate({
+        path: 'ideationMethod',
+        model: 'IdeationMethod'
+      })
+    .populate({
+        path: 'coordinator',
+        model: 'User'
+      })
+
+    const publicProjectsStrings = publicProjects.map(project => {
+      const {
+        title,
+        description,
+        creationDate,
+        visibility,
+        collaboratorsCount,
+        collaborators,
+        mainTopic,
+        subTopics,
+        clubs,
+        modules,
+        events,
+        thumbnailUrl
+      } = project
+      const formattedSubTopics = subTopics?.map(topic => {
+        return {
+          topicId: topic._id,
+          topicName: topic.topicName
+        }
+      })
+      const formattedCollaborators = collaborators?.map(collaborator => {
+        if (collaborator.member) {
+          const { firstName, lastName, email, profilePicUrl } =
+            collaborator.member
+          return {
+            firstName,
+            lastName,
+            email,
+            profilePicUrl
+          }
+        }
+
+        return null
+      })
+      const coordinator = {
+        firstName: project.coordinator.firstName,
+        lastName: project.coordinator.lastName,
+        email: project.coordinator.email,
+        profilePicUrl: project.coordinator.profilePicUrl
+      }
+      const formattedProject = {
+        projectId: project.id,
+        IdeationMethod: project.ideationMethod.methodName,
+        ProjectTitle: title,
+        Description: description,
+        coordinator,
+        Visibility: visibility,
+        CollaboratorsCount: collaboratorsCount.toString(),
+        collaborators: formattedCollaborators,
+        MainTopic: mainTopic?.topicName || '',
+        MainTopicId: mainTopic?.id,
+        SubTopics: formattedSubTopics,
+        Clubs: clubs.map(club => club.clubName),
+        Modules: modules.map(module => module.moduleName),
+        Events: events.map(event => event.eventName),
+        ThumbnailUrl: thumbnailUrl,
+        joinedDate: creationDate,
+        projectStatus: project.status,
+        timer: project.timer
+      }
+
+      return formattedProject
+    })
+
+    res.status(200).json(publicProjectsStrings)
   } catch (error) {
     console.log(error)
     return res.sendStatus(500)

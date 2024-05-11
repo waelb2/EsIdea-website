@@ -406,7 +406,13 @@ exports.getFeedbacks = getFeedbacks;
 const getPublicProjectRequests = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const ppRequests = yield publicProjectRequestModel_1.publicProjectRequest.find({})
-            .populate('projectId');
+            .populate({
+            path: 'projectId',
+            populate: {
+                path: 'coordinator',
+                model: 'User'
+            }
+        });
         return res.status(200).send(ppRequests);
     }
     catch (error) {
@@ -441,6 +447,7 @@ const approvePublicProjectRequest = (req, res) => __awaiter(void 0, void 0, void
         }
         project.visibility = projectModels_1.ProjectVisibility.PUBLIC;
         yield project.save();
+        yield publicProjectRequestModel_1.publicProjectRequest.deleteOne(pprObjectId);
         return res.status(200).send({ msg: "The public project request has been approved" });
     }
     catch (error) {

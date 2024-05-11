@@ -378,7 +378,13 @@ const getFeedbacks = async (req: Request, res: Response) => {
 const getPublicProjectRequests = async (req: Request, res: Response) => {
   try {
     const ppRequests = await publicProjectRequest.find({})
-      .populate('projectId')
+      .populate({
+        path: 'projectId',
+        populate: {
+          path: 'coordinator',
+          model: 'User'
+        }
+      })
     return res.status(200).send(ppRequests)
   } catch (error) {
     console.log(error)
@@ -416,6 +422,7 @@ const approvePublicProjectRequest = async (req: Request, res: Response) => {
     }
     project.visibility = ProjectVisibility.PUBLIC
     await project.save()
+    await publicProjectRequest.deleteOne(pprObjectId)
     return res.status(200).send({ msg: "The public project request has been approved" })
   } catch (error) {
     console.log(error)
