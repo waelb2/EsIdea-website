@@ -2,8 +2,10 @@
 import React,{useState} from 'react'
 import {close,arrow, whiteLogo} from '../../assets';
 import {AdminNavLinks} from './constants';
-import {Link, useLocation} from 'react-router-dom';
+import {Link, useLocation,useNavigate} from 'react-router-dom';
+import { AiFillHome } from "react-icons/ai";
 const AdminSideBar = () => {
+    const navigate = useNavigate();
     const {pathname} = useLocation()
     const [toggle,setToggle] = useState(false);
     return (
@@ -23,6 +25,10 @@ const AdminSideBar = () => {
                 ))}
             </ul>
             <img onClick={()=>{setToggle(prev => !prev)}}  className={`${toggle ?"hidden":"block"} cursor-pointer md:hidden w-7 h-7 absolute top-[45%] left-[250px]`} src={arrow} alt="slide_right"/>
+            <button onClick={()=>{navigate("/Home/Projects")}} className='absolute bottom-3 text-realWhite flex gap-2 items-center bg-transparent transition-all duration-500 border-realWhite border-2 p-1 rounded-md group hover:bg-realWhite hover:text-black w-56 justify-center'>
+                <AiFillHome className='fill-realWhite group-hover:fill-black w-5 h-5' />
+                <span>Back to home</span>
+            </button>
         </aside>
   )
 }
