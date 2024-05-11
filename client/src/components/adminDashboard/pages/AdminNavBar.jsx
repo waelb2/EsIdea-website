@@ -26,21 +26,22 @@ const AdminNavBar = ({location}) => {
             icon:ChangePassIcon,
             title:"Change password",
             path:"/ChangePassword"
-        },{
-            icon:HelpIcon,
-            title:"Help",
-            path:"",
-            action:()=>{
+         },//{
+        //     icon:HelpIcon,
+        //     title:"Help",
+        //     path:"",
+        //     action:()=>{
 
-            }
-        },{
-            icon:FeedBackIcon,
-            title:"Feedback",
-            path:"/",
-            action:()=>{
+        //     }
+        // },{
+        //     icon:FeedBackIcon,
+        //     title:"Feedback",
+        //     path:"/",
+        //     action:()=>{
 
-            }
-        },{
+        //     }
+        // },
+        {
             icon:LogoutIcon,
             title:"Log out",
             path: import.meta.env.VITE_API_URL + "/auth/logout",
