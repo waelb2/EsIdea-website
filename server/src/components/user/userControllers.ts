@@ -5,7 +5,7 @@ import cloudinary from '../../config/cloudConfig'
 import fs, { lstat, rmSync } from 'fs'
 import multer from 'multer'
 import { feedback } from '../feedback/feedbackModel'
-import { Project } from "../project/projectModels"
+import { Project, ProjectVisibility } from "../project/projectModels"
 import { publicProjectRequest } from "../publicProjectRequest/publicProjectRequestModel"
 import { User } from './userModels'
 import { isLowercase } from 'validator'
@@ -112,6 +112,8 @@ const createPublicProjectRequest = async (req: Request, res: Response) => {
       return res.status(400).send({ error: "Your are not the coordinator of the project" });
     const existReq = await publicProjectRequest.findOne({projectId: objectId})
     if (!existReq) {
+      if (project.visibility === ProjectVisibility.PUBLIC)
+        return res.status(400).send({ error: 'The project is already public' })
       const ppr = new publicProjectRequest({ projectId })
       await ppr.save()
       return res.status(201).send(ppr)

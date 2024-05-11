@@ -135,6 +135,8 @@ const createPublicProjectRequest = (req, res) => __awaiter(void 0, void 0, void 
             return res.status(400).send({ error: "Your are not the coordinator of the project" });
         const existReq = yield publicProjectRequestModel_1.publicProjectRequest.findOne({ projectId: objectId });
         if (!existReq) {
+            if (project.visibility === projectModels_1.ProjectVisibility.PUBLIC)
+                return res.status(400).send({ error: 'The project is already public' });
             const ppr = new publicProjectRequestModel_1.publicProjectRequest({ projectId });
             yield ppr.save();
             return res.status(201).send(ppr);
