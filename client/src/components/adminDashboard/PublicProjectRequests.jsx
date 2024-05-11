@@ -25,7 +25,7 @@ const PublicProjectRequests = () => {
     const approveRequest = async(id)=>{
         try {
             const response = await axios.patch("admin/publicProjectRequest/approve",{id});
-            if (response.statusText == 'OK') {
+            if (response.status == 200) {
                 displayMessageToUser("success","The public project request has been approved");
                 getPublicProjectRequests();
             } else {
