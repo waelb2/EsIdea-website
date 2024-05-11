@@ -10,7 +10,6 @@ const SideBar = () => {
     const {pathname} = useLocation()  
     const [toggle,setToggle] = useState(false);
     const {user} = useUser();
-    console.log(user);
     const navigate = useNavigate();
     return (
         <aside className={`${toggle ? "left-0":"-left-64"} w-64 h-screen bg-darkBlue px-4 py-5 absolute md:sticky md:left-0 transition-all duration-500 z-10 flex-shrink-0`}>
