@@ -3,15 +3,14 @@ import { BsChatSquare, BsXCircle } from "react-icons/bs"; // Import chat icon fr
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import profilePic from "../../assets/profile-pic.png";
 import aiProfilePic from "../../assets/ai-profile-pic.png";
-import Aichatbot from '../../assets/Aichatbot.png'
+import Aichatbot from "../../assets/Aichatbot.png";
+
 const Chat = () => {
   const [messages, setMessages] = useState([]);
   const [inputText, setInputText] = useState("");
   const [showChat, setShowChat] = useState(false);
 
-  const genAI = new GoogleGenerativeAI(
-    "AIzaSyDlxdT0GpW4HYIdJZoWg8mG5ZmhoQSq_b4"
-  ); // Replace 'YOUR_API_KEY' with your actual API key
+  const genAI = new GoogleGenerativeAI(import.meta.env.GOOGLE_KEY); // Replace 'YOUR_API_KEY' with your actual API key
 
   const toggleChat = () => {
     setShowChat(!showChat);
@@ -50,7 +49,7 @@ const Chat = () => {
   const handleClearConversation = () => {
     setMessages([]);
   };
-  const [tooltip,setToolTip] = useState(false);
+  const [tooltip, setToolTip] = useState(false);
   return (
     <div className="fixed bottom-4 left-4 w-5/12">
       <div
@@ -97,8 +96,24 @@ const Chat = () => {
         className={`fixed bottom-16 left-4 ${showChat ? "hidden" : "block"}`}
       >
         <button className="relative" onClick={toggleChat}>
-          <img onMouseOver={()=>{setToolTip(true)}} onMouseLeave={()=>{setToolTip(false)}} className="text-3xl w-10 cursor-pointer" src={Aichatbot} alt="Chat Bot" />
-          <p className={`absolute py-0.5 px-1 text-sm rounded-md bg-realWhite ml-3 left-full top-1/2 -translate-y-1/2 transition-opacity duration-500 whitespace-nowrap ${tooltip ? "opacity-100":"opacity-0"}`}>Chat Bot</p>
+          <img
+            onMouseOver={() => {
+              setToolTip(true);
+            }}
+            onMouseLeave={() => {
+              setToolTip(false);
+            }}
+            className="text-3xl w-10 cursor-pointer"
+            src={Aichatbot}
+            alt="Chat Bot"
+          />
+          <p
+            className={`absolute py-0.5 px-1 text-sm rounded-md bg-realWhite ml-3 left-full top-1/2 -translate-y-1/2 transition-opacity duration-500 whitespace-nowrap ${
+              tooltip ? "opacity-100" : "opacity-0"
+            }`}
+          >
+            Chat Bot
+          </p>
         </button>
       </div>
     </div>
