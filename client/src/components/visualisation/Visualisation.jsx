@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useRef } from "react";
-import axios from "axios";
+import axios from "../../utils/axios";
 import HomeIcon from "../../assets/Home.svg";
-import profilePic from "../assets/profile-pic.png";
 import html2canvas from "html2canvas"; // Import html2canvas for exporting
 import MainTopic from "./MainTopic";
+import { useLocation } from "react-router-dom";
+import useUser from "../../hooks/useUser";
 
 // This is a functional component named Visualisation
-const Visualisation = (project) => {
+const Visualisation = () => {
   // Define state variables using useState hook
 
   // this code is made for sub topics
@@ -18,9 +19,17 @@ const Visualisation = (project) => {
   const [showProfilePopup, setShowProfilePopup] = useState(false);
   const [ideas, setIdeas] = useState([]);
   const profileRef = useRef(null);
+  const location = useLocation()
+  const {project} = location.state
+  const {user} = useUser()
+  const profilePic = user.profilePicUrl
+  const mainTopic = project.MainTopic
 
+  useEffect(()=>{getProjectIdeas()
+   }, [])
+ 
   // useEffect hook to fetch data from APIs when the component mounts
-  useEffect(() => {
+  // useEffect(() => {
     // this code is made for sub topics
     // const fetchDataMultiple = async () => {
     //   try {
@@ -40,23 +49,23 @@ const Visualisation = (project) => {
     //   }
     // };
 
-    const fetchDataSingle = async () => {
-      try {
-        // Fetch single topic data
-        const singleTopicResponse = await axios.get(
-          "http://localhost:3000/single-topic"
-        );
-        setSingleTopic(singleTopicResponse.data[0]);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+    // const fetchDataSingle = async () => {
+    //   try {
+    //     // Fetch single topic data
+    //     const singleTopicResponse = await axios.get(
+    //       "http://localhost:3000/single-topic"
+    //     );
+    //     setSingleTopic(singleTopicResponse.data[0]);
+    //   } catch (error) {
+    //     console.error("Error fetching data:", error);
+    //   }
+    // };
 
     // this code is made for sub topics
     // fetchDataMultiple(); // Call function to fetch multiple topics data
 
-    fetchDataSingle(); // Call function to fetch single topic data
-  }, []); // Run this effect only once on component mount
+    // fetchDataSingle(); // Call function to fetch single topic data
+  // }, []); // Run this effect only once on component mount
 
   // useEffect hook to handle click outside of profile popup
   useEffect(() => {
@@ -77,6 +86,17 @@ const Visualisation = (project) => {
   const handleProfileClick = () => {
     setShowProfilePopup(!showProfilePopup);
   };
+
+  const getProjectIdeas = async ()=>{
+        try {
+            
+            const response = await  axios.get(`idea/get-ideas/${project.projectId}`)
+            setIdeas(response.data)
+    } catch (error) {
+           console.log(error) 
+           throw new Error(error)
+        }
+    }
 
   // Function to handle export click and generate image from HTML content
   const handleExportClick = () => {
@@ -148,7 +168,7 @@ const Visualisation = (project) => {
         <div className=" border-l border-gray-300 h-auto"></div>
 
         {/* Main Topic Title */}
-        <h1 className="text-md font-bold">{mainTopic}</h1>
+        <h1 className="text-md font-bold">{project.ProjectTitle}</h1>
 
         {/* Vertical Separator */}
         <div className="border-l border-gray-300 h-auto"></div>
@@ -176,7 +196,7 @@ const Visualisation = (project) => {
       {
         <div className="grid grid-cols-1">
           <div id="exportContent">
-            <MainTopic Prop={singleTopic} />
+            <MainTopic ideas={ideas} mainTopic={mainTopic} />
           </div>
         </div>
       }

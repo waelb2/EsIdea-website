@@ -8,7 +8,7 @@ const Sticker = ({ color, idea }) => {
       className={` ${color} px-6 py-3 m-1 inline-block rounded-lg shadow-md`}
     >
       {/* Render a <p> element to display the `idea` prop as text. */}
-      <p className="text-xs">{idea}</p>
+      <p className="text-xs">{idea.content}</p>
     </div>
   );
 };

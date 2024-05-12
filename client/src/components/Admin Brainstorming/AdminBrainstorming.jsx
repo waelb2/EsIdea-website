@@ -222,6 +222,10 @@ const AdminBrainStorming = ({ project, ideas, onlineUsers, socket }) => {
       // close the popup
       setShowCombinePopUp(false)
 
+      const handleCountdownEnd = ()=>{
+        setCountdownEnded(true)
+      }
+
       socket.emit('deleteManyIdeas', {
         newIdeas: newThoughtsState,
         projectId: project.projectId
@@ -238,7 +242,11 @@ const AdminBrainStorming = ({ project, ideas, onlineUsers, socket }) => {
       prevUserThoughts.filter(idea => idea.text !== text)
     )
   }
-
+  const navigateVisualise= ()=>{
+  navigate("/visualisation", {state: {
+      project: project
+    }})
+  }
   const { user } = useUser()
   const navigate = useNavigate()
   return (
@@ -377,7 +385,9 @@ const AdminBrainStorming = ({ project, ideas, onlineUsers, socket }) => {
               />
             </svg>
           </div>
+
         )}
+        {countdownEnded &&(<button onClick={navigateVisualise}>Visualise</button>)}
       </div>
 
       {userIdeas.length > 0 && (

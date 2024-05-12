@@ -2,7 +2,7 @@ import React from "react";
 import Sticker from "./Sticker";
 
 // This is a functional component named MainTopic that accepts a single prop `Prop`.
-const MainTopic = ({ Prop }) => {
+const MainTopic = ({ ideas , mainTopic }) => {
   // Define an array of colors used for the stickers.
   const colors = [
     "bg-yellow-600 text-gray-900",
@@ -27,12 +27,12 @@ const MainTopic = ({ Prop }) => {
     // Render a <div> element with specific styling classes for layout and appearance.
     <div className="flex flex-1 flex-col bg-gray-100 rounded-lg shadow-md p-8 my-8">
       {/* Render a heading element with dynamic content based on the `Prop.title` */}
-      <h1 className="text-center text-3xl font-bold mb-4">{Prop.title}</h1>
+      <h1 className="text-center text-3xl font-bold mb-4">{mainTopic}</h1>
       {/* Conditionally render content if `Prop.ideas` is not null or undefined */}
-      {Prop.ideas && (
+      {ideas && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {/* Map through the `Prop.ideas` array to render Sticker components */}
-          {Prop.ideas.map((idea, index) => (
+          {ideas.map((idea, index) => (
             <Sticker
               key={index} // Assign a unique key to each sticker
               idea={idea} // Pass the `idea` to the Sticker component
