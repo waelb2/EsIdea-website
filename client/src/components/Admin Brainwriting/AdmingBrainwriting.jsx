@@ -45,6 +45,7 @@ const AdminBrainWriting = ({ project, ideas, onlineUsers, socket }) => {
   const user = useUser()
   const userToken = localStorage.getItem('userToken')
   const [userArray, setUserArray] = useState([])
+  const [projectCompleted, setProjectCompleted] = useState(false)
 
   const [activeUserIndex, setActiveUserIndex] = useState(0)
 
@@ -53,6 +54,10 @@ const AdminBrainWriting = ({ project, ideas, onlineUsers, socket }) => {
     setUserIdeas(ideas)
   }, [ideas])
 
+  const handleCloseProject = ()=>{
+    editProjectStatus()
+    setProjectCompleted(true)
+  } 
   useEffect(() => {
     setUserArray(onlineUsers)
   }, [onlineUsers])
@@ -290,11 +295,7 @@ const AdminBrainWriting = ({ project, ideas, onlineUsers, socket }) => {
       throw Error(error)
     }
   }
-  useEffect(() => {
-    if (rounds == 0) {
-      editProjectStatus()
-    }
-  }, [rounds])
+
   const handleEnlarge = text => {
     setEnlargedText(text)
     toggleExtendPopUp()
@@ -452,7 +453,16 @@ const AdminBrainWriting = ({ project, ideas, onlineUsers, socket }) => {
             </svg>
           </div>
         )}
-        {rounds == 0 && (
+         {rounds == 0 && !projectCompleted && (
+          <button
+            className='mr-4 text-white text-sm font-semibold bg-skyBlue hover:bg-skyblue-dark focus:outline-none focus:ring-2 focus:ring-skyblue focus:ring-opacity-50 rounded px-4 py-2'
+            onClick={handleCloseProject}
+          >
+            close project
+          </button>
+        )}
+
+        {projectCompleted && (
           <button
             className='mr-4 text-white text-sm font-semibold bg-skyBlue hover:bg-skyblue-dark focus:outline-none focus:ring-2 focus:ring-skyblue focus:ring-opacity-50 rounded px-4 py-2'
             onClick={navigateVisualise}

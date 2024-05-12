@@ -41,6 +41,7 @@ const AdminBrainStorming = ({ project, ideas, onlineUsers, socket }) => {
   const userToken = localStorage.getItem('userToken')
   const countDownMin = Math.floor(project.timer / 60)
   const countDownSec = project.timer % 60
+  const [projectCompleted, setProjectCompleted] = useState(false)
 
   // init user thoughts
   useEffect(() => {
@@ -171,26 +172,26 @@ const AdminBrainStorming = ({ project, ideas, onlineUsers, socket }) => {
     }
   }, [countDownStarted, socket])
 
-  const editProjectStatus = async ()=>{
-  try {
+  const editProjectStatus = async () => {
+    try {
       const data = {
-        newStatus : "completed"
+        newStatus: 'completed'
       }
-      const response =  await axios.patch(`project/update-project-status/${project.projectId}`,data, {headers: {
-            'Authorization': `Bearer ${userToken}`,
-        },
-        }) 
-
-  } catch (error) {
-   console.log(error)
-   throw new Error(error) 
+      const response = await axios.patch(
+        `project/update-project-status/${project.projectId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${userToken}`
+          }
+        }
+      )
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
   }
-}
-useEffect(()=>{
-if(countdownEnded){
-  editProjectStatus()
-}
-},[countdownEnded])
+
   const handleCombinedIdeaSend = async newIdeaText => {
     const coordinator = localStorage.getItem('user')
     // filter out the selected ideas from the global ideas array, then create the new idea
@@ -242,8 +243,6 @@ if(countdownEnded){
       // close the popup
       setShowCombinePopUp(false)
 
-    
-
       socket.emit('deleteManyIdeas', {
         newIdeas: newThoughtsState,
         projectId: project.projectId
@@ -269,6 +268,11 @@ if(countdownEnded){
     })
   }
   const { user } = useUser()
+
+  const handleCloseProject = () => {
+    editProjectStatus()
+    setProjectCompleted(true)
+  }
   return (
     <div className='bg-[#F1F6FB] relative pt-36 min-h-screen'>
       <div className='flex justify-between items-center py-4 px-5 fixed top-0 left-0 right-0'>
@@ -406,7 +410,15 @@ if(countdownEnded){
             </svg>
           </div>
         )}
-        {countdownEnded && (
+        {countdownEnded && !projectCompleted && (
+          <button
+            className='mr-4 text-white text-sm font-semibold bg-skyBlue hover:bg-skyblue-dark focus:outline-none focus:ring-2 focus:ring-skyblue focus:ring-opacity-50 rounded px-4 py-2'
+            onClick={handleCloseProject}
+          >
+            close project
+          </button>
+        )}
+        {projectCompleted && (
           <button
             className='mr-4 text-white text-sm font-semibold bg-skyBlue hover:bg-skyblue-dark focus:outline-none focus:ring-2 focus:ring-skyblue focus:ring-opacity-50 rounded px-4 py-2'
             onClick={navigateVisualise}
