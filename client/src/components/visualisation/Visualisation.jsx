@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import SubTopic from "./SubTopic";
 import HomeIcon from "../assets/Home.svg";
 import profilePic from "../assets/profile-pic.png";
 import html2canvas from "html2canvas"; // Import html2canvas for exporting

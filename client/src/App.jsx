@@ -6,6 +6,7 @@ import RequireAuth from './components/auth/RequireAuth';
 import UnauthorizedPage from './components/auth/UnauthorizedPage';
 import NotFound from './components/NotFoundPage/NotFound';
 import Ideation from './components/pages/Ideation';
+import Visualisation from './components/visualisation/Visualisation';
 
 const App = () => {
   return (
@@ -20,7 +21,7 @@ const App = () => {
         <Route path='/auth/resetPassword/*' element={<ResetPassword/>}></Route>
         <Route path='/ChangePassword' element={<ChangePassword/>}></Route>
         <Route path='/unauthorized' element={<UnauthorizedPage/>}></Route>
-        
+
 
         {/* <Route  path='/Admin' element={user?<AdminDashboard/>:<Navigate to="/login"/>}>
             <Route index={true} element={<Navigate to="/Admin/General"/>}/>
@@ -64,6 +65,7 @@ const App = () => {
         </Route>
 
         <Route path='/ideation' element={<Ideation/>}></Route>
+        <Route path='/visualisation' element={<Visualisation/>}></Route>
 
         <Route path='/brainstorming' element={<BrainStorming/>}></Route>
         <Route path='/brainwriting' element={<BrainWriting/>}></Route>
