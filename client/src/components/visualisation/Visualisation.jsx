@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import axios from "axios";
-import HomeIcon from "../assets/Home.svg";
+import HomeIcon from "../../assets/Home.svg";
 import profilePic from "../assets/profile-pic.png";
 import html2canvas from "html2canvas"; // Import html2canvas for exporting
 import MainTopic from "./MainTopic";
@@ -16,7 +16,7 @@ const Visualisation = (project) => {
   const [singleTopic, setSingleTopic] = useState([]);
   const [showTooltip, setShowTooltip] = useState(false);
   const [showProfilePopup, setShowProfilePopup] = useState(false);
-  const [ideas, setIdeas] = useState([])
+  const [ideas, setIdeas] = useState([]);
   const profileRef = useRef(null);
 
   // useEffect hook to fetch data from APIs when the component mounts
