@@ -145,7 +145,7 @@ const createPublicProjectRequest = (req, res) => __awaiter(void 0, void 0, void 
     }
     catch (error) {
         console.log(error);
-        return res.sendStatus(400);
+        return res.sendStatus(500);
     }
 });
 exports.createPublicProjectRequest = createPublicProjectRequest;
