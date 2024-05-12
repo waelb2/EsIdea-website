@@ -95,6 +95,26 @@ const BrainWriting = ({ project, ideas, socket, onlineUsers }) => {
     }
   }
 
+  const editProjectStatus = async () => {
+    try {
+      const data = {
+        newStatus: 'completed'
+      }
+      const response = await axios.patch(
+        `project/update-project-status/${project.projectId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${userToken}`
+          }
+        }
+      )
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }
+  
   const handleKeyPress = event => {
     if (event.key === 'Enter') {
       event.preventDefault()
@@ -164,7 +184,16 @@ const BrainWriting = ({ project, ideas, socket, onlineUsers }) => {
   useEffect(() => {
     if (rounds === 0) setCountdownEnded(true)
   }, [rounds])
+
   const navigate = useNavigate()
+  const navigateVisualise = () => {
+    navigate('/project/visualisation', {
+      state: {
+        project: project
+      }
+    })
+  }
+
   return (
     <div className='h-screen bg-[#F1F6FB] relative py-36'>
       <div>
@@ -286,6 +315,14 @@ const BrainWriting = ({ project, ideas, socket, onlineUsers }) => {
               </div>
             </div>
           </div>
+        )}
+        {rounds == 0 && (
+          <button
+            className='mr-4 text-white text-sm font-semibold bg-skyBlue hover:bg-skyblue-dark focus:outline-none focus:ring-2 focus:ring-skyblue focus:ring-opacity-50 rounded px-4 py-2'
+            onClick={navigateVisualise}
+          >
+            Visualize
+          </button>
         )}
       </div>
 
