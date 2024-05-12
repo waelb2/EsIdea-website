@@ -71,9 +71,7 @@ const Ideation = () => {
       })
     }
   }, [socket])
-  useEffect(() => {
-    console.log(ideas)
-  }, ideas)
+
 
   useEffect(()=>{
     if(projectCompleted){
