@@ -10,7 +10,7 @@ const Chat = () => {
   const [inputText, setInputText] = useState("");
   const [showChat, setShowChat] = useState(false);
 
-  const genAI = new GoogleGenerativeAI(import.meta.env.GOOGLE_KEY); // Replace 'YOUR_API_KEY' with your actual API key
+  const genAI = new GoogleGenerativeAI(import.meta.env.VITE_GOOGLE_KEY); // Replace 'YOUR_API_KEY' with your actual API key
 
   const toggleChat = () => {
     setShowChat(!showChat);

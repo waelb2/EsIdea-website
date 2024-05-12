@@ -169,6 +169,26 @@ const AdminBrainWriting = ({ project, ideas, onlineUsers, socket }) => {
     return userIdeas.map(idea => [idea])
   }
 
+  const editProjectStatus = async () => {
+    try {
+      const data = {
+        newStatus: 'completed'
+      }
+      const response = await axios.patch(
+        `project/update-project-status/${project.projectId}`,
+        data,
+        {
+          headers: {
+            Authorization: `Bearer ${userToken}`
+          }
+        }
+      )
+    } catch (error) {
+      console.log(error)
+      throw new Error(error)
+    }
+  }
+
   const toggleCombinePopUp = event => {
     event.stopPropagation()
     if (showCombinePopUp) {
@@ -270,6 +290,11 @@ const AdminBrainWriting = ({ project, ideas, onlineUsers, socket }) => {
       throw Error(error)
     }
   }
+  useEffect(() => {
+    if (rounds == 0) {
+      editProjectStatus()
+    }
+  }, [rounds])
   const handleEnlarge = text => {
     setEnlargedText(text)
     toggleExtendPopUp()
@@ -278,6 +303,13 @@ const AdminBrainWriting = ({ project, ideas, onlineUsers, socket }) => {
     )
   }
   const navigate = useNavigate()
+  const navigateVisualise = () => {
+    navigate('/project/visualisation', {
+      state: {
+        project: project
+      }
+    })
+  }
   return (
     <div className='h-screen bg-[#F1F6FB] relative py-36'>
       <div className='flex justify-between items-center py-4 px-5 fixed top-0 left-0 right-0'>
@@ -368,7 +400,8 @@ const AdminBrainWriting = ({ project, ideas, onlineUsers, socket }) => {
 
       <div className=' w-full fixed bottom-0 h-24 flex justify-center items-start'>
         {countDownStarted &&
-          user.user.email == onlineUsers[activeUserIndex].email && (
+          user.user.email == onlineUsers[activeUserIndex].email &&
+          rounds != 0 && (
             <div className='bg-white flex items-center w-1/2 rounded-full px-2 py-1'>
               <img src={Brain} className='w-8' />
               <input
@@ -418,6 +451,14 @@ const AdminBrainWriting = ({ project, ideas, onlineUsers, socket }) => {
               />
             </svg>
           </div>
+        )}
+        {rounds == 0 && (
+          <button
+            className='mr-4 text-white text-sm font-semibold bg-skyBlue hover:bg-skyblue-dark focus:outline-none focus:ring-2 focus:ring-skyblue focus:ring-opacity-50 rounded px-4 py-2'
+            onClick={navigateVisualise}
+          >
+            Visualize
+          </button>
         )}
       </div>
 

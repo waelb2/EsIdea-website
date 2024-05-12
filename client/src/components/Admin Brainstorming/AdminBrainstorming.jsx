@@ -260,6 +260,7 @@ if(countdownEnded){
       prevUserThoughts.filter(idea => idea.text !== text)
     )
   }
+  const navigate = useNavigate()
   const navigateVisualise = () => {
     navigate('/project/visualisation', {
       state: {
@@ -268,7 +269,6 @@ if(countdownEnded){
     })
   }
   const { user } = useUser()
-  const navigate = useNavigate()
   return (
     <div className='bg-[#F1F6FB] relative pt-36 min-h-screen'>
       <div className='flex justify-between items-center py-4 px-5 fixed top-0 left-0 right-0'>
