@@ -12,7 +12,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.deleteProjectManyIdeas = exports.restoreProject = exports.trashProject = exports.getProjectByUserId = exports.deleteProject = exports.updateProject = exports.createProject = void 0;
+exports.updateProjectStatus = exports.deleteProjectManyIdeas = exports.restoreProject = exports.trashProject = exports.getProjectByUserId = exports.deleteProject = exports.updateProject = exports.createProject = void 0;
 const projectModels_1 = require("./projectModels");
 const userModels_1 = require("../user/userModels");
 const ideationMethodModel_1 = require("../idea/ideationMethodModel");
@@ -217,6 +217,39 @@ const updateProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.updateProject = updateProject;
+const updateProjectStatus = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const { userId } = req.user;
+    const { projectId } = req.params;
+    try {
+        if (!projectId) {
+            return res.status(400).json({
+                error: 'Project ID must be provided'
+            });
+        }
+        const project = yield projectModels_1.Project.findById(projectId);
+        if (!project) {
+            return res.status(404).json({
+                error: 'Project not found'
+            });
+        }
+        if (project.coordinator.toString() !== userId) {
+            return res.status(403).json({
+                error: 'Unauthorized - Only project coordinator can update the project'
+            });
+        }
+        const { newStatus } = req.body;
+        if (newStatus) {
+            project.status = newStatus;
+        }
+        yield project.save();
+        res.status(200).json({ message: 'Project status updated successfully' });
+    }
+    catch (error) {
+        console.error('Error updating project:', error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+});
+exports.updateProjectStatus = updateProjectStatus;
 const deleteProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.user;
     const { projectId } = req.params;
@@ -478,7 +511,8 @@ const getProjectByUserId = (req, res) => __awaiter(void 0, void 0, void 0, funct
                 isFav: project.isFav,
                 joinedDate: project.joinedAt,
                 projectStatus: project.project.status,
-                timer: project.project.timer
+                timer: project.project.timer,
+                ProjectStatus: project.project.status
             };
             return formattedProject;
         });

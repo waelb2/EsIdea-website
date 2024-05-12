@@ -6,7 +6,8 @@ import {
   getProjectByUserId,
   trashProject,
   restoreProject,
-  deleteProjectManyIdeas
+  deleteProjectManyIdeas,
+  updateProjectStatus
 } from './projectControllers'
 
 import multer from 'multer'
@@ -24,6 +25,7 @@ router.post(
 )
 
 router.patch('/update-project/:projectId',upload.single('thumbnailUrl') ,authMiddleWare, updateProject)
+router.patch('/update-project-status/:projectId',authMiddleWare, updateProjectStatus)
 router.delete('/delete-project/:projectId', authMiddleWare, deleteProject)
 router.get('/get-all-projects', authMiddleWare, getProjectByUserId)
 router.delete('/trash-project/:projectId', authMiddleWare, trashProject)

@@ -171,6 +171,26 @@ const AdminBrainStorming = ({ project, ideas, onlineUsers, socket }) => {
     }
   }, [countDownStarted, socket])
 
+  const editProjectStatus = async ()=>{
+  try {
+      const data = {
+        newStatus : "completed"
+      }
+      const response =  await axios.patch(`project/update-project-status/${project.projectId}`,data, {headers: {
+            'Authorization': `Bearer ${userToken}`,
+        },
+        }) 
+
+  } catch (error) {
+   console.log(error)
+   throw new Error(error) 
+  }
+}
+useEffect(()=>{
+if(countdownEnded){
+  editProjectStatus()
+}
+},[countdownEnded])
   const handleCombinedIdeaSend = async newIdeaText => {
     const coordinator = localStorage.getItem('user')
     // filter out the selected ideas from the global ideas array, then create the new idea
@@ -222,9 +242,7 @@ const AdminBrainStorming = ({ project, ideas, onlineUsers, socket }) => {
       // close the popup
       setShowCombinePopUp(false)
 
-      const handleCountdownEnd = ()=>{
-        setCountdownEnded(true)
-      }
+    
 
       socket.emit('deleteManyIdeas', {
         newIdeas: newThoughtsState,
@@ -242,10 +260,12 @@ const AdminBrainStorming = ({ project, ideas, onlineUsers, socket }) => {
       prevUserThoughts.filter(idea => idea.text !== text)
     )
   }
-  const navigateVisualise= ()=>{
-  navigate("/visualisation", {state: {
-      project: project
-    }})
+  const navigateVisualise = () => {
+    navigate('/visualisation', {
+      state: {
+        project: project
+      }
+    })
   }
   const { user } = useUser()
   const navigate = useNavigate()
@@ -385,9 +405,15 @@ const AdminBrainStorming = ({ project, ideas, onlineUsers, socket }) => {
               />
             </svg>
           </div>
-
         )}
-        {countdownEnded &&(<button onClick={navigateVisualise}>Visualise</button>)}
+        {countdownEnded && (
+          <button
+            className='mr-4 text-white text-sm font-semibold bg-skyBlue hover:bg-skyblue-dark focus:outline-none focus:ring-2 focus:ring-skyblue focus:ring-opacity-50 rounded px-4 py-2'
+            onClick={navigateVisualise}
+          >
+            Visualize
+          </button>
+        )}
       </div>
 
       {userIdeas.length > 0 && (

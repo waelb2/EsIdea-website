@@ -145,7 +145,13 @@ const BrainStorming = ({ project, ideas, socket, onlineUsers }) => {
   // };
   const { user } = useUser()
   const navigate = useNavigate()
-
+ const navigateVisualise = () => {
+    navigate('/visualisation', {
+      state: {
+        project: project
+      }
+    })
+  }
   return (
     <div className='bg-[#F1F6FB] relative py-36 min-h-screen'>
       <div>
@@ -234,9 +240,9 @@ const BrainStorming = ({ project, ideas, socket, onlineUsers }) => {
         <img src={Line1} className='w-6' />
         <img src={Clear} className='w-6 cursor-pointer' onClick={clearIdeas} />
       </div>
-      {countDownStarted && !countdownEnded && (
+      
         <div className=' w-full fixed bottom-0 h-24 flex justify-center items-start'>
-          <div className='bg-white flex items-center w-1/2 rounded-full px-2 py-1'>
+         {countDownStarted && !countdownEnded && ( <div className='bg-white flex items-center w-1/2 rounded-full px-2 py-1'>
             <img src={Brain} className='w-8' />
             <input
               type='text'
@@ -259,10 +265,17 @@ const BrainStorming = ({ project, ideas, socket, onlineUsers }) => {
                 <img src={Send} className='w-6' />
               </div>
             </div>
-          </div>
+          </div>)}
+                 {countdownEnded && (
+          <button
+            className='mr-4 text-white text-sm font-semibold bg-skyBlue hover:bg-skyblue-dark focus:outline-none focus:ring-2 focus:ring-skyblue focus:ring-opacity-50 rounded px-4 py-2'
+            onClick={navigateVisualise}
+          >
+            Visualize
+          </button>
+        )}
         </div>
-      )}
-      {/* {userThoughts.length > 0 && (
+            {/* {userThoughts.length > 0 && (
         <div className="flex flex-wrap justify-start px-12 h-[55vh] w-5/6 ml-24 overflow-x-hidden overflow-y-scroll scrollbar-thin scrollbar-webkit" style={{ wordWrap: 'break-word' }}>
           {/* <UserIdea ideas={userThoughts} onDeleteAll={handleDeleteAll} /> */}
       {/* <IdeaEvaluation ideas={userThoughts} toggleCommentPopup={toggleCommentPopup} />
@@ -279,7 +292,6 @@ const BrainStorming = ({ project, ideas, socket, onlineUsers }) => {
                 )}
                   </div>
                 )} */}{' '}
-      */
       <div
         className='flex flex-wrap justify-start px-12 h-[55vh] w-5/6 ml-24 overflow-x-hidden overflow-y-scroll scrollbar-thin scrollbar-webkit'
         style={{ wordWrap: 'break-word' }}

@@ -7,15 +7,17 @@ import UnauthorizedPage from './components/auth/UnauthorizedPage';
 import NotFound from './components/NotFoundPage/NotFound';
 import Ideation from './components/pages/Ideation';
 import Visualisation from './components/visualisation/Visualisation';
+import useUser from './hooks/useUser';
 
 const App = () => {
+    const {user} = useUser()
   return (
   <>
       <Routes>
         {/* <Route path="/login" element={user ? <Navigate to="/Home/Projects"/>:<LoginPage setUser={setUser}/>}/>
         <Route path='/' element={user?<Navigate to="/Home/Projects"/>:<LandingPage/>}/> */}
         <Route path="/login" element={<LoginPage/>}/>
-        <Route path='/' element={<LandingPage/>}/>
+        <Route path='/' element={user ? <Navigate to="/Home/Projects"/>: <LandingPage/> }/>
         <Route path='/ForgotPassword' element={<ForgotPassword/>}></Route>
         <Route path='/addPassword' element={<AddPassword/>}></Route>
         <Route path='/auth/resetPassword/*' element={<ResetPassword/>}></Route>

@@ -267,6 +267,45 @@ const updateProject = async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Internal Server Error' })
   }
 }
+const updateProjectStatus = async (req: Request, res: Response) => {
+  const { userId } = req.user as AuthPayload
+
+  const { projectId } = req.params
+
+  try {
+   
+    if (!projectId) {
+      return res.status(400).json({
+        error: 'Project ID must be provided'
+      })
+    }
+    const project = await Project.findById(projectId)
+
+    if (!project) {
+      return res.status(404).json({
+        error: 'Project not found'
+      })
+    }
+
+    if (project.coordinator.toString() !== userId) {
+      return res.status(403).json({
+        error: 'Unauthorized - Only project coordinator can update the project'
+      })
+    }
+
+    const { newStatus  }: {  newStatus: string } =
+      req.body
+
+    if(newStatus){
+      project.status = newStatus as ProjectStatus;
+    }
+    await project.save()
+    res.status(200).json({ message: 'Project status updated successfully' })
+  } catch (error) {
+    console.error('Error updating project:', error)
+    res.status(500).json({ error: 'Internal Server Error' })
+  }
+}
 const deleteProject = async (req: Request, res: Response) => {
   const { userId } = req.user as AuthPayload
   const { projectId } = req.params
@@ -582,7 +621,8 @@ const getProjectByUserId = async (req: Request, res: Response) => {
         isFav: project.isFav,
         joinedDate: project.joinedAt,
         projectStatus: project.project.status,
-        timer: project.project.timer
+        timer: project.project.timer,
+        ProjectStatus : project.project.status
       }
 
       return formattedProject
@@ -638,5 +678,6 @@ export {
   getProjectByUserId,
   trashProject,
   restoreProject,
-  deleteProjectManyIdeas
+  deleteProjectManyIdeas,
+  updateProjectStatus
 }
