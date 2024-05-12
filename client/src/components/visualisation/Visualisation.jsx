@@ -9,33 +9,36 @@ import MainTopic from "./MainTopic";
 // This is a functional component named Visualisation
 const Visualisation = () => {
   // Define state variables using useState hook
-  const [mainTopic, setMainTopic] = useState("");
-  const [subTopics, setSubTopics] = useState([]);
+
+  // this code is made for sub topics
+  // const [mainTopic, setMainTopic] = useState("");
+  // const [subTopics, setSubTopics] = useState([]);
+
   const [singleTopic, setSingleTopic] = useState([]);
   const [showTooltip, setShowTooltip] = useState(false);
   const [showProfilePopup, setShowProfilePopup] = useState(false);
   const profileRef = useRef(null);
-  const isMultiple = false; // Boolean flag indicating whether there are multiple topics
 
   // useEffect hook to fetch data from APIs when the component mounts
   useEffect(() => {
-    const fetchDataMultiple = async () => {
-      try {
-        // Fetch main topic data
-        const mainTopicResponse = await axios.get(
-          "http://localhost:3000/main-topic"
-        );
-        setMainTopic(mainTopicResponse.data[0].title);
+    // this code is made for sub topics
+    // const fetchDataMultiple = async () => {
+    //   try {
+    //     // Fetch main topic data
+    //     const mainTopicResponse = await axios.get(
+    //       "http://localhost:3000/main-topic"
+    //     );
+    //     setMainTopic(mainTopicResponse.data[0].title);
 
-        // Fetch sub topics data
-        const subTopicsResponse = await axios.get(
-          "http://localhost:3000/sub-topics"
-        );
-        setSubTopics(subTopicsResponse.data);
-      } catch (error) {
-        console.error("Error fetching data:", error);
-      }
-    };
+    //     // Fetch sub topics data
+    //     const subTopicsResponse = await axios.get(
+    //       "http://localhost:3000/sub-topics"
+    //     );
+    //     setSubTopics(subTopicsResponse.data);
+    //   } catch (error) {
+    //     console.error("Error fetching data:", error);
+    //   }
+    // };
 
     const fetchDataSingle = async () => {
       try {
@@ -49,7 +52,9 @@ const Visualisation = () => {
       }
     };
 
-    fetchDataMultiple(); // Call function to fetch multiple topics data
+    // this code is made for sub topics
+    // fetchDataMultiple(); // Call function to fetch multiple topics data
+
     fetchDataSingle(); // Call function to fetch single topic data
   }, []); // Run this effect only once on component mount
 
@@ -123,7 +128,6 @@ const Visualisation = () => {
           )}
         </div>
       </div>
-
       {/* Navigation Bar */}
       <div className="flex gap-4 fixed top-6 left-6 px-8 py-4 bg-white shadow rounded-2xl">
         {/* Home Icon with Tooltip */}
@@ -152,28 +156,30 @@ const Visualisation = () => {
         {/* Export Button */}
         <button onClick={handleExportClick}>Export as Image</button>
       </div>
-
-      {/* Render content based on the condition (isMultiple flag) */}
-      {isMultiple && (
-        <div id="exportContent">
-          <h1 className="text-center text-3xl font-bold my-8">{mainTopic}</h1>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
-            {/* Render SubTopic components for multiple topics */}
-            {subTopics.map((subTopic) => (
-              <SubTopic key={subTopic.id} Prop={subTopic} />
-            ))}
-          </div>
-        </div>
-      )}
+      {/* this code is made for sub topics
+      
+          Render content based on the condition (isMultiple flag) 
+          {isMultiple && (
+            <div id="exportContent">
+              <h1 className="text-center text-3xl font-bold my-8">{mainTopic}</h1>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-10">
+                Render SubTopic components for multiple topics 
+                {subTopics.map((subTopic) => (
+                  <SubTopic key={subTopic.id} Prop={subTopic} />
+                ))}
+              </div>
+            </div>
+          )}
+      */}
 
       {/* Render MainTopic component for single topic */}
-      {!isMultiple && (
+      {
         <div className="grid grid-cols-1">
           <div id="exportContent">
             <MainTopic Prop={singleTopic} />
           </div>
         </div>
-      )}
+      }
     </div>
   );
 };
