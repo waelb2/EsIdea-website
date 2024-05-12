@@ -7,7 +7,7 @@ import html2canvas from "html2canvas"; // Import html2canvas for exporting
 import MainTopic from "./MainTopic";
 
 // This is a functional component named Visualisation
-const Visualisation = () => {
+const Visualisation = (project) => {
   // Define state variables using useState hook
 
   // this code is made for sub topics
@@ -17,6 +17,7 @@ const Visualisation = () => {
   const [singleTopic, setSingleTopic] = useState([]);
   const [showTooltip, setShowTooltip] = useState(false);
   const [showProfilePopup, setShowProfilePopup] = useState(false);
+  const [ideas, setIdeas] = useState([])
   const profileRef = useRef(null);
 
   // useEffect hook to fetch data from APIs when the component mounts

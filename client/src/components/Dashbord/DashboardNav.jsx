@@ -47,7 +47,8 @@ const DashboardNav = ({currentLoc,action}) => {
             title:"Log out",
             path: import.meta.env.VITE_API_URL + "/auth/logout",
             action:()=>{
-
+                    localStorage.removeItem('user')
+                    localStorage.removeItem('userToken')
             }
         }
     ]
