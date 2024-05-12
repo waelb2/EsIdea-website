@@ -40,7 +40,8 @@ const getIdeasByProject = (req, res) => __awaiter(void 0, void 0, void 0, functi
                 createdAt: idea.creationDate,
                 votes: idea.votes,
                 isBold: idea.isBold,
-                isItalic: idea.isItalic
+                isItalic: idea.isItalic,
+                color: idea.color
             };
             return formattedIdea;
         });
@@ -118,7 +119,10 @@ const postIdea = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             createdBy: author,
             topic: createdIdea.topic.topicName,
             content: createdIdea.content,
-            creationDate: createdIdea.creationDate
+            creationDate: createdIdea.creationDate,
+            isBold: createdIdea.isBold,
+            isItalic: createdIdea.isItalic,
+            color: createdIdea.color
         };
         res.status(201).json(formattedIdea);
     }

@@ -66,8 +66,6 @@ io.on('connection', socket => {
   // Handle joining a project room
   socket.on('joinRoom', projectId => {
     socket.join(projectId)
-    console.log(`User joined project: ${projectId}`)
-    console.log(connectedUsers)
   })
 
   socket.on('userData', userData => {
@@ -96,7 +94,6 @@ io.on('connection', socket => {
 
   socket.on('deleteManyIdeas', data => {
     const { newIdeas, projectId } = data
-    console.log(newIdeas)
     socket.broadcast.to(projectId).emit('deleteManyIdeas', newIdeas)
   })
 

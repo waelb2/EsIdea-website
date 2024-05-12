@@ -34,7 +34,8 @@ export const getIdeasByProject = async (req: Request, res: Response) => {
         createdAt: idea.creationDate,
         votes: idea.votes,
         isBold: idea.isBold,
-        isItalic: idea.isItalic
+        isItalic: idea.isItalic,
+        color: idea.color
       }
       return formattedIdea
     })
@@ -138,7 +139,10 @@ export const postIdea = async (req: Request, res: Response) => {
       createdBy: author,
       topic: createdIdea.topic.topicName,
       content: createdIdea.content,
-      creationDate: createdIdea.creationDate
+      creationDate: createdIdea.creationDate,
+      isBold: createdIdea.isBold,
+      isItalic : createdIdea.isItalic,
+      color : createdIdea.color
     }
     res.status(201).json(formattedIdea)
   } catch (error) {
