@@ -21,7 +21,6 @@ const Ideation = () => {
   if (!project) throw new Error('where is the project!!!!!!!!!!!')
 
   const isCoordinator = user.email === project.coordinator.email
-    console.log(project.ProjectStatus)
   const getProjectIdeas = async () => {
     try {
       const response = await axios.get(`idea/get-ideas/${project.projectId}`)
