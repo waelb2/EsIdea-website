@@ -17,7 +17,7 @@ const App = () => {
         {/* <Route path="/login" element={user ? <Navigate to="/Home/Projects"/>:<LoginPage setUser={setUser}/>}/>
         <Route path='/' element={user?<Navigate to="/Home/Projects"/>:<LandingPage/>}/> */}
         <Route path="/login" element={<LoginPage/>}/>
-        <Route path='/' element={user ? <Navigate to="/Home/Projects"/>: <LandingPage/> }/>
+        <Route path='/' element={user !=='undefined' ? <Navigate to="/Home/Projects"/>: <LandingPage/> }/>
         <Route path='/ForgotPassword' element={<ForgotPassword/>}></Route>
         <Route path='/addPassword' element={<AddPassword/>}></Route>
         <Route path='/auth/resetPassword/*' element={<ResetPassword/>}></Route>
@@ -66,8 +66,11 @@ const App = () => {
             </Route>
         </Route>
 
-        <Route path='/ideation' element={<Ideation/>}></Route>
-        <Route path='/visualisation' element={<Visualisation/>}></Route>
+        <Route path='/project' element={<RequireAuth allowedRoles={["user","admin"]}/>}>
+
+        <Route path='ideation' element={<Ideation/>}></Route>
+        <Route path='visualisation' element={<Visualisation/>}></Route>
+        </Route>
 
         <Route path='/brainstorming' element={<BrainStorming/>}></Route>
         <Route path='/brainwriting' element={<BrainWriting/>}></Route>

@@ -221,8 +221,8 @@ if(countdownEnded){
           projectId: project.projectId,
           topicId: project.MainTopicId,
           content: newIdeaText,
-          isBold: false,
-          isItalic: false,
+          isBold,
+          isItalic,
           color: '#000',
           selected: false
         },
@@ -261,7 +261,7 @@ if(countdownEnded){
     )
   }
   const navigateVisualise = () => {
-    navigate('/visualisation', {
+    navigate('/project/visualisation', {
       state: {
         project: project
       }

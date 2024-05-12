@@ -52,6 +52,7 @@ const Ideation = () => {
   useEffect(() => {
     if (socket) {
       socket.on('newIdea', idea => {
+        console.log(idea)
         setIdeas(prevIdeas => [...prevIdeas, idea])
       })
 
@@ -75,7 +76,7 @@ const Ideation = () => {
   useEffect(()=>{
     if(projectCompleted){
         (
-        navigate('/visualisation', {
+        navigate('/project/visualisation', {
           state: {
             project: project
           }

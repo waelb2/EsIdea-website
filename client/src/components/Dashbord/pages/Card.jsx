@@ -148,7 +148,7 @@ const addToPublic = async(projectId)=>{
     //   navigate(`/${proj.IdeationMethod}?ProjectTitle=${proj.ProjectTitle}&MainTopic=${proj.MainTopic}`);
     // }
 
-    navigate("/ideation", {state: {
+    navigate("/project/ideation", {state: {
       project: proj
     }})
   }

@@ -146,7 +146,7 @@ const BrainStorming = ({ project, ideas, socket, onlineUsers }) => {
   const { user } = useUser()
   const navigate = useNavigate()
  const navigateVisualise = () => {
-    navigate('/visualisation', {
+    navigate('/project/visualisation', {
       state: {
         project: project
       }
