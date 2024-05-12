@@ -3,17 +3,17 @@ import Sticker from './Sticker'
 
 const MainTopic = ({ ideas, mainTopic }) => {
   const colors = [
-    'bg-[#c2cad2] text-white',
-    'bg-[#d8b2f4] text-white',
+    'bg-[#c2cad2] text-white', 
+    'bg-[#ec8885] text-white',
     'bg-[#d094f7] text-white',
     'bg-[#8fa2f8] text-white',
+    'bg-[#d8b2f4] text-white',
     'bg-[#a3c3f8] text-white',
     'bg-[#f7d6a1] text-white',
     'bg-[#eea87d] text-white',
     'bg-[#85c69a] text-white',
     'bg-[#a4ce91] text-white',
     'bg-[#eba9a3] text-white',
-    'bg-[#ec8885] text-white'
   ]
 
   return (
