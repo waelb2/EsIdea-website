@@ -1,4 +1,4 @@
-import React from "react";
+timport React from "react";
 import Sticker from "./Sticker";
 
 // This is a functional component named MainTopic that accepts a single prop `Prop`.
