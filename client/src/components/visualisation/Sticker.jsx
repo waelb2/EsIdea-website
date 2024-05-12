@@ -1,24 +1,45 @@
-import React from 'react'
+import React from 'react';
+
+const getRandomRotation = () => {
+  // Generate a random rotation angle between -5 and 5 degrees
+  return `rotate(${Math.random() * 10 - 5}deg)`;
+};
 
 const Sticker = ({ color, idea }) => {
-
-  // Define a style object to calculate the height based on the width of the sticker
   const stickerStyle = {
+    position: 'relative',
     display: 'inline-block',
-    boxShadow: '10px  10px 10px rgba(0, 0, 0, 0.1)',
-    width: '100%', // Set the width to 100% to make the sticker responsive
-    paddingBottom: '100%', // Maintain aspect ratio (height = width)
-    position: 'relative', // Positioning context for absolute children,,
+    width: '200px',
+    height: 'auto',
+    boxShadow: '0 10px 20px rgba(0, 0, 0, 0.3)',
+    transform: getRandomRotation(), 
+    marginBottom: '20px', 
+  };
 
-  }
+  const cornerStyle = {
+    position: 'absolute',
+    top: '-20px',
+    right: '-20px',
+    width: '10px',
+    height: '10px',
+    transform: 'rotate(45deg)',
+    background:'#f3f4f6',
+    zIndex: '1',
+      clipPath: 'polygon(100% 0, 100% 100%, 0% 100%)', // Add curvature to the corner
+
+  };
 
   return (
-    <div style={stickerStyle} className={` ${color}`}>
-      <p className='text-xl  font-semibold absolute m-[20%] top-0 left-0 right-0 bottom-0 overflow-auto'>
+    <div className={` ${color}`} style={stickerStyle}>
+      <div style={cornerStyle} ></div>
+      <p
+        className="text-xl font-semibold p-4"
+        style={{ position: 'relative', zIndex: '2' }}
+      >
         {idea.content}
       </p>
     </div>
-  )
-}
+  );
+};
 
-export default Sticker
+export default Sticker;
