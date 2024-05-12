@@ -19,53 +19,11 @@ const Visualisation = () => {
   const [showProfilePopup, setShowProfilePopup] = useState(false);
   const [ideas, setIdeas] = useState([]);
   const profileRef = useRef(null);
-  const location = useLocation()
-  const {project} = location.state
-  const {user} = useUser()
-  const profilePic = user.profilePicUrl
-  const mainTopic = project.MainTopic
-
-  useEffect(()=>{getProjectIdeas()
-   }, [])
- 
-  // useEffect hook to fetch data from APIs when the component mounts
-  // useEffect(() => {
-    // this code is made for sub topics
-    // const fetchDataMultiple = async () => {
-    //   try {
-    //     // Fetch main topic data
-    //     const mainTopicResponse = await axios.get(
-    //       "http://localhost:3000/main-topic"
-    //     );
-    //     setMainTopic(mainTopicResponse.data[0].title);
-
-    //     // Fetch sub topics data
-    //     const subTopicsResponse = await axios.get(
-    //       "http://localhost:3000/sub-topics"
-    //     );
-    //     setSubTopics(subTopicsResponse.data);
-    //   } catch (error) {
-    //     console.error("Error fetching data:", error);
-    //   }
-    // };
-
-    // const fetchDataSingle = async () => {
-    //   try {
-    //     // Fetch single topic data
-    //     const singleTopicResponse = await axios.get(
-    //       "http://localhost:3000/single-topic"
-    //     );
-    //     setSingleTopic(singleTopicResponse.data[0]);
-    //   } catch (error) {
-    //     console.error("Error fetching data:", error);
-    //   }
-    // };
-
-    // this code is made for sub topics
-    // fetchDataMultiple(); // Call function to fetch multiple topics data
-
-    // fetchDataSingle(); // Call function to fetch single topic data
-  // }, []); // Run this effect only once on component mount
+  const location = useLocation();
+  const { project } = location.state;
+  const { user } = useUser();
+  const profilePic = user.profilePicUrl;
+  const mainTopic = project.MainTopic;
 
   // useEffect hook to handle click outside of profile popup
   useEffect(() => {
@@ -87,16 +45,16 @@ const Visualisation = () => {
     setShowProfilePopup(!showProfilePopup);
   };
 
-  const getProjectIdeas = async ()=>{
-        try {
-            
-            const response = await  axios.get(`idea/get-ideas/${project.projectId}`)
-            setIdeas(response.data)
+  const getProjectIdeas = async () => {
+    try {
+      const response = await axios.get(`idea/get-ideas/${project.projectId}`);
+      setIdeas(response.data);
+      console.log(ideas);
     } catch (error) {
-           console.log(error) 
-           throw new Error(error)
-        }
+      console.log(error);
+      throw new Error(error);
     }
+  };
 
   // Function to handle export click and generate image from HTML content
   const handleExportClick = () => {
@@ -139,8 +97,10 @@ const Visualisation = () => {
                   alt="Profile"
                   className="w-24 h-24 rounded-full mx-auto mb-2"
                 />
-                <p className="text-xl font-bold text-center">Full Name</p>
-                <p className="text-center mb-2">example@mail.com</p>
+                <p className="text-xl font-bold text-center">
+                  {user.lastName} {user.firstName}
+                </p>
+                <p className="text-center mb-2">{user.email}</p>
                 <hr />
                 <p className="text-red text-center mt-2">Log Out</p>
               </div>
