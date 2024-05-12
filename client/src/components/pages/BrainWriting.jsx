@@ -95,25 +95,7 @@ const BrainWriting = ({ project, ideas, socket, onlineUsers }) => {
     }
   }
 
-  const editProjectStatus = async () => {
-    try {
-      const data = {
-        newStatus: 'completed'
-      }
-      const response = await axios.patch(
-        `project/update-project-status/${project.projectId}`,
-        data,
-        {
-          headers: {
-            Authorization: `Bearer ${userToken}`
-          }
-        }
-      )
-    } catch (error) {
-      console.log(error)
-      throw new Error(error)
-    }
-  }
+
   
   const handleKeyPress = event => {
     if (event.key === 'Enter') {

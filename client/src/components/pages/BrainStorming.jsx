@@ -35,6 +35,7 @@ const BrainStorming = ({ project, ideas, socket, onlineUsers }) => {
   const countDownMin = Math.floor(project.timer / 60)
   const countDownSec = project.timer % 60
 
+
   // init user thoughts
   useEffect(() => {
     setUserIdeas(ideas)
@@ -129,20 +130,7 @@ const BrainStorming = ({ project, ideas, socket, onlineUsers }) => {
     }
   }, [socket])
 
-  // const handleCountdownEnd = () => {
-  //   setUserArray(prevUserArray => {
-  //     const updatedUserArray = [...prevUserArray];
-  //     updatedUserArray[activeUserIndex] = { ...updatedUserArray[activeUserIndex], showName: false };
 
-  //     const nextUserIndex = (activeUserIndex + 1) % userArray.length;
-  //     updatedUserArray[nextUserIndex] = { ...updatedUserArray[nextUserIndex], showName: true };
-
-  //     setActiveUserIndex(nextUserIndex);
-  //     setCountdownTime(30);
-
-  //     return updatedUserArray;
-  //   });
-  // };
   const { user } = useUser()
   const navigate = useNavigate()
  const navigateVisualise = () => {
