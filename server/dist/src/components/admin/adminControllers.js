@@ -421,7 +421,6 @@ const getPublicProjectRequests = (req, res) => __awaiter(void 0, void 0, void 0,
     }
 });
 exports.getPublicProjectRequests = getPublicProjectRequests;
-// Needs some discussion, 'cause the admin should approve the public project based on certain verifications (file uploaded)
 const approvePublicProjectRequest = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const errResult = (0, express_validator_1.validationResult)(req);
     if (!errResult.isEmpty())

@@ -33,6 +33,8 @@ const DashboardNav = ({currentLoc,action}) => {
             icon:HelpIcon,
             title:"Help",
             path:"/faq",
+            target: "_blank",
+            rel: "noopener noreferrer",
             action:()=>{
                 
             }
@@ -84,7 +86,8 @@ const DashboardNav = ({currentLoc,action}) => {
                     <ul className='list-none flex justify-end items-start flex-1 flex-col'>
                         {userDetails.map((det,ind) =><div className='w-full' key={det.title}>
                             <li className={`w-full rounded-md transition-all hover:bg-[#d9e9f6]`}>
-                                <Link onClick={det.action} to={det.path} className='flex w-full items-center  p-2'>
+                                <Link onClick={det.action} to={det.path} {...(det.target && { target: det.target })}
+                                    {...(det.rel && { rel: det.rel })} className='flex w-full items-center  p-2'>
                                     <img className='mr-3 w-5 h-5 object-contain' src={det.icon} alt={det.title} />
                                     <p className='flex-grow'>{det.title}</p>
                                 </Link>
