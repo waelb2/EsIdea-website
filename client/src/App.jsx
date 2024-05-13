@@ -17,7 +17,7 @@ const App = () => {
         {/* <Route path="/login" element={user ? <Navigate to="/Home/Projects"/>:<LoginPage setUser={setUser}/>}/>
         <Route path='/' element={user?<Navigate to="/Home/Projects"/>:<LandingPage/>}/> */}
         <Route path="/login" element={<LoginPage/>}/>
-        <Route path='/' element={user !=='undefined' ? <Navigate to="/Home/Projects"/>: <LandingPage/> }/>
+        <Route path='/' element={user !==null ? <Navigate to="/Home/Projects"/>: <LandingPage/> }/>
         <Route path='/ForgotPassword' element={<ForgotPassword/>}></Route>
         <Route path='/addPassword' element={<AddPassword/>}></Route>
         <Route path='/auth/resetPassword/*' element={<ResetPassword/>}></Route>
