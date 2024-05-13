@@ -39,7 +39,6 @@ const login_get = (req: Request, res: Response) => {
   res.send('login_get')
 }
 
-//!!!!!!!!!!!! This must be in User model method and the secret must be in .env file
 const createToken = (user: UserInterface) => {
   return jwt.sign(
     { userId: user.id, email: user.email },
@@ -56,7 +55,6 @@ const login_post = async (req: Request, res: Response) => {
     if (!user) {
       return res.status(400).json({ message: 'No user found with that email' })
     }
-    // !!! Same for this method in User model
     const passwordMatch = await bcrypt.compare(
       String(password),
       String(user!.password)
@@ -151,7 +149,6 @@ const updatePassword = async (req: Request, res: Response) => {
     if (!updateResult) {
       return (
         res
-          //!!!!!!!!!same note
           .status(404)
           .json({ message: 'Failed to update password, try again!' })
       )
@@ -214,7 +211,6 @@ const resetPassword = async (req: Request, res: Response) => {
     passwordResetToken: token,
     passwordResetTokenExpires: { $gt: Date.now() }
   })
-  // Not accurate error handling , maybe the user does not even exists ?!!!!!!!!!!!!!
   if (!user) {
     return res.status(400).json({ message: 'Token is invalid or has expired!' })
   }
@@ -231,7 +227,6 @@ const resetPassword = async (req: Request, res: Response) => {
     { runValidators: true, new: true }
   )
 
-  //Same note !!!!!!!!!!
   if (!updateResult) {
     return res.status(404).json({ message: 'User not found' })
   }
@@ -245,9 +240,7 @@ const resetPassword = async (req: Request, res: Response) => {
 
   return res.status(200).json({ user })
 }
-//////////////////////////////////////////////////////////////////////////
 
-/// NOT HEREE !!!!!!!!!!!!!!!!!!!!
 const handleError = (err: any) => {
   let errors: any = {}
   if (err.name === 'ValidationError') {
