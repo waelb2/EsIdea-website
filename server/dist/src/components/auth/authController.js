@@ -51,7 +51,6 @@ const login_get = (req, res) => {
     res.send('login_get');
 };
 exports.login_get = login_get;
-//!!!!!!!!!!!! This must be in User model method and the secret must be in .env file
 const createToken = (user) => {
     return jsonwebtoken_1.default.sign({ userId: user.id, email: user.email }, process.env.JWT_SECRET, {
         expiresIn: 30 * 24 * 60 * 60
@@ -64,7 +63,6 @@ const login_post = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
         if (!user) {
             return res.status(400).json({ message: 'No user found with that email' });
         }
-        // !!! Same for this method in User model
         const passwordMatch = yield bcrypt_1.default.compare(String(password), String(user.password));
         if (!passwordMatch) {
             return res.status(401).json({ message: 'Wrong Password, try again' });
@@ -139,7 +137,6 @@ const updatePassword = (req, res) => __awaiter(void 0, void 0, void 0, function*
         const updateResult = yield userModels_1.User.findOneAndUpdate({ email: email }, { $set: { password: hashedPassword } }, { runValidators: true, new: true });
         if (!updateResult) {
             return (res
-                //!!!!!!!!!same note
                 .status(404)
                 .json({ message: 'Failed to update password, try again!' }));
         }
@@ -195,7 +192,6 @@ const resetPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         passwordResetToken: token,
         passwordResetTokenExpires: { $gt: Date.now() }
     });
-    // Not accurate error handling , maybe the user does not even exists ?!!!!!!!!!!!!!
     if (!user) {
         return res.status(400).json({ message: 'Token is invalid or has expired!' });
     }
@@ -205,7 +201,6 @@ const resetPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     const salt = yield bcrypt_1.default.genSalt();
     const hashedPassword = yield bcrypt_1.default.hash(String(newPassword), salt);
     const updateResult = yield userModels_1.User.findOneAndUpdate({ passwordResetToken: token }, { $set: { password: hashedPassword } }, { runValidators: true, new: true });
-    //Same note !!!!!!!!!!
     if (!updateResult) {
         return res.status(404).json({ message: 'User not found' });
     }
@@ -218,8 +213,6 @@ const resetPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     return res.status(200).json({ user });
 });
 exports.resetPassword = resetPassword;
-//////////////////////////////////////////////////////////////////////////
-/// NOT HEREE !!!!!!!!!!!!!!!!!!!!
 const handleError = (err) => {
     let errors = {};
     if (err.name === 'ValidationError') {
