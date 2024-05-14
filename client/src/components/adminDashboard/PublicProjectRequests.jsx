@@ -48,7 +48,7 @@ const PublicProjectRequests = () => {
                 <img className='ss:w-40 ss:h-40 w-full h-32 p-2 object-contain bg-realWhite' src={req.projectId.thumbnailUrl === ""?"https://img.freepik.com/free-vector/startup-success-launch-business-project_107791-4758.jpg?t=st=1714342322~exp=1714345922~hmac=81d1a808f2b5abda57ed89b74489360abce54b3c9bdc7816ecd6a489f3339b35&w=1380":req.projectId.thumbnailUrl} alt="Banner" />
                 <div className='flex-grow flex flex-col justify-between px-4 py-3'>
                     <h1 className='font-semibold text-lg'>{req.projectId.title}</h1>
-                    <p>{req.projectId.description}</p>
+                    <p title={req.projectId.description} className='line-clamp-3 mb-1'>{req.projectId.description}</p>
                     <div className='flex justify-between items-center'>
                         <div className='flex items-center gap-x-1'>
                             <img  className='w-8 h-8 rounded-full border-2 border-[#10b981] p-0.5' src={req.projectId.coordinator.profilePicUrl} alt="" />
