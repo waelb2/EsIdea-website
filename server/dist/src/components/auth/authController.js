@@ -109,7 +109,7 @@ const addPassword = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
         const token = createToken(user);
         return res
             .status(200)
-            .json({ message: 'Password Added Successfully', user, userToken: token });
+            .json({ message: 'Password Added Successfully', formattedUser, userToken: token });
     }
     catch (e) {
         const errors = handleError(e);
