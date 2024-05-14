@@ -161,7 +161,7 @@ const addToPublic = async(projectId)=>{
                 <h1 className='text-[14px] font-semibold'>{proj.ProjectTitle}</h1>
                 <p className='text-[12px] '>{new Date(proj.joinedDate).toLocaleDateString(dataOptions)}</p>
             </div>
-            <p className='text-sm text-grey font-medium line-clamp-[4]'>
+            <p title={proj.Description} className='text-sm text-grey font-medium line-clamp-2'>
                 {proj.Description}
             </p>
         </div>

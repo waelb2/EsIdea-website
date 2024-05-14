@@ -26,8 +26,8 @@ const ScrollToTop = ({ container }) => {
   }, [container]);
 
   return (
-      <img style={active ? {bottom:"1rem"}:{bottom:"-3rem"}} onClick={() => container.current.scrollTo({ top: 0, behavior: 'smooth' })}
-        className="w-[50px] h-[50px] fixed transition-all cursor-pointer duration-300 opacity-100 right-9"
+      <img title='Scroll to up' style={active ? {bottom:"1rem"}:{bottom:"-3rem"}} onClick={() => container.current.scrollTo({ top: 0, behavior: 'smooth' })}
+        className="w-9 h-9 fixed transition-all cursor-pointer duration-300 opacity-100 right-4 mr-0.5"
         src={UpIcon}
         alt="Scroll to Up"
       />
