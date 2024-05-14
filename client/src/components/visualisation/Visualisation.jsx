@@ -115,7 +115,7 @@ const Visualisation = () => {
       // Create a temporary link element
       const link = document.createElement('a')
       link.href = imgData
-      link.download = 'exported-image.png'
+      link.download = `${project.ProjectTitle}.png`
       document.body.appendChild(link)
 
       // Trigger the download
