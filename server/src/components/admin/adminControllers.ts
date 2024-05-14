@@ -392,7 +392,6 @@ const getPublicProjectRequests = async (req: Request, res: Response) => {
   }
 }
 
-// Needs some discussion, 'cause the admin should approve the public project based on certain verifications (file uploaded)
 const approvePublicProjectRequest = async (req: Request, res: Response) => {
   const errResult = validationResult(req)
   if (!errResult.isEmpty())

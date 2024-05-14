@@ -104,10 +104,10 @@ return (
                     }
                   </td>
                 ))}
-                <td key={row.id} className={`${tdStyle} flex justify-between px-2`}>
-                  <img className='cursor-pointer' src={View} alt="View" />
-                  <img className='cursor-pointer' src={Hammer} alt="Hammer" />
-                  <img onClick={()=>{deleteUser(row.original._id)}} className='cursor-pointer' src={Remove} alt="Remove" />
+                <td key={row.id} className={`${tdStyle} flex justify-center px-2`}>
+                  {/* <img className='cursor-pointer' src={View} alt="View" />
+                  <img className='cursor-pointer' src={Hammer} alt="Hammer" /> */}
+                  <img title='Delete user' onClick={()=>{deleteUser(row.original._id)}} className='cursor-pointer' src={Remove} alt="Remove" />
                 </td>
               </tr>
             ))}

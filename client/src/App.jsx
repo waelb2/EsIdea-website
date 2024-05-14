@@ -1,7 +1,7 @@
 // eslint-disable-next-line no-unused-vars
-import React, { useState,useEffect,useMemo } from 'react';
+import React from 'react';
 import { Routes,Route, Navigate } from 'react-router-dom';
-import { LoginPage,Dashbord,Projects,Recents,Favorites,Public,Trash, LandingPage, AdminDashboard, General, Tags, Logs, Users, FeedBacks, ForgotPassword, ResetPassword, AddPassword, ChangePassword, BrainStorming, BrainWriting, AdminBrainStorming, AdminBrainWriting, Whiteboard, PublicProjectRequests } from './components';
+import { LoginPage,Dashbord,Projects,Recents,Favorites,Public,Trash, LandingPage, AdminDashboard, General, Tags, Logs, Users, FeedBacks, ForgotPassword, ResetPassword, AddPassword, ChangePassword, BrainStorming, BrainWriting, AdminBrainStorming, AdminBrainWriting, Whiteboard, PublicProjectRequests, FaqPage } from './components';
 import RequireAuth from './components/auth/RequireAuth';
 import UnauthorizedPage from './components/auth/UnauthorizedPage';
 import NotFound from './components/NotFoundPage/NotFound';
@@ -23,6 +23,7 @@ const App = () => {
         <Route path='/auth/resetPassword/*' element={<ResetPassword/>}></Route>
         <Route path='/ChangePassword' element={<ChangePassword/>}></Route>
         <Route path='/unauthorized' element={<UnauthorizedPage/>}></Route>
+        <Route path='/faq' element={<FaqPage/>}></Route>
 
 
         {/* <Route  path='/Admin' element={user?<AdminDashboard/>:<Navigate to="/login"/>}>

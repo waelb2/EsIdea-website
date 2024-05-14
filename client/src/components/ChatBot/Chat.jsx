@@ -51,7 +51,7 @@ const Chat = () => {
   };
   const [tooltip, setToolTip] = useState(false);
   return (
-    <div className="fixed bottom-4 left-4 w-5/12">
+    <div className="fixed z-20 bottom-2 left-4 w-5/12">
       <div
         className={`bg-white border-slate-600 border-2 rounded-lg shadow-2xl ${
           showChat ? "block" : "hidden"

@@ -22,6 +22,7 @@ import AdminBrainStorming from './Admin Brainstorming/AdminBrainstorming'
 import AdminBrainWriting from './Admin Brainwriting/AdmingBrainwriting'
 import Whiteboard from '../components/WhiteBoard/whiteboard'
 import PublicProjectRequests from "./adminDashboard/PublicProjectRequests";
+import FaqPage from "./FaqPage/FaqPage";
 export {
     LoginPage,
     Dashbord,
@@ -46,5 +47,6 @@ export {
     AdminBrainStorming,
     AdminBrainWriting,
     Whiteboard,
-    PublicProjectRequests
+    PublicProjectRequests,
+    FaqPage
 }
