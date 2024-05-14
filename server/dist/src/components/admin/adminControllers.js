@@ -61,6 +61,7 @@ const publicProjectRequestModel_1 = require("../publicProjectRequest/publicProje
 const ideationMethodModel_1 = require("../idea/ideationMethodModel");
 const fs_1 = __importDefault(require("fs"));
 const getStats = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // Initialize statistics object
     let stats = {
         nbUsers: 0,
         nbProjects: [],
@@ -68,9 +69,9 @@ const getStats = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
         nbProjects24h: 0
     };
     try {
-        //Number of users
+        // Number of users
         stats.nbUsers = yield userModels_1.User.countDocuments();
-        //Number of projects per method
+        // Number of projects per method
         const methods = yield ideationMethodModel_1.IdeationMethod.find();
         for (const method of methods) {
             const nb = yield projectModels_1.Project.find({
@@ -78,37 +79,43 @@ const getStats = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             }).countDocuments();
             stats.nbProjects.push(nb);
         }
-        //Number of website visits in the last 24h
+        // Number of website visits in the last 24 hours
         stats.nbVisits24h = yield (0, adminUtils_1.nbVisits24h)();
-        //Number of the new projects in the last 24h
+        // Number of new projects in the last 24 hours
         const avant24h = new Date(Date.now() - 24 * 3600 * 1000);
-        //filtering the projects that were created in the last 24h
+        // Filtering the projects created in the last 24 hours
         const projects24h = yield projectModels_1.Project.find({ creationDate: { $gte: avant24h } });
         stats.nbProjects24h = projects24h.length;
+        // Send statistics in response
         return res.status(200).send(stats);
     }
     catch (error) {
         console.log(error);
-        return res.sendStatus(500);
+        return res.sendStatus(500); // Internal server error
     }
 });
 exports.getStats = getStats;
 const getUsers = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        // Find all users
         const users = yield userModels_1.User.find({});
+        // Send users in response
         return res.status(200).send(users);
     }
     catch (error) {
         console.log(error);
-        return res.sendStatus(500);
+        return res.sendStatus(500); // Internal server error
     }
 });
 exports.getUsers = getUsers;
 const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // Validate request body
     const errResult = (0, express_validator_1.validationResult)(req);
     if (!errResult.isEmpty())
         return res.status(400).send({ errors: errResult.array() });
+    // Extract user ID from request body
     const userId = req.body.id;
+    // Check if user ID is valid
     if (!(0, mongoose_1.isObjectIdOrHexString)(userId)) {
         return res
             .status(400)
@@ -116,10 +123,12 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
     }
     const objectId = new mongoose_1.default.Types.ObjectId(userId);
     try {
+        // Find user by ID
         const user = yield userModels_1.User.findById(objectId);
         if (!user) {
             return res.status(404).send({ error: 'User not found' });
         }
+        // Remove user from collaborators of all projects
         for (const projectObj of user.projects) {
             const project = yield projectModels_1.Project.findById(new mongoose_1.default.Types.ObjectId(projectObj.project._id.toString()));
             if (project) {
@@ -131,113 +140,134 @@ const deleteUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
                 return res.status(404).send({ error: 'Project of the user not found' });
             }
         }
+        // Delete user
         yield userModels_1.User.deleteOne(objectId);
-        return res.sendStatus(200);
+        return res.sendStatus(200); // Success response
     }
     catch (error) {
         console.log(error);
-        return res.sendStatus(500);
+        return res.sendStatus(500); // Internal server error
     }
 });
 exports.deleteUser = deleteUser;
 const banUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // Validate request body
     const errResult = (0, express_validator_1.validationResult)(req);
     if (!errResult.isEmpty())
         return res.status(400).send({ errors: errResult.array() });
+    // Extract user ID and duration from request body
     const userId = req.body.id;
     const duration = req.body.duration;
+    // Check if duration is valid
     if (duration <= 0)
         return res.status(400).send({
             error: 'Bad duration: must be positive different from 0 integer'
         });
+    // Check if user ID is valid
     if (!(0, mongoose_1.isObjectIdOrHexString)(userId))
         return res
             .status(400)
             .send({ error: 'Bad id: must be 24 character hex string' });
     const objectId = new mongoose_1.default.Types.ObjectId(userId);
     try {
+        // Find user by ID
         const user = yield userModels_1.User.findById(objectId);
         if (!user) {
             return res.status(404).send({ error: 'User not found' });
         }
+        // Calculate end date of ban
         const endDate = new Date(Date.now() + duration * 24 * 3600 * 1000);
         user.ban.isBan = true;
         user.ban.banEnd = endDate;
         yield user.save();
-        return res.sendStatus(200);
+        return res.sendStatus(200); // Success response
     }
     catch (error) {
         console.log(error);
-        return res.sendStatus(500);
+        return res.sendStatus(500); // Internal server error
     }
 });
 exports.banUser = banUser;
 const unbanUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // Validate request body
     const errResult = (0, express_validator_1.validationResult)(req);
     if (!errResult.isEmpty())
         return res.status(400).send({ errors: errResult.array() });
+    // Extract user ID from request body
     const userId = req.body.id;
+    // Check if user ID is valid
     if (!(0, mongoose_1.isObjectIdOrHexString)(userId))
         return res
             .status(400)
             .send({ error: 'Bad id: must be 24 character hex string' });
     const objectId = new mongoose_1.default.Types.ObjectId(userId);
     try {
+        // Find user by ID
         const user = yield userModels_1.User.findById(objectId);
         if (!user) {
             return res.status(404).send({ error: 'User not found' });
         }
+        // Check if user is banned
         if (user.ban.isBan) {
+            // Check if ban period has expired
             if (Date.now() >= user.ban.banEnd.getTime()) {
                 user.ban.isBan = false;
                 yield user.save();
-                return res.sendStatus(200);
+                return res.sendStatus(200); // Success response
             }
-            return res.status(403).send({ error: adminInterface_1.banMsg });
+            return res.status(403).send({ error: adminInterface_1.banMsg }); // Forbidden response
         }
-        return res.status(400).send({ error: 'User is not banned' });
+        return res.status(400).send({ error: 'User is not banned' }); // Bad request response
     }
     catch (error) {
         console.log(error);
-        return res.sendStatus(500);
+        return res.sendStatus(500); // Internal server error
     }
 });
 exports.unbanUser = unbanUser;
 const forceUnbanUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // Validate request body
     const errResult = (0, express_validator_1.validationResult)(req);
     if (!errResult.isEmpty())
         return res.status(400).send({ errors: errResult.array() });
+    // Extract user ID from request body
     const userId = req.body.id;
+    // Check if user ID is valid
     if (!(0, mongoose_1.isObjectIdOrHexString)(userId))
         return res
             .status(400)
             .send({ error: 'Bad id: must be 24 character hex string' });
     const objectId = new mongoose_1.default.Types.ObjectId(userId);
     try {
+        // Find user by ID
         const user = yield userModels_1.User.findById(objectId);
         if (!user) {
             return res.status(404).send({ error: 'User not found' });
         }
+        // Check if user is banned
         if (user.ban.isBan) {
             user.ban.isBan = false;
             yield user.save();
-            return res.sendStatus(200);
+            return res.sendStatus(200); // Success response
         }
-        return res.status(400).send({ error: 'User is not banned' });
+        return res.status(400).send({ error: 'User is not banned' }); // Bad request response
     }
     catch (error) {
         console.log(error);
-        return res.sendStatus(500);
+        return res.sendStatus(500); // Internal server error
     }
 });
 exports.forceUnbanUser = forceUnbanUser;
 const getTags = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // Validate request body
     const errResult = (0, express_validator_1.validationResult)(req);
     if (!errResult.isEmpty())
         return res.status(400).send({ errors: errResult.array() });
+    // Extract type from query parameters
     const type = req.query.type;
     let docs;
     try {
+        // Retrieve documents based on type
         switch (type.toLowerCase()) {
             case 'club':
                 docs = yield clubModel_1.Club.find({});
@@ -251,6 +281,7 @@ const getTags = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             default:
                 return res.status(400).send({ error: 'Invalid tag type' });
         }
+        // Send retrieved documents
         return res.status(200).send(docs);
     }
     catch (error) {
@@ -260,12 +291,15 @@ const getTags = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.getTags = getTags;
 const createTag = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // Validate request body
     const errResult = (0, express_validator_1.validationResult)(req);
     if (!errResult.isEmpty())
         return res.status(400).send({ errors: errResult.array() });
+    // Extract type and tag details from request body
     const _a = req.body, { type } = _a, tag = __rest(_a, ["type"]);
     let savedDoc;
     try {
+        // Create new document based on type
         switch (type.toLowerCase()) {
             case 'club':
                 const newClub = new clubModel_1.Club(tag);
@@ -282,6 +316,7 @@ const createTag = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             default:
                 return res.status(400).send({ error: 'Invalid tag type' });
         }
+        // Send success response
         return res.status(201).send({ msg: 'Created successfully', savedDoc });
     }
     catch (error) {
@@ -291,10 +326,13 @@ const createTag = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.createTag = createTag;
 const deleteTag = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // Validate request body
     const errResult = (0, express_validator_1.validationResult)(req);
     if (!errResult.isEmpty())
         return res.status(400).send({ errors: errResult.array() });
+    // Extract tag ID and type from request body
     const id = req.body.id, type = req.body.type;
+    // Check if ID is valid
     if (!(0, mongoose_1.isObjectIdOrHexString)(id)) {
         return res
             .status(400)
@@ -302,31 +340,46 @@ const deleteTag = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
     const objectId = new mongoose_1.default.Types.ObjectId(id);
     try {
+        // Delete document based on type and ID
         switch (type.toLowerCase()) {
+            // If type is 'club', delete the club document
             case 'club':
+                // Find the club document by its ID
                 const club = yield clubModel_1.Club.findById(objectId);
+                // If club document not found, send error response
                 if (!club) {
                     return res.status(404).send({ error: 'Club not found' });
                 }
+                // Delete the club document
                 yield clubModel_1.Club.deleteOne(objectId);
                 break;
+            // If type is 'module', delete the module document
             case 'module':
+                // Find the module document by its ID
                 const module = yield moduleModel_1.Module.findById(objectId);
+                // If module document not found, send error response
                 if (!module) {
                     return res.status(404).send({ error: 'Module not found' });
                 }
+                // Delete the module document
                 yield moduleModel_1.Module.deleteOne(objectId);
                 break;
+            // If type is 'event', delete the event document
             case 'event':
+                // Find the event document by its ID
                 const event = yield eventModel_1.Event.findById(objectId);
+                // If event document not found, send error response
                 if (!event) {
                     return res.status(404).send({ error: 'Event not found' });
                 }
+                // Delete the event document
                 yield eventModel_1.Event.deleteOne(objectId);
                 break;
+            // If type is not recognized, send invalid tag type error response
             default:
                 return res.status(400).send({ error: 'Invalid tag type' });
         }
+        // Send success response
         return res.sendStatus(200);
     }
     catch (error) {
@@ -336,10 +389,12 @@ const deleteTag = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 });
 exports.deleteTag = deleteTag;
 const modifyTag = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // Validate request body
     const errResult = (0, express_validator_1.validationResult)(req);
     if (!errResult.isEmpty())
         return res.status(400).send({ errors: errResult.array() });
     const { id, type, tag } = req.body;
+    // Check if ID is valid
     if (!(0, mongoose_1.isObjectIdOrHexString)(id)) {
         return res
             .status(400)
@@ -347,6 +402,7 @@ const modifyTag = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
     const objectId = mongoose_1.default.Types.ObjectId.createFromHexString(id);
     try {
+        // Modify document based on type
         switch (type.toLowerCase()) {
             case 'club':
                 let club = yield clubModel_1.Club.findById(objectId);
@@ -384,6 +440,7 @@ const modifyTag = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             default:
                 return res.status(400).send({ error: 'Invalid tag type' });
         }
+        // Send success response
         return res.sendStatus(200);
     }
     catch (error) {
@@ -394,7 +451,9 @@ const modifyTag = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
 exports.modifyTag = modifyTag;
 const getFeedbacks = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        // Retrieve feedbacks
         const fbs = yield feedbackModel_1.feedback.find({});
+        // Send success response
         return res.status(200).send(fbs);
     }
     catch (error) {
@@ -405,6 +464,7 @@ const getFeedbacks = (req, res) => __awaiter(void 0, void 0, void 0, function* (
 exports.getFeedbacks = getFeedbacks;
 const getPublicProjectRequests = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        // Retrieve public project requests with populated data
         const ppRequests = yield publicProjectRequestModel_1.publicProjectRequest.find({})
             .populate({
             path: 'projectId',
@@ -413,6 +473,7 @@ const getPublicProjectRequests = (req, res) => __awaiter(void 0, void 0, void 0,
                 model: 'User'
             }
         });
+        // Send success response
         return res.status(200).send(ppRequests);
     }
     catch (error) {
@@ -422,47 +483,62 @@ const getPublicProjectRequests = (req, res) => __awaiter(void 0, void 0, void 0,
 });
 exports.getPublicProjectRequests = getPublicProjectRequests;
 const approvePublicProjectRequest = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    // Validate request body parameters
     const errResult = (0, express_validator_1.validationResult)(req);
     if (!errResult.isEmpty())
         return res.status(400).send({ errors: errResult.array() });
+    // Extract project publication request ID from request body
     const pprId = req.body.id;
+    // Validate project publication request ID
     if (!(0, mongoose_1.isObjectIdOrHexString)(pprId))
         return res
             .status(400)
             .send({ error: 'Bad id: must be 24 character hex string' });
+    // Convert project publication request ID to MongoDB ObjectId
     const pprObjectId = new mongoose_1.default.Types.ObjectId(pprId);
     try {
+        // Find the project publication request by ID
         const ppr = yield publicProjectRequestModel_1.publicProjectRequest.findById(pprObjectId);
         if (!ppr) {
             return res
                 .status(404)
                 .send({ error: 'Project publication request not found' });
         }
+        // Find the project associated with the publication request
         const project = yield projectModels_1.Project.findById(ppr.projectId);
         if (!project) {
             return res
                 .status(404)
                 .send({ error: 'The project of the publication request not found' });
         }
+        // Approve the public visibility of the project
         project.visibility = projectModels_1.ProjectVisibility.PUBLIC;
         yield project.save();
+        // Delete the approved project publication request
         yield publicProjectRequestModel_1.publicProjectRequest.deleteOne(pprObjectId);
+        // Send success response
         return res.status(200).send({ msg: "The public project request has been approved" });
     }
     catch (error) {
+        // Handle errors and send error response
         console.log(error);
         return res.sendStatus(500);
     }
 });
 exports.approvePublicProjectRequest = approvePublicProjectRequest;
 const getLogs = (req, res) => {
+    // Read the content of the access log file
     fs_1.default.readFile("./access.log", 'utf8', (error, data) => {
         if (error) {
+            // If error occurs during file reading, send error response
             console.log(error);
             return res.status(500).send({ error: 'Error in reading logs file' });
         }
+        // Split the data into individual lines
         const lines = data.split('\n');
+        // Initialize an array to store parsed log entries
         const parsedLogs = [];
+        // Iterate over each line of the log file
         lines.forEach((line) => {
             // Split the line to extract date, request type, and route
             if (line) {
@@ -478,15 +554,19 @@ const getLogs = (req, res) => {
                 parsedLogs.push(logEntry);
             }
         });
+        // Send the parsed log entries as response
         return res.status(200).send(parsedLogs);
     });
 };
 exports.getLogs = getLogs;
 const deleteLogs = (req, res) => {
+    // Overwrite the content of the access log file with an empty string
     fs_1.default.writeFile("./access.log", '', (error) => {
         if (error) {
+            // If error occurs during file writing, send error response
             return res.status(500).send({ msg: 'Error deleting file content', error });
         }
+        // Send success response after deleting file content
         return res.sendStatus(200);
     });
 };

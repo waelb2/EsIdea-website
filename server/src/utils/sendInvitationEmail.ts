@@ -1,8 +1,11 @@
 import transporter from '../config/ndmailer'
-import jwt, { JwtPayload, verify } from 'jsonwebtoken'
+import jwt, { JwtPayload } from 'jsonwebtoken'
 import dotenv from 'dotenv'
 dotenv.config()
 
+/**
+ * Interface representing the structure of an email.
+ */
 interface EmailInterface {
   from: string
   to: string
@@ -10,6 +13,9 @@ interface EmailInterface {
   html: string
 }
 
+/**
+ * Payload structure for invitation links.
+ */
 export interface LinkPayload extends JwtPayload {
   userId: string
   email: string
@@ -18,6 +24,15 @@ export interface LinkPayload extends JwtPayload {
   exp?: number
 }
 
+/**
+ * Sends an invitation email to a user.
+ * @param coordinator The name of the coordinator sending the invitation.
+ * @param userId The ID of the user being invited.
+ * @param email The email address of the user being invited.
+ * @param projectId The ID of the project to which the user is being invited.
+ * @param projectName The name of the project.
+ * @param invitationId The ID of the invitation.
+ */
 const sendInvitationEMail = async (
   coordinator: string,
   userId: string,

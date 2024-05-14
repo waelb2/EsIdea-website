@@ -25,6 +25,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Event = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
+// Define the schema for the Event model
 const eventSchema = new mongoose_1.Schema({
     eventName: {
         type: String,
@@ -32,4 +33,5 @@ const eventSchema = new mongoose_1.Schema({
     },
     description: String
 });
+// Create and export the Event model
 exports.Event = mongoose_1.default.model('Event', eventSchema);

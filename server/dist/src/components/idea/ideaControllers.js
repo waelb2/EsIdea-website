@@ -14,19 +14,23 @@ const ideaModels_1 = require("./ideaModels");
 const userModels_1 = require("../user/userModels");
 const projectModels_1 = require("../project/projectModels");
 const topicModel_1 = require("../project/topicModel");
+// Function to get ideas by project ID
 const getIdeasByProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { projectId } = req.params;
+        // Check if projectId is provided
         if (!projectId) {
             return res.status(400).json({
                 error: 'Project ID must be provided'
             });
         }
+        // Find ideas by project ID and populate related fields
         const ideas = yield ideaModels_1.Idea.find({
             projectId
         })
             .populate('topic')
             .populate('createdBy');
+        // Format retrieved ideas
         const formattedIdeas = ideas.map(idea => {
             const formattedIdea = {
                 ideaId: idea.id,
@@ -45,6 +49,7 @@ const getIdeasByProject = (req, res) => __awaiter(void 0, void 0, void 0, functi
             };
             return formattedIdea;
         });
+        // Send the formatted ideas as response
         res.status(201).json(formattedIdeas);
     }
     catch (error) {
@@ -55,42 +60,52 @@ const getIdeasByProject = (req, res) => __awaiter(void 0, void 0, void 0, functi
     }
 });
 exports.getIdeasByProject = getIdeasByProject;
+// Function to post a new idea
 const postIdea = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        // const userId = '662d1119ace155f48b676a7d'
         const { userId } = req.user;
         const user = yield userModels_1.User.findById(userId);
+        // Check if the user exists
         if (!user) {
             return res.status(404).json({
                 error: `User with id : ${userId} does not exist`
             });
         }
+        // Destructure request body
         const { projectId, topicId, content, isBold, isItalic, color, selected } = req.body;
+        // Find project by ID
         const project = yield projectModels_1.Project.findById(projectId);
+        // Check if the project exists
         if (!project) {
             return res.status(404).json({
                 error: `Project with id : ${projectId} does not exist`
             });
         }
+        // Populate collaborators and coordinator fields
         ;
         (yield project.populate('collaborators.member')).populate('coordinator');
+        // Extract collaborator IDs
         const collaboratorIds = project.collaborators.map(collaborator => {
             const objectId = collaborator.member._id;
             return objectId.toString();
         });
         collaboratorIds.push(project.coordinator._id.toString());
+        // Check if the user is authorized to collaborate on the project
         const foundUsers = collaboratorIds.filter(collaboratorId => collaboratorId === userId);
         if (foundUsers.length === 0) {
             return res.status(401).json({
                 error: `User with ID ${userId} is unauthorized to collaborate on this project`
             });
         }
+        // Find topic by ID
         const topic = yield topicModel_1.Topic.findById(topicId);
+        // Check if the topic exists
         if (!topic) {
             return res.status(404).json({
                 error: `Topic with id : ${topicId} does not exist`
             });
         }
+        // Create a new idea
         const createdIdea = yield ideaModels_1.Idea.create({
             projectId: project,
             createdBy: user,
@@ -102,18 +117,22 @@ const postIdea = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
             color,
         });
         (yield createdIdea.populate('topic')).populate('createdBy');
+        // Handle errors
         if (!createdIdea) {
             return res.status(500).json({
                 error: 'Error posting the idea'
             });
         }
+        // Update project with the new idea
         project.ideas.push(createdIdea);
         project.save();
+        // Format author data
         const author = {
             firstName: user.firstName,
             email: user.email,
             profilePicUrl: user.profilePicUrl
         };
+        // Format the created idea and send as response
         const formattedIdea = {
             ideaId: createdIdea.id,
             createdBy: author,
@@ -134,22 +153,27 @@ const postIdea = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.postIdea = postIdea;
+// Function to delete an idea
 const deleteIdea = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const { ideaId } = req.params;
+        // Check if idea ID is provided
         if (!ideaId) {
             return res.status(400).json({
                 error: 'Idea ID must be provided'
             });
         }
+        // Find and delete the idea
         const deletedIdea = yield ideaModels_1.Idea.findOneAndDelete({
             _id: ideaId
         });
+        // Handle errors if idea is not found
         if (!deletedIdea) {
             return res.status(404).json({
                 error: 'Idea not found'
             });
         }
+        // Find the project associated with the idea
         const projectId = deletedIdea.projectId;
         const project = yield projectModels_1.Project.findById(projectId);
         if (!project) {
@@ -157,10 +181,12 @@ const deleteIdea = (req, res) => __awaiter(void 0, void 0, void 0, function* () 
                 error: 'Project not found'
             });
         }
+        // Remove the idea from the project's ideas list and save the project
         const projectIdeas = project.ideas;
         const newIdeasList = projectIdeas.filter(idea => idea._id !== ideaId);
         project.ideas = newIdeasList;
         project.save();
+        // Send success message
         return res.status(200).json({
             msg: 'Idea deleted successfully'
         });

@@ -1,7 +1,30 @@
 import express from "express"
 import { checkSchema } from "express-validator"
-import { approvePublicProjectRequest, banUser, createTag, deleteLogs, deleteTag, deleteUser, forceUnbanUser, getFeedbacks, getLogs, getPublicProjectRequests, getStats, getTags, getUsers, modifyTag, unbanUser } from "./adminControllers"
-import { feedbackReplyValidationSchema, publicProjectRequestApproveValidationSchema, tagTypeIdValidationSchema, tagTypeValidationSchema, userBanValidationSchema, userIdValidationSchema } from "./adminInterface"
+import { 
+    approvePublicProjectRequest, 
+    banUser, 
+    createTag, 
+    deleteLogs, 
+    deleteTag, 
+    deleteUser, 
+    forceUnbanUser, 
+    getFeedbacks, 
+    getLogs, 
+    getPublicProjectRequests, 
+    getStats, 
+    getTags, 
+    getUsers, 
+    modifyTag, 
+    unbanUser 
+} from "./adminControllers" // Importing controller functions
+import { 
+    feedbackReplyValidationSchema, 
+    publicProjectRequestApproveValidationSchema, 
+    tagTypeIdValidationSchema, 
+    tagTypeValidationSchema, 
+    userBanValidationSchema, 
+    userIdValidationSchema 
+} from "./adminInterface" // Importing validation schemas
 
 const router = express.Router()
 
@@ -35,4 +58,4 @@ router.get("/logs", getLogs)
 
 router.delete("/logs", deleteLogs)
 
-export default router
+export default router // Exporting router for use in routes file

@@ -1,8 +1,14 @@
-import express from 'express'
-import { acceptInvitation } from './invitationControllers'
+// Importing the express module
+import express from 'express';
 
-const router = express.Router()
+// Importing the acceptInvitation function from invitationControllers module
+import { acceptInvitation } from './invitationControllers';
 
-router.post('/accept', acceptInvitation)
+// Creating an instance of express router
+const router = express.Router();
 
-export default router
+// Defining a route for handling POST requests to '/accept' endpoint, using the acceptInvitation controller function
+router.post('/accept', acceptInvitation);
+
+// Exporting the router to make it available for other modules
+export default router;

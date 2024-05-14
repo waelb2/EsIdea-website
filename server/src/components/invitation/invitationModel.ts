@@ -1,6 +1,7 @@
-import mongoose, { Schema, mongo } from 'mongoose'
+import mongoose, { Schema } from 'mongoose'
 import { InvitationInterface } from './invitationInterface'
 
+// Define the schema for invitations
 const invitationSchema = new Schema<InvitationInterface>({
   senderId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -31,9 +32,7 @@ const invitationSchema = new Schema<InvitationInterface>({
   }
 })
 
-const Invitation = mongoose.model<InvitationInterface>(
-  'Invitation',
-  invitationSchema
-)
+// Create the Invitation model from the schema
+const Invitation = mongoose.model<InvitationInterface>('Invitation', invitationSchema)
 
 export { Invitation }

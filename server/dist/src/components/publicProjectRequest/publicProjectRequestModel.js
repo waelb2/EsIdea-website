@@ -25,6 +25,7 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.createPublicProjectRequestValidationSchema = exports.publicProjectRequest = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
+// Define the schema for the public project request
 const publicProjectRequestSchema = new mongoose_1.Schema({
     projectId: {
         type: mongoose_1.default.Schema.Types.ObjectId,
@@ -32,8 +33,10 @@ const publicProjectRequestSchema = new mongoose_1.Schema({
         required: true
     }
 });
+// Create the model from the schema
 const publicProjectRequest = mongoose_1.default.model('publicProjectRequest', publicProjectRequestSchema);
 exports.publicProjectRequest = publicProjectRequest;
+// Validation schema for creating a public project request
 const createPublicProjectRequestValidationSchema = {
     projectId: {
         notEmpty: {

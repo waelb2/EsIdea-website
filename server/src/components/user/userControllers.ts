@@ -13,11 +13,19 @@ import { AuthPayload } from '../auth/authInterface'
 
 const upload = multer({ dest: 'uploads/' })
 
+/** 
+ * Modify user profile picture.
+ * 
+ * @param req Request object.
+ * @param res Response object.
+ * @param image Profile picture file.
+ */
 const modifyProfilePicture = async (
   req: Request,
   res: Response,
   image: Express.Multer.File | undefined
 ) => {
+  // Check if image is provided
   if (!image)
     return res
       .status(400)
@@ -25,6 +33,7 @@ const modifyProfilePicture = async (
 
   const { userId } = req.user as AuthPayload
 
+  // Check if userId is a valid ObjectId
   if (!isObjectIdOrHexString(userId))
     return res
       .status(400)
@@ -58,6 +67,12 @@ const modifyProfilePicture = async (
   }
 }
 
+/** 
+ * Create feedback.
+ * 
+ * @param req Request object.
+ * @param res Response object.
+ */
 const createFeedback = async (req: Request, res: Response) => {
   const errResult = validationResult(req)
   if (!errResult.isEmpty())
@@ -88,6 +103,12 @@ const createFeedback = async (req: Request, res: Response) => {
   }
 }
 
+/** 
+ * Create public project request.
+ * 
+ * @param req Request object.
+ * @param res Response object.
+ */
 const createPublicProjectRequest = async (req: Request, res: Response) => {
   const errResult = validationResult(req)
   if(!errResult.isEmpty())
@@ -104,12 +125,12 @@ const createPublicProjectRequest = async (req: Request, res: Response) => {
   const objectId = new mongoose.Types.ObjectId(projectId)
 
   try {
-    const project = await Project.findById(objectId);
+    const project = await Project.findById(objectId)
     if (!project) {
-      return res.status(404).send({ error: "The project of the publication request is not found" });
+      return res.status(404).send({ error: "The project of the publication request is not found" })
     }
     if (!(userId == project.coordinator.toString()))
-      return res.status(400).send({ error: "Your are not the coordinator of the project" });
+      return res.status(400).send({ error: "Your are not the coordinator of the project" })
     const existReq = await publicProjectRequest.findOne({projectId: objectId})
     if (!existReq) {
       if (project.visibility === ProjectVisibility.PUBLIC)
@@ -125,6 +146,12 @@ const createPublicProjectRequest = async (req: Request, res: Response) => {
   }
 }
 
+/** 
+ * Get user by ID.
+ * 
+ * @param req Request object.
+ * @param res Response object.
+ */
 const getUserById = async (req: Request, res: Response) => {
   const { userId, email } = req.user as AuthPayload
   try {
@@ -145,6 +172,12 @@ const getUserById = async (req: Request, res: Response) => {
   }
 }
 
+/** 
+ * Get user by email.
+ * 
+ * @param req Request object.
+ * @param res Response object.
+ */
 const getUserByEmail = async (req: Request, res: Response) => {
   const { emailQuery }: { emailQuery: string } = req.body
   try {
@@ -174,6 +207,13 @@ const getUserByEmail = async (req: Request, res: Response) => {
     })
   }
 }
+
+/** 
+ * Get user by last name.
+ * 
+ * @param req Request object.
+ * @param res Response object.
+ */
 const getUserByLastName = async (req: Request, res: Response) => {
   const { lastNameQuery }: { lastNameQuery: string } = req.body
   try {
@@ -204,6 +244,12 @@ const getUserByLastName = async (req: Request, res: Response) => {
   }
 }
 
+/** 
+ * Get user details.
+ * 
+ * @param req Request object.
+ * @param res Response object.
+ */
 const getUser = async (req: Request, res: Response) => {
   if (!req.isAuthenticated()) {
     return res.status(401).json({
@@ -220,6 +266,12 @@ const getUser = async (req: Request, res: Response) => {
   }
 }
 
+/** 
+ * Add project to user's favourites.
+ * 
+ * @param req Request object.
+ * @param res Response object.
+ */
 const addFavouriteProject = async (req: Request, res: Response) => {
   const { userId } = req.user as AuthPayload
   const { projectId } = req.body
@@ -232,56 +284,62 @@ const addFavouriteProject = async (req: Request, res: Response) => {
   const projectObjectId = new mongoose.Types.ObjectId(projectId)
 
   try {
-      const user = await User.findById(userObjectId)
-      if (!user) {
-        return res.status(404).send({ error: 'User not found' })
+    const user = await User.findById(userObjectId)
+    if (!user) {
+      return res.status(404).send({ error: 'User not found' })
+    }
+    for(const projectObj of user.projects) {
+      if (projectObjectId.equals(new mongoose.Types.ObjectId(projectObj.project.toString()))) {
+        user.projects[user.projects.indexOf(projectObj)].isFav = true
+        await user.save()
+        return res.status(200).send({ msg: 'Project added to favourites' })
       }
-      for(const projectObj of user.projects) {
-        if (projectObjectId.equals(new mongoose.Types.ObjectId(projectObj.project.toString()))) {
-          user.projects[user.projects.indexOf(projectObj)].isFav = true
-          await user.save()
-          return res.status(200).send({ msg: 'Project added to favourites' })
-        }
-      }
-      return res.status(400).send({ error: 'The user is not a member of the given project' })
+    }
+    return res.status(400).send({ error: 'The user is not a member of the given project' })
   } catch (error) {
-      console.log(error)
-      return res.sendStatus(400)
+    console.log(error)
+    return res.sendStatus(400)
   }
 }
 
+/** 
+ * Get public projects.
+ * 
+ * @param req Request object.
+ * @param res Response object.
+ */
 const getPublicProjects = async (req: Request, res: Response) => {
   try {
-    const publicProjects = await Project.find({visibility: 'public'})
-    .populate({
+    const publicProjects = await Project.find({ visibility: 'public' })
+      .populate({
         path: 'subTopics',
         model: 'Topic'
       })
-    .populate({
+      .populate({
         path: 'collaborators.member',
         model: 'User'
       })
-    .populate({
+      .populate({
         path: 'mainTopic',
         model: 'Topic'
       })
-    .populate({
+      .populate({
         path: 'clubs',
         model: 'Club'
       })
-    .populate({
+      .populate({
         path: 'events',
         model: 'Event'
       })
-    .populate({
+      .populate({
         path: 'modules',
         model: 'Module'
       })
-    .populate({
+      .populate({
         path: 'ideationMethod',
         model: 'IdeationMethod'
       })
-    .populate({
+      .populate({
         path: 'coordinator',
         model: 'User'
       })
@@ -318,7 +376,6 @@ const getPublicProjects = async (req: Request, res: Response) => {
             profilePicUrl
           }
         }
-
         return null
       })
       const coordinator = {
@@ -370,4 +427,3 @@ export {
   createPublicProjectRequest,
   getPublicProjects
 }
-

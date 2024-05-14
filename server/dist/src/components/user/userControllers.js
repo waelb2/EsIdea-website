@@ -47,12 +47,21 @@ const publicProjectRequestModel_1 = require("../publicProjectRequest/publicProje
 const userModels_1 = require("./userModels");
 const upload = (0, multer_1.default)({ dest: 'uploads/' });
 exports.upload = upload;
+/**
+ * Modify user profile picture.
+ *
+ * @param req Request object.
+ * @param res Response object.
+ * @param image Profile picture file.
+ */
 const modifyProfilePicture = (req, res, image) => __awaiter(void 0, void 0, void 0, function* () {
+    // Check if image is provided
     if (!image)
         return res
             .status(400)
             .send({ error: 'Must provide the new profile picture' });
     const { userId } = req.user;
+    // Check if userId is a valid ObjectId
     if (!(0, mongoose_1.isObjectIdOrHexString)(userId))
         return res
             .status(400)
@@ -85,6 +94,12 @@ const modifyProfilePicture = (req, res, image) => __awaiter(void 0, void 0, void
     }
 });
 exports.modifyProfilePicture = modifyProfilePicture;
+/**
+ * Create feedback.
+ *
+ * @param req Request object.
+ * @param res Response object.
+ */
 const createFeedback = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const errResult = (0, express_validator_1.validationResult)(req);
     if (!errResult.isEmpty())
@@ -114,6 +129,12 @@ const createFeedback = (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.createFeedback = createFeedback;
+/**
+ * Create public project request.
+ *
+ * @param req Request object.
+ * @param res Response object.
+ */
 const createPublicProjectRequest = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const errResult = (0, express_validator_1.validationResult)(req);
     if (!errResult.isEmpty())
@@ -149,6 +170,12 @@ const createPublicProjectRequest = (req, res) => __awaiter(void 0, void 0, void 
     }
 });
 exports.createPublicProjectRequest = createPublicProjectRequest;
+/**
+ * Get user by ID.
+ *
+ * @param req Request object.
+ * @param res Response object.
+ */
 const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId, email } = req.user;
     try {
@@ -170,6 +197,12 @@ const getUserById = (req, res) => __awaiter(void 0, void 0, void 0, function* ()
     }
 });
 exports.getUserById = getUserById;
+/**
+ * Get user by email.
+ *
+ * @param req Request object.
+ * @param res Response object.
+ */
 const getUserByEmail = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { emailQuery } = req.body;
     try {
@@ -201,6 +234,12 @@ const getUserByEmail = (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.getUserByEmail = getUserByEmail;
+/**
+ * Get user by last name.
+ *
+ * @param req Request object.
+ * @param res Response object.
+ */
 const getUserByLastName = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { lastNameQuery } = req.body;
     try {
@@ -232,6 +271,12 @@ const getUserByLastName = (req, res) => __awaiter(void 0, void 0, void 0, functi
     }
 });
 exports.getUserByLastName = getUserByLastName;
+/**
+ * Get user details.
+ *
+ * @param req Request object.
+ * @param res Response object.
+ */
 const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     if (!req.isAuthenticated()) {
         return res.status(401).json({
@@ -249,6 +294,12 @@ const getUser = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     }
 });
 exports.getUser = getUser;
+/**
+ * Add project to user's favourites.
+ *
+ * @param req Request object.
+ * @param res Response object.
+ */
 const addFavouriteProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.user;
     const { projectId } = req.body;
@@ -279,6 +330,12 @@ const addFavouriteProject = (req, res) => __awaiter(void 0, void 0, void 0, func
     }
 });
 exports.addFavouriteProject = addFavouriteProject;
+/**
+ * Get public projects.
+ *
+ * @param req Request object.
+ * @param res Response object.
+ */
 const getPublicProjects = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const publicProjects = yield projectModels_1.Project.find({ visibility: 'public' })

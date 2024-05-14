@@ -8,16 +8,21 @@ import bodyParser from 'body-parser'
 import cors from 'cors'
 import http from 'http'
 import { Server as SocketServer } from 'socket.io'
+// Load environment variables from .env file
 dotenv.config()
 
-// Configuring the host
+// Configuring the host, port, and database URI
 const HOST = process.env.HOST
 const PORT = process.env.PORT || 3000
 const DB_URI = process.env.DATABASE_URI
 
+// Create an Express application instance
 const app: Express = express()
 
+// Create an HTTP server instance
 const server = http.createServer(app)
+
+// Create a Socket.IO server instance
 const io = new SocketServer(server, {
   cors: {
     origin: process.env.CLIENT_URL || 'http://localhost:5174',
@@ -25,8 +30,9 @@ const io = new SocketServer(server, {
   }
 })
 
-// app config
+// Configure middleware
 
+// Configure session middleware
 app.use(
   session({
     secret: 'secret_key',
@@ -36,9 +42,11 @@ app.use(
   })
 )
 
+// Initialize Passport and session middleware
 app.use(passport.initialize())
 app.use(passport.session())
 
+// Configure CORS middleware
 app.use(
   cors({
     origin: process.env.CLIENT_URL || 'http://localhost:5174',
@@ -46,20 +54,28 @@ app.use(
     credentials: true
   })
 )
+
+// Parse request bodies as JSON
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded({ extended: true }))
 
-// routes
+// Import routes
 import routes from './routes'
 import initializeSocket from './src/utils/socketManager'
 
+// Mount routes
 app.use(routes)
 
+// Initialize Socket.IO
 initializeSocket(io)
+
+// Start the server
 const start = async () => {
   try {
+    // Connect to the database
     await connectDB(String(process.env.DATABASE_URI))
     console.log('DATABASE CONNECTED')
+    // Start listening on the specified port
     server.listen(3000, () => {
       console.log(`Server starting at ${HOST}:${PORT}`)
     })

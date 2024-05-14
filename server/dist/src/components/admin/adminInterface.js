@@ -1,8 +1,10 @@
 "use strict";
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.publicProjectRequestApproveValidationSchema = exports.feedbackReplyValidationSchema = exports.tagTypeIdValidationSchema = exports.tagTypeValidationSchema = exports.userBanValidationSchema = exports.userIdValidationSchema = exports.banMsg = void 0;
+// Message for informing users about the ban duration
 const banMsg = 'The ban duration has not yet been completed. Please wait until the ban period expires before attempting to perform this action again.';
 exports.banMsg = banMsg;
+// Validation schema for validating user ID
 const userIdValidationSchema = {
     id: {
         notEmpty: {
@@ -11,6 +13,7 @@ const userIdValidationSchema = {
     }
 };
 exports.userIdValidationSchema = userIdValidationSchema;
+// Validation schema for validating user ban duration
 const userBanValidationSchema = {
     id: {
         notEmpty: {
@@ -22,11 +25,12 @@ const userBanValidationSchema = {
             errorMessage: "Must provide the duration of the ban"
         },
         isNumeric: {
-            errorMessage: "The duaration must be a number (of days)"
+            errorMessage: "The duration must be a number (of days)"
         }
     }
 };
 exports.userBanValidationSchema = userBanValidationSchema;
+// Validation schema for validating tag type
 const tagTypeValidationSchema = {
     type: {
         notEmpty: {
@@ -38,6 +42,7 @@ const tagTypeValidationSchema = {
     }
 };
 exports.tagTypeValidationSchema = tagTypeValidationSchema;
+// Validation schema for validating tag ID and type
 const tagTypeIdValidationSchema = {
     id: {
         notEmpty: {
@@ -54,6 +59,7 @@ const tagTypeIdValidationSchema = {
     }
 };
 exports.tagTypeIdValidationSchema = tagTypeIdValidationSchema;
+// Validation schema for validating feedback ID and admin response
 const feedbackReplyValidationSchema = {
     id: {
         notEmpty: {
@@ -70,6 +76,7 @@ const feedbackReplyValidationSchema = {
     }
 };
 exports.feedbackReplyValidationSchema = feedbackReplyValidationSchema;
+// Validation schema for validating project publication request ID in approve
 const publicProjectRequestApproveValidationSchema = {
     id: {
         notEmpty: {

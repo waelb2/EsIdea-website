@@ -1,3 +1,4 @@
+// Importing necessary modules and types
 import { Request, Response } from 'express'
 import { Project, ProjectVisibility, ProjectStatus } from './projectModels'
 import { User } from '../user/userModels'
@@ -26,11 +27,13 @@ import { AuthPayload } from '../auth/authInterface'
 import mongoose from 'mongoose'
 import { Idea } from '../idea/ideaModels'
 
+// Controller function to create a project
 const createProject = async (req: Request, res: Response) => {
   const { userId } = req.user as AuthPayload
   let secureURL: string = ''
 
   try {
+    // Handling file upload (thumbnail)
     if (req.file) {
       const cloudImage = await cloudinary.uploader.upload(req.file.path, {
         folder: 'projectThumbnails'
@@ -39,6 +42,7 @@ const createProject = async (req: Request, res: Response) => {
       fs.unlinkSync(req.file.path)
     }
 
+    // Destructuring request body
     const {
       projectTitle,
       description,
@@ -61,6 +65,7 @@ const createProject = async (req: Request, res: Response) => {
 
     // Getting and validating project metadata
 
+    // Finding the coordinator (user who is creating the project)
     const coordinator: UserInterface | null = await User.findById(userId)
 
     if (!coordinator) {
@@ -69,6 +74,7 @@ const createProject = async (req: Request, res: Response) => {
       })
     }
 
+    // Finding the ideation method for the project
     const ideationMethod: IdeationMethodInterface | null =
       await IdeationMethod.findOne({
         methodName: { $regex: ideationMethodName, $options: 'i' }
@@ -79,12 +85,15 @@ const createProject = async (req: Request, res: Response) => {
         error: 'Ideation method not found'
       })
     }
+
+    // Creating main topic for the project
     const parentTopic = await Topic.create({
       topicName: mainTopic,
       parentTopic: null
     })
 
     let subTopicsIds: string[] = []
+    // Creating sub topics for the project
     if (subTopics) {
       for (const topic of subTopics) {
         const subTopic = await Topic.create({
@@ -99,6 +108,7 @@ const createProject = async (req: Request, res: Response) => {
     let moduleList: ModuleInterface[] = []
     let eventList: EventInterface[] = []
 
+    // Processing tags (clubs, modules, events)
     const formattedTags = tags.map(tag => JSON.parse(tag))
     for (const tag of formattedTags) {
       const tagId = tag.tagId
@@ -113,7 +123,6 @@ const createProject = async (req: Request, res: Response) => {
             })
           }
           clubList.push(club)
-
           break
         case 'module':
           const module: ModuleInterface | null = await Module.findById(tagId)
@@ -139,6 +148,8 @@ const createProject = async (req: Request, res: Response) => {
           })
       }
     }
+
+    // Checking if at least one club, module or event is provided
     if (
       clubList.length == 0 &&
       moduleList.length == 0 &&
@@ -148,7 +159,8 @@ const createProject = async (req: Request, res: Response) => {
         error: 'Either one club, module or event must be provided'
       })
     }
-    // creating the project document
+
+    // Creating the project document
     const project = await Project.create({
       title: projectTitle,
       description: description,
@@ -163,15 +175,17 @@ const createProject = async (req: Request, res: Response) => {
       timer
     })
 
+    // Normalizing collaborators' emails
     const normalized_collaborators = collaborators.map(email =>
       email.toLowerCase().trim()
     )
 
-    // creating and sending invitations
+    // Finding invited users
     const invitedUsers: UserInterface[] = await User.find({
       email: { $in: normalized_collaborators }
     })
-    // creating invitations
+
+    // Creating invitations and sending emails
     for (const collaborator of normalized_collaborators) {
       const user: UserInterface | undefined = invitedUsers.find(
         user => user.email === collaborator
@@ -188,7 +202,7 @@ const createProject = async (req: Request, res: Response) => {
         expiresAt: expirationDate
       })
 
-      // Associating project with his coordinator
+      // Associating project with the coordinator
       coordinator.projects.push({
         project,
         joinedAt: new Date(),
@@ -200,7 +214,7 @@ const createProject = async (req: Request, res: Response) => {
       user?.projectInvitations.push(invitation)
       user?.save()
 
-      //sending the invitation email
+      // Sending the invitation email
       sendInvitationEMail(
         coordinator.lastName + ' ' + coordinator.firstName,
         user?.id,
@@ -210,6 +224,7 @@ const createProject = async (req: Request, res: Response) => {
         invitation.id
       )
     }
+
     return res.status(201).json({
       success: 'Project created successfully'
     })
@@ -220,6 +235,8 @@ const createProject = async (req: Request, res: Response) => {
     })
   }
 }
+
+// Controller function to update a project
 const updateProject = async (req: Request, res: Response) => {
   const { userId } = req.user as AuthPayload
 
@@ -227,6 +244,7 @@ const updateProject = async (req: Request, res: Response) => {
   let secureURL: string = ''
 
   try {
+    // Handling file upload (thumbnail)
     if (req.file) {
       const cloudImage = await cloudinary.uploader.upload(req.file.path, {
         folder: 'projectThumbnails'
@@ -267,6 +285,8 @@ const updateProject = async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Internal Server Error' })
   }
 }
+
+// Controller function to update project status
 const updateProjectStatus = async (req: Request, res: Response) => {
   const { userId } = req.user as AuthPayload
 
@@ -293,11 +313,11 @@ const updateProjectStatus = async (req: Request, res: Response) => {
       })
     }
 
-    const { newStatus  }: {  newStatus: string } =
+    const { newStatus }: { newStatus: string } =
       req.body
 
     if(newStatus){
-      project.status = newStatus as ProjectStatus;
+      project.status = newStatus as ProjectStatus
     }
     await project.save()
     res.status(200).json({ message: 'Project status updated successfully' })
@@ -306,11 +326,14 @@ const updateProjectStatus = async (req: Request, res: Response) => {
     res.status(500).json({ error: 'Internal Server Error' })
   }
 }
+
+// Controller function to delete a project
 const deleteProject = async (req: Request, res: Response) => {
   const { userId } = req.user as AuthPayload
   const { projectId } = req.params
 
   try {
+    // Validating project ID
     if (!projectId) {
       return res.status(400).json({
         error: 'Project ID must be provided'
@@ -322,6 +345,7 @@ const deleteProject = async (req: Request, res: Response) => {
       })
     }
 
+    // Finding the collaborator
     const collaborator = await User.findById(userId)
 
     if (!collaborator) {
@@ -330,6 +354,7 @@ const deleteProject = async (req: Request, res: Response) => {
       })
     }
 
+    // Finding the project
     const project = await Project.findById(projectId)
 
     if (!project) {
@@ -338,6 +363,7 @@ const deleteProject = async (req: Request, res: Response) => {
       })
     }
 
+    // Checking if the user is a collaborator in this project
     const collaborators = project.collaborators.filter(
       collaborator => collaborator.member._id.toString() === userId
     )
@@ -346,20 +372,19 @@ const deleteProject = async (req: Request, res: Response) => {
         error: 'This user is not a collaborator in this project'
       })
     }
+
+    // Removing the collaborator from project collaborators list
     const updatedCollaborators = project.collaborators.filter(
       collaborator => collaborator.member._id.toString() !== userId
     )
-
-    // deleting the collaborator from project collaborators list
     project.collaborators = updatedCollaborators
     project.save()
 
+    // Removing the project from user projects list
     const updatedProjectsList = collaborator.projects.filter(
       collaboratorProject =>
         collaboratorProject.project._id.toString() !== projectId
     )
-
-    // deleting the project from user projects list
     collaborator.projects = updatedProjectsList
     collaborator.save()
 
@@ -370,11 +395,13 @@ const deleteProject = async (req: Request, res: Response) => {
   }
 }
 
+// Controller function to trash a project
 const trashProject = async (req: Request, res: Response) => {
   const { userId } = req.user as AuthPayload
   const { projectId } = req.params
 
   try {
+    // Validating project ID
     if (!projectId) {
       return res.status(400).json({
         error: 'Project ID must be provided'
@@ -386,6 +413,7 @@ const trashProject = async (req: Request, res: Response) => {
       })
     }
 
+    // Finding the collaborator
     const collaborator = await User.findById(userId)
 
     if (!collaborator) {
@@ -394,6 +422,7 @@ const trashProject = async (req: Request, res: Response) => {
       })
     }
 
+    // Finding the project
     const project = await Project.findById(projectId)
 
     if (!project) {
@@ -402,6 +431,7 @@ const trashProject = async (req: Request, res: Response) => {
       })
     }
 
+    // Checking if the user is a collaborator in this project
     const collaborators = project.collaborators.filter(
       collaborator => collaborator.member._id.toString() === userId
     )
@@ -411,6 +441,7 @@ const trashProject = async (req: Request, res: Response) => {
       })
     }
 
+    // Updating the project's trashed status
     const projectIndex = collaborator.projects.findIndex(
       project => project.project.toString() === projectId
     )
@@ -429,11 +460,13 @@ const trashProject = async (req: Request, res: Response) => {
   }
 }
 
+// Controller function to restore a trashed project
 const restoreProject = async (req: Request, res: Response) => {
   const { userId } = req.user as AuthPayload
   const { projectId } = req.body
 
   try {
+    // Validating project ID
     if (!projectId) {
       return res.status(400).json({
         error: 'Project ID must be provided'
@@ -445,6 +478,7 @@ const restoreProject = async (req: Request, res: Response) => {
       })
     }
 
+    // Finding the collaborator
     const collaborator = await User.findById(userId)
 
     if (!collaborator) {
@@ -453,6 +487,7 @@ const restoreProject = async (req: Request, res: Response) => {
       })
     }
 
+    // Finding the project
     const project = await Project.findById(projectId)
 
     if (!project) {
@@ -461,6 +496,7 @@ const restoreProject = async (req: Request, res: Response) => {
       })
     }
 
+    // Checking if the user is a collaborator in this project
     const collaborators = project.collaborators.filter(
       collaborator => collaborator.member._id.toString() === userId
     )
@@ -470,6 +506,7 @@ const restoreProject = async (req: Request, res: Response) => {
       })
     }
 
+    // Updating the project's trashed status
     const projectIndex = collaborator.projects.findIndex(
       project => project.project.toString() === projectId
     )
@@ -488,9 +525,11 @@ const restoreProject = async (req: Request, res: Response) => {
   }
 }
 
+// Controller function to get projects by user ID
 const getProjectByUserId = async (req: Request, res: Response) => {
   const { userId } = req.user as AuthPayload
   try {
+    // Validating user ID
     if (!userId) {
       return res.status(400).json({
         error: 'User ID must be provided'
@@ -560,6 +599,7 @@ const getProjectByUserId = async (req: Request, res: Response) => {
       })
     }
 
+    // Formatting project details
     const projects = user.projects.map(project => project)
     const projectStrings = projects.map(project => {
       const {
@@ -576,7 +616,7 @@ const getProjectByUserId = async (req: Request, res: Response) => {
         thumbnailUrl
       } = project.project
       const formattedSubTopics = subTopics?.map(topic => {
-        return {
+            return {
           topicId: topic._id,
           topicName: topic.topicName
         }
@@ -643,7 +683,7 @@ const deleteProjectManyIdeas = async (req: Request, res: Response) => {
         .status(400)
         .json({
           error: 'Invalid input. Idea IDs must be provided in an array.'
-        })
+      })
     }
 
     // Fetch the project document
@@ -671,6 +711,7 @@ const deleteProjectManyIdeas = async (req: Request, res: Response) => {
   }
 }
 
+// Exporting controller functions
 export {
   createProject,
   updateProject,

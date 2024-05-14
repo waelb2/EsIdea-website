@@ -1,6 +1,10 @@
-import { Document } from "mongoose";
-import { ProjectInterface } from "../project/projectInterface";
+import { Document } from "mongoose"
+import { ProjectInterface } from "../project/projectInterface"
 
+/**
+ * Interface representing a request for a public project.
+ */
 export interface publicProjectRequestInterface extends Document {
-    projectId : ProjectInterface
+    /** The ID of the project being requested. */
+    projectId: ProjectInterface
 }

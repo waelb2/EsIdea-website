@@ -2,6 +2,11 @@
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.nbVisits24h = void 0;
 const fs_1 = require("fs");
+/**
+ * Function to get the number of visits in the last 24 hours.
+ * Reads the 'access.log' file and counts the number of requests within the last 24 hours.
+ * @returns Promise<number> The number of visits in the last 24 hours.
+ */
 function nbVisits24h() {
     return new Promise((resolve, reject) => {
         (0, fs_1.readFile)('access.log', 'utf8', (err, data) => {
@@ -9,22 +14,22 @@ function nbVisits24h() {
                 reject(err);
                 return;
             }
-            // Diviser le contenu du fichier log en lignes
+            // Split the log file content into lines
             const logLines = data.split('\n');
-            // Obtenir la date et l'heure actuelles
+            // Get the current date and time
             const now = Date.now();
-            // Calculer le timestamp d'il y a 24 heures
+            // Calculate the timestamp of 24 hours ago
             const twentyFourHoursAgo = new Date(now - 24 * 60 * 60 * 1000).getTime();
-            // Filtrer les requetes qui se sont produites au cours des dernières 24 heures
+            // Filter requests that occurred in the last 24 hours
             const requestsInLast24Hours = logLines.filter(line => {
-                // Extraire le timestamp de la ligne du log
+                // Extract the timestamp from the log line
                 const timestampStr = line.split(' - ')[0].trim();
                 const timestamp = new Date(timestampStr).getTime();
-                // Verifier si le timestamp est dans les dernières 24 heures
+                // Check if the timestamp is within the last 24 hours
                 if (!isNaN(timestamp))
                     return timestamp > twentyFourHoursAgo && timestamp <= now;
             });
-            // Obtenir le nombre de requêtes au cours des dernières 24 heures
+            // Get the number of requests in the last 24 hours
             resolve(requestsInLast24Hours.length);
         });
     });

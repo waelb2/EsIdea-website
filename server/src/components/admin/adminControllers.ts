@@ -17,6 +17,7 @@ import { IdeationMethod } from '../idea/ideationMethodModel'
 import fs from 'fs'
 
 const getStats = async (req: Request, res: Response) => {
+  // Initialize statistics object
   let stats: Statistics = {
     nbUsers: 0,
     nbProjects: [],
@@ -25,10 +26,10 @@ const getStats = async (req: Request, res: Response) => {
   }
 
   try {
-    //Number of users
+    // Number of users
     stats.nbUsers = await User.countDocuments()
 
-    //Number of projects per method
+    // Number of projects per method
     const methods = await IdeationMethod.find()
     for (const method of methods) {
       const nb = await Project.find({
@@ -37,39 +38,45 @@ const getStats = async (req: Request, res: Response) => {
       stats.nbProjects.push(nb)
     }
 
-    //Number of website visits in the last 24h
+    // Number of website visits in the last 24 hours
     stats.nbVisits24h = await nbVisits24h()
 
-    //Number of the new projects in the last 24h
+    // Number of new projects in the last 24 hours
     const avant24h = new Date(Date.now() - 24 * 3600 * 1000)
-    //filtering the projects that were created in the last 24h
+    // Filtering the projects created in the last 24 hours
     const projects24h = await Project.find({ creationDate: { $gte: avant24h } })
     stats.nbProjects24h = projects24h.length
 
+    // Send statistics in response
     return res.status(200).send(stats)
   } catch (error) {
     console.log(error)
-    return res.sendStatus(500)
+    return res.sendStatus(500) // Internal server error
   }
 }
 
 const getUsers = async (req: Request, res: Response) => {
   try {
+    // Find all users
     const users = await User.find({})
+    // Send users in response
     return res.status(200).send(users)
   } catch (error) {
     console.log(error)
-    return res.sendStatus(500)
+    return res.sendStatus(500) // Internal server error
   }
 }
 
 const deleteUser = async (req: Request, res: Response) => {
+  // Validate request body
   const errResult = validationResult(req)
   if (!errResult.isEmpty())
     return res.status(400).send({ errors: errResult.array() })
 
+  // Extract user ID from request body
   const userId: string = req.body.id
 
+  // Check if user ID is valid
   if (!isObjectIdOrHexString(userId)) {
     return res
       .status(400)
@@ -78,10 +85,13 @@ const deleteUser = async (req: Request, res: Response) => {
   const objectId = new mongoose.Types.ObjectId(userId)
 
   try {
+    // Find user by ID
     const user = await User.findById(objectId)
     if (!user) {
       return res.status(404).send({ error: 'User not found' })
     }
+
+    // Remove user from collaborators of all projects
     for (const projectObj of user.projects) {
       const project = await Project.findById(new mongoose.Types.ObjectId(projectObj.project._id.toString()))
       if (project) {
@@ -94,26 +104,33 @@ const deleteUser = async (req: Request, res: Response) => {
         return res.status(404).send({ error: 'Project of the user not found' })
       }
     }
+
+    // Delete user
     await User.deleteOne(objectId)
-    return res.sendStatus(200)
+    return res.sendStatus(200) // Success response
   } catch (error) {
     console.log(error)
-    return res.sendStatus(500)
+    return res.sendStatus(500) // Internal server error
   }
 }
 
 const banUser = async (req: Request, res: Response) => {
+  // Validate request body
   const errResult = validationResult(req)
   if (!errResult.isEmpty())
     return res.status(400).send({ errors: errResult.array() })
 
+  // Extract user ID and duration from request body
   const userId: string = req.body.id
   const duration: number = req.body.duration
 
+  // Check if duration is valid
   if (duration <= 0)
     return res.status(400).send({
       error: 'Bad duration: must be positive different from 0 integer'
     })
+
+  // Check if user ID is valid
   if (!isObjectIdOrHexString(userId))
     return res
       .status(400)
@@ -122,28 +139,35 @@ const banUser = async (req: Request, res: Response) => {
   const objectId = new mongoose.Types.ObjectId(userId)
 
   try {
+    // Find user by ID
     const user = await User.findById(objectId)
     if (!user) {
       return res.status(404).send({ error: 'User not found' })
     }
+
+    // Calculate end date of ban
     const endDate: Date = new Date(Date.now() + duration * 24 * 3600 * 1000)
     user.ban.isBan = true
     user.ban.banEnd = endDate
     await user.save()
-    return res.sendStatus(200)
+
+    return res.sendStatus(200) // Success response
   } catch (error) {
     console.log(error)
-    return res.sendStatus(500)
+    return res.sendStatus(500) // Internal server error
   }
 }
 
 const unbanUser = async (req: Request, res: Response) => {
+  // Validate request body
   const errResult = validationResult(req)
   if (!errResult.isEmpty())
     return res.status(400).send({ errors: errResult.array() })
 
+  // Extract user ID from request body
   const userId: string = req.body.id
 
+  // Check if user ID is valid
   if (!isObjectIdOrHexString(userId))
     return res
       .status(400)
@@ -152,32 +176,40 @@ const unbanUser = async (req: Request, res: Response) => {
   const objectId = new mongoose.Types.ObjectId(userId)
 
   try {
+    // Find user by ID
     const user = await User.findById(objectId)
     if (!user) {
       return res.status(404).send({ error: 'User not found' })
     }
+
+    // Check if user is banned
     if (user.ban.isBan) {
+      // Check if ban period has expired
       if (Date.now() >= user.ban.banEnd.getTime()) {
         user.ban.isBan = false
         await user.save()
-        return res.sendStatus(200)
+        return res.sendStatus(200) // Success response
       }
-      return res.status(403).send({ error: banMsg })
+      return res.status(403).send({ error: banMsg }) // Forbidden response
     }
-    return res.status(400).send({ error: 'User is not banned' })
+
+    return res.status(400).send({ error: 'User is not banned' }) // Bad request response
   } catch (error) {
     console.log(error)
-    return res.sendStatus(500)
+    return res.sendStatus(500) // Internal server error
   }
 }
 
 const forceUnbanUser = async (req: Request, res: Response) => {
+  // Validate request body
   const errResult = validationResult(req)
   if (!errResult.isEmpty())
     return res.status(400).send({ errors: errResult.array() })
 
+  // Extract user ID from request body
   const userId: string = req.body.id
 
+  // Check if user ID is valid
   if (!isObjectIdOrHexString(userId))
     return res
       .status(400)
@@ -186,30 +218,38 @@ const forceUnbanUser = async (req: Request, res: Response) => {
   const objectId = new mongoose.Types.ObjectId(userId)
 
   try {
+    // Find user by ID
     const user = await User.findById(objectId)
     if (!user) {
       return res.status(404).send({ error: 'User not found' })
     }
+
+    // Check if user is banned
     if (user.ban.isBan) {
       user.ban.isBan = false
       await user.save()
-      return res.sendStatus(200)
+      return res.sendStatus(200) // Success response
     }
-    return res.status(400).send({ error: 'User is not banned' })
+
+    return res.status(400).send({ error: 'User is not banned' }) // Bad request response
   } catch (error) {
     console.log(error)
-    return res.sendStatus(500)
+    return res.sendStatus(500) // Internal server error
   }
 }
 
 const getTags = async (req: Request, res: Response) => {
+  // Validate request body
   const errResult = validationResult(req)
   if (!errResult.isEmpty())
     return res.status(400).send({ errors: errResult.array() })
 
+  // Extract type from query parameters
   const type: string = req.query.type as string;
   let docs: (ClubInterface | ModuleInterface | EventInterface)[]
+
   try {
+    // Retrieve documents based on type
     switch (type.toLowerCase()) {
       case 'club':
         docs = await Club.find({})
@@ -223,6 +263,8 @@ const getTags = async (req: Request, res: Response) => {
       default:
         return res.status(400).send({ error: 'Invalid tag type' })
     }
+
+    // Send retrieved documents
     return res.status(200).send(docs)
   } catch (error) {
     console.log(error)
@@ -231,14 +273,17 @@ const getTags = async (req: Request, res: Response) => {
 }
 
 const createTag = async (req: Request, res: Response) => {
+  // Validate request body
   const errResult = validationResult(req)
   if (!errResult.isEmpty())
     return res.status(400).send({ errors: errResult.array() })
 
+  // Extract type and tag details from request body
   const { type, ...tag } = req.body
   let savedDoc: ClubInterface | ModuleInterface | EventInterface
 
   try {
+    // Create new document based on type
     switch (type.toLowerCase()) {
       case 'club':
         const newClub = new Club(tag)
@@ -255,6 +300,8 @@ const createTag = async (req: Request, res: Response) => {
       default:
         return res.status(400).send({ error: 'Invalid tag type' })
     }
+
+    // Send success response
     return res.status(201).send({ msg: 'Created successfully', savedDoc })
   } catch (error) {
     console.log(error)
@@ -263,13 +310,16 @@ const createTag = async (req: Request, res: Response) => {
 }
 
 const deleteTag = async (req: Request, res: Response) => {
+  // Validate request body
   const errResult = validationResult(req)
   if (!errResult.isEmpty())
     return res.status(400).send({ errors: errResult.array() })
 
+  // Extract tag ID and type from request body
   const id: string = req.body.id,
     type: string = req.body.type
 
+  // Check if ID is valid
   if (!isObjectIdOrHexString(id)) {
     return res
       .status(400)
@@ -278,31 +328,49 @@ const deleteTag = async (req: Request, res: Response) => {
   const objectId = new mongoose.Types.ObjectId(id)
 
   try {
+    // Delete document based on type and ID
     switch (type.toLowerCase()) {
+      // If type is 'club', delete the club document
       case 'club':
+        // Find the club document by its ID
         const club = await Club.findById(objectId)
+        // If club document not found, send error response
         if (!club) {
           return res.status(404).send({ error: 'Club not found' })
         }
+        // Delete the club document
         await Club.deleteOne(objectId)
         break
+      
+      // If type is 'module', delete the module document
       case 'module':
+        // Find the module document by its ID
         const module = await Module.findById(objectId)
+        // If module document not found, send error response
         if (!module) {
           return res.status(404).send({ error: 'Module not found' })
         }
+        // Delete the module document
         await Module.deleteOne(objectId)
         break
+      
+      // If type is 'event', delete the event document
       case 'event':
+        // Find the event document by its ID
         const event = await Event.findById(objectId)
+        // If event document not found, send error response
         if (!event) {
           return res.status(404).send({ error: 'Event not found' })
         }
+        // Delete the event document
         await Event.deleteOne(objectId)
         break
+      
+      // If type is not recognized, send invalid tag type error response
       default:
         return res.status(400).send({ error: 'Invalid tag type' })
     }
+    // Send success response
     return res.sendStatus(200)
   } catch (error) {
     console.log(error)
@@ -311,10 +379,13 @@ const deleteTag = async (req: Request, res: Response) => {
 }
 
 const modifyTag = async (req: Request, res: Response) => {
+  // Validate request body
   const errResult = validationResult(req)
   if (!errResult.isEmpty())
     return res.status(400).send({ errors: errResult.array() })
   const { id, type, tag } = req.body
+
+  // Check if ID is valid
   if (!isObjectIdOrHexString(id)) {
     return res
       .status(400)
@@ -322,6 +393,7 @@ const modifyTag = async (req: Request, res: Response) => {
   }
   const objectId = mongoose.Types.ObjectId.createFromHexString(id);
   try {
+    // Modify document based on type
     switch (type.toLowerCase()) {
       case 'club':
         let club = await Club.findById(objectId)
@@ -358,6 +430,8 @@ const modifyTag = async (req: Request, res: Response) => {
       default:
         return res.status(400).send({ error: 'Invalid tag type' })
     }
+
+    // Send success response
     return res.sendStatus(200)
   } catch (error) {
     console.log(error)
@@ -367,7 +441,9 @@ const modifyTag = async (req: Request, res: Response) => {
 
 const getFeedbacks = async (req: Request, res: Response) => {
   try {
+    // Retrieve feedbacks
     const fbs = await feedback.find({})
+    // Send success response
     return res.status(200).send(fbs)
   } catch (error) {
     console.log(error)
@@ -377,6 +453,7 @@ const getFeedbacks = async (req: Request, res: Response) => {
 
 const getPublicProjectRequests = async (req: Request, res: Response) => {
   try {
+    // Retrieve public project requests with populated data
     const ppRequests = await publicProjectRequest.find({})
       .populate({
         path: 'projectId',
@@ -385,6 +462,7 @@ const getPublicProjectRequests = async (req: Request, res: Response) => {
           model: 'User'
         }
       })
+    // Send success response
     return res.status(200).send(ppRequests)
   } catch (error) {
     console.log(error)
@@ -393,52 +471,67 @@ const getPublicProjectRequests = async (req: Request, res: Response) => {
 }
 
 const approvePublicProjectRequest = async (req: Request, res: Response) => {
+  // Validate request body parameters
   const errResult = validationResult(req)
   if (!errResult.isEmpty())
     return res.status(400).send({ errors: errResult.array() })
 
+  // Extract project publication request ID from request body
   const pprId: string = req.body.id
 
+  // Validate project publication request ID
   if (!isObjectIdOrHexString(pprId))
     return res
       .status(400)
       .send({ error: 'Bad id: must be 24 character hex string' })
 
+  // Convert project publication request ID to MongoDB ObjectId
   const pprObjectId = new mongoose.Types.ObjectId(pprId)
 
   try {
+    // Find the project publication request by ID
     const ppr = await publicProjectRequest.findById(pprObjectId)
     if (!ppr) {
       return res
         .status(404)
         .send({ error: 'Project publication request not found' })
     }
+    // Find the project associated with the publication request
     const project = await Project.findById(ppr.projectId)
     if (!project) {
       return res
         .status(404)
         .send({ error: 'The project of the publication request not found' })
     }
+    // Approve the public visibility of the project
     project.visibility = ProjectVisibility.PUBLIC
     await project.save()
+    // Delete the approved project publication request
     await publicProjectRequest.deleteOne(pprObjectId)
+    // Send success response
     return res.status(200).send({ msg: "The public project request has been approved" })
   } catch (error) {
+    // Handle errors and send error response
     console.log(error)
     return res.sendStatus(500)
   }
 }
 
 const getLogs = (req: Request, res: Response) => {
+  // Read the content of the access log file
   fs.readFile("./access.log", 'utf8', (error, data) => {
     if (error) {
+      // If error occurs during file reading, send error response
       console.log(error)
       return res.status(500).send({ error: 'Error in reading logs file' })
     }
+    // Split the data into individual lines
     const lines: string[] = data.split('\n')
     
+    // Initialize an array to store parsed log entries
     const parsedLogs: {date: Date, requestType: string, route: string}[] = []
 
+    // Iterate over each line of the log file
     lines.forEach((line) => {
         // Split the line to extract date, request type, and route
         if(line) {
@@ -455,15 +548,19 @@ const getLogs = (req: Request, res: Response) => {
           parsedLogs.push(logEntry)
         }
     })
+    // Send the parsed log entries as response
     return res.status(200).send(parsedLogs)
   })
 }
 
 const deleteLogs = (req: Request, res: Response) => {
+  // Overwrite the content of the access log file with an empty string
   fs.writeFile("./access.log", '', (error) => {
     if (error) {
+        // If error occurs during file writing, send error response
         return res.status(500).send({ msg: 'Error deleting file content', error })
     }
+    // Send success response after deleting file content
     return res.sendStatus(200)
   })
 }

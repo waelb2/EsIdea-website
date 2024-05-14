@@ -5,8 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const express_1 = __importDefault(require("express"));
 const express_validator_1 = require("express-validator");
-const adminControllers_1 = require("./adminControllers");
-const adminInterface_1 = require("./adminInterface");
+const adminControllers_1 = require("./adminControllers"); // Importing controller functions
+const adminInterface_1 = require("./adminInterface"); // Importing validation schemas
 const router = express_1.default.Router();
 router.get("/stats", adminControllers_1.getStats);
 router.get("/users", adminControllers_1.getUsers);
@@ -23,4 +23,4 @@ router.get("/publicProjectRequest", adminControllers_1.getPublicProjectRequests)
 router.patch("/publicProjectRequest/approve", (0, express_validator_1.checkSchema)(adminInterface_1.publicProjectRequestApproveValidationSchema), adminControllers_1.approvePublicProjectRequest);
 router.get("/logs", adminControllers_1.getLogs);
 router.delete("/logs", adminControllers_1.deleteLogs);
-exports.default = router;
+exports.default = router; // Exporting router for use in routes file

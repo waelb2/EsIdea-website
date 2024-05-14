@@ -16,6 +16,15 @@ const ndmailer_1 = __importDefault(require("../config/ndmailer"));
 const jsonwebtoken_1 = __importDefault(require("jsonwebtoken"));
 const dotenv_1 = __importDefault(require("dotenv"));
 dotenv_1.default.config();
+/**
+ * Sends an invitation email to a user.
+ * @param coordinator The name of the coordinator sending the invitation.
+ * @param userId The ID of the user being invited.
+ * @param email The email address of the user being invited.
+ * @param projectId The ID of the project to which the user is being invited.
+ * @param projectName The name of the project.
+ * @param invitationId The ID of the invitation.
+ */
 const sendInvitationEMail = (coordinator, userId, email, projectId, projectName, invitationId) => __awaiter(void 0, void 0, void 0, function* () {
     const linkPayload = {
         userId,

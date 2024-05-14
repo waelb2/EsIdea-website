@@ -1,7 +1,7 @@
-import { Document } from "mongoose";
-
+import { Document } from "mongoose"
 
 export interface EventInterface extends Document {
-    eventName : string, 
-    description : string 
+    // Define the properties of the EventInterface
+    eventName: string
+    description: string
 }

@@ -24,21 +24,26 @@ var __importStar = (this && this.__importStar) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Module = void 0;
+// Importing mongoose and necessary types
 const mongoose_1 = __importStar(require("mongoose"));
+// Defining the module schema using Mongoose's Schema class
 const moduleSchema = new mongoose_1.Schema({
+    // Defining moduleName field with type String and required constraint
     moduleName: {
         type: String,
         required: [true, 'Module name is required']
     },
+    // Defining description field with sub-fields
     description: {
-        title: String,
-        field: String,
-        credit: mongoose_1.default.Schema.Types.Number,
-        coef: mongoose_1.default.Schema.Types.Number,
-        edition: String,
-        courseHours: String,
-        tdHours: String,
-        tpHours: String
+        title: String, // Title of the module description
+        field: String, // Field of study the module belongs to
+        credit: mongoose_1.default.Schema.Types.Number, // Number of credits associated with the module
+        coef: mongoose_1.default.Schema.Types.Number, // Coefficient of the module
+        edition: String, // Edition of the module
+        courseHours: String, // Total course hours of the module
+        tdHours: String, // Total tutorial hours of the module
+        tpHours: String // Total practical hours of the module
     }
 });
+// Creating and exporting the Module model based on the defined schema
 exports.Module = mongoose_1.default.model('Module', moduleSchema);

@@ -13,10 +13,13 @@ exports.getEvents = void 0;
 const eventModel_1 = require("./eventModel");
 const getEvents = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        // Retrieve all events from the database
         const events = yield eventModel_1.Event.find({});
+        // Return the events as JSON response
         return res.status(200).json(events);
     }
     catch (error) {
+        // Log any errors and return a 500 status code
         console.log(error);
         return res.sendStatus(500);
     }

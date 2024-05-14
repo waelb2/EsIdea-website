@@ -26,10 +26,12 @@ const cloudConfig_1 = __importDefault(require("../../config/cloudConfig"));
 const fs_1 = __importDefault(require("fs"));
 const mongoose_1 = __importDefault(require("mongoose"));
 const ideaModels_1 = require("../idea/ideaModels");
+// Controller function to create a project
 const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.user;
     let secureURL = '';
     try {
+        // Handling file upload (thumbnail)
         if (req.file) {
             const cloudImage = yield cloudConfig_1.default.uploader.upload(req.file.path, {
                 folder: 'projectThumbnails'
@@ -37,14 +39,17 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             secureURL = cloudImage.secure_url;
             fs_1.default.unlinkSync(req.file.path);
         }
+        // Destructuring request body
         const { projectTitle, description, ideationMethodName, collaborators, mainTopic, subTopics, tags, timer } = req.body;
         // Getting and validating project metadata
+        // Finding the coordinator (user who is creating the project)
         const coordinator = yield userModels_1.User.findById(userId);
         if (!coordinator) {
             return res.status(404).json({
                 error: 'User not found'
             });
         }
+        // Finding the ideation method for the project
         const ideationMethod = yield ideationMethodModel_1.IdeationMethod.findOne({
             methodName: { $regex: ideationMethodName, $options: 'i' }
         });
@@ -53,11 +58,13 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 error: 'Ideation method not found'
             });
         }
+        // Creating main topic for the project
         const parentTopic = yield topicModel_1.Topic.create({
             topicName: mainTopic,
             parentTopic: null
         });
         let subTopicsIds = [];
+        // Creating sub topics for the project
         if (subTopics) {
             for (const topic of subTopics) {
                 const subTopic = yield topicModel_1.Topic.create({
@@ -70,6 +77,7 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
         let clubList = [];
         let moduleList = [];
         let eventList = [];
+        // Processing tags (clubs, modules, events)
         const formattedTags = tags.map(tag => JSON.parse(tag));
         for (const tag of formattedTags) {
             const tagId = tag.tagId;
@@ -108,6 +116,7 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                     });
             }
         }
+        // Checking if at least one club, module or event is provided
         if (clubList.length == 0 &&
             moduleList.length == 0 &&
             eventList.length == 0) {
@@ -115,7 +124,7 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 error: 'Either one club, module or event must be provided'
             });
         }
-        // creating the project document
+        // Creating the project document
         const project = yield projectModels_1.Project.create({
             title: projectTitle,
             description: description,
@@ -129,12 +138,13 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             thumbnailUrl: secureURL,
             timer
         });
+        // Normalizing collaborators' emails
         const normalized_collaborators = collaborators.map(email => email.toLowerCase().trim());
-        // creating and sending invitations
+        // Finding invited users
         const invitedUsers = yield userModels_1.User.find({
             email: { $in: normalized_collaborators }
         });
-        // creating invitations
+        // Creating invitations and sending emails
         for (const collaborator of normalized_collaborators) {
             const user = invitedUsers.find(user => user.email === collaborator);
             const currentDate = new Date();
@@ -148,7 +158,7 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 invitationDate: currentDate,
                 expiresAt: expirationDate
             });
-            // Associating project with his coordinator
+            // Associating project with the coordinator
             coordinator.projects.push({
                 project,
                 joinedAt: new Date(),
@@ -158,7 +168,7 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
             yield coordinator.save();
             user === null || user === void 0 ? void 0 : user.projectInvitations.push(invitation);
             user === null || user === void 0 ? void 0 : user.save();
-            //sending the invitation email
+            // Sending the invitation email
             (0, sendInvitationEmail_1.default)(coordinator.lastName + ' ' + coordinator.firstName, user === null || user === void 0 ? void 0 : user.id, collaborator, project.id, project.title, invitation.id);
         }
         return res.status(201).json({
@@ -173,11 +183,13 @@ const createProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.createProject = createProject;
+// Controller function to update a project
 const updateProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.user;
     const { projectId } = req.params;
     let secureURL = '';
     try {
+        // Handling file upload (thumbnail)
         if (req.file) {
             const cloudImage = yield cloudConfig_1.default.uploader.upload(req.file.path, {
                 folder: 'projectThumbnails'
@@ -217,6 +229,7 @@ const updateProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.updateProject = updateProject;
+// Controller function to update project status
 const updateProjectStatus = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.user;
     const { projectId } = req.params;
@@ -250,10 +263,12 @@ const updateProjectStatus = (req, res) => __awaiter(void 0, void 0, void 0, func
     }
 });
 exports.updateProjectStatus = updateProjectStatus;
+// Controller function to delete a project
 const deleteProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.user;
     const { projectId } = req.params;
     try {
+        // Validating project ID
         if (!projectId) {
             return res.status(400).json({
                 error: 'Project ID must be provided'
@@ -264,30 +279,33 @@ const deleteProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
                 error: 'User ID must be provided'
             });
         }
+        // Finding the collaborator
         const collaborator = yield userModels_1.User.findById(userId);
         if (!collaborator) {
             return res.status(404).json({
                 error: 'User not found'
             });
         }
+        // Finding the project
         const project = yield projectModels_1.Project.findById(projectId);
         if (!project) {
             return res.status(404).json({
                 error: 'Project not found'
             });
         }
+        // Checking if the user is a collaborator in this project
         const collaborators = project.collaborators.filter(collaborator => collaborator.member._id.toString() === userId);
         if (collaborators.length < 0) {
             return res.status(400).json({
                 error: 'This user is not a collaborator in this project'
             });
         }
+        // Removing the collaborator from project collaborators list
         const updatedCollaborators = project.collaborators.filter(collaborator => collaborator.member._id.toString() !== userId);
-        // deleting the collaborator from project collaborators list
         project.collaborators = updatedCollaborators;
         project.save();
+        // Removing the project from user projects list
         const updatedProjectsList = collaborator.projects.filter(collaboratorProject => collaboratorProject.project._id.toString() !== projectId);
-        // deleting the project from user projects list
         collaborator.projects = updatedProjectsList;
         collaborator.save();
         res.status(200).json({ message: 'Project deleted successfully' });
@@ -298,10 +316,12 @@ const deleteProject = (req, res) => __awaiter(void 0, void 0, void 0, function* 
     }
 });
 exports.deleteProject = deleteProject;
+// Controller function to trash a project
 const trashProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.user;
     const { projectId } = req.params;
     try {
+        // Validating project ID
         if (!projectId) {
             return res.status(400).json({
                 error: 'Project ID must be provided'
@@ -312,24 +332,28 @@ const trashProject = (req, res) => __awaiter(void 0, void 0, void 0, function* (
                 error: 'User ID must be provided'
             });
         }
+        // Finding the collaborator
         const collaborator = yield userModels_1.User.findById(userId);
         if (!collaborator) {
             return res.status(404).json({
                 error: 'User not found'
             });
         }
+        // Finding the project
         const project = yield projectModels_1.Project.findById(projectId);
         if (!project) {
             return res.status(404).json({
                 error: 'Project not found'
             });
         }
+        // Checking if the user is a collaborator in this project
         const collaborators = project.collaborators.filter(collaborator => collaborator.member._id.toString() === userId);
         if (collaborators.length < 0) {
             return res.status(400).json({
                 error: 'This user is not a collaborator in this project'
             });
         }
+        // Updating the project's trashed status
         const projectIndex = collaborator.projects.findIndex(project => project.project.toString() === projectId);
         if (projectIndex === -1) {
             return res.status(404).json({
@@ -346,10 +370,12 @@ const trashProject = (req, res) => __awaiter(void 0, void 0, void 0, function* (
     }
 });
 exports.trashProject = trashProject;
+// Controller function to restore a trashed project
 const restoreProject = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.user;
     const { projectId } = req.body;
     try {
+        // Validating project ID
         if (!projectId) {
             return res.status(400).json({
                 error: 'Project ID must be provided'
@@ -360,24 +386,28 @@ const restoreProject = (req, res) => __awaiter(void 0, void 0, void 0, function*
                 error: 'User ID must be provided'
             });
         }
+        // Finding the collaborator
         const collaborator = yield userModels_1.User.findById(userId);
         if (!collaborator) {
             return res.status(404).json({
                 error: 'User not found'
             });
         }
+        // Finding the project
         const project = yield projectModels_1.Project.findById(projectId);
         if (!project) {
             return res.status(404).json({
                 error: 'Project not found'
             });
         }
+        // Checking if the user is a collaborator in this project
         const collaborators = project.collaborators.filter(collaborator => collaborator.member._id.toString() === userId);
         if (collaborators.length < 0) {
             return res.status(400).json({
                 error: 'This user is not a collaborator in this project'
             });
         }
+        // Updating the project's trashed status
         const projectIndex = collaborator.projects.findIndex(project => project.project.toString() === projectId);
         if (projectIndex === -1) {
             return res.status(404).json({
@@ -394,9 +424,11 @@ const restoreProject = (req, res) => __awaiter(void 0, void 0, void 0, function*
     }
 });
 exports.restoreProject = restoreProject;
+// Controller function to get projects by user ID
 const getProjectByUserId = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     const { userId } = req.user;
     try {
+        // Validating user ID
         if (!userId) {
             return res.status(400).json({
                 error: 'User ID must be provided'
@@ -464,6 +496,7 @@ const getProjectByUserId = (req, res) => __awaiter(void 0, void 0, void 0, funct
                 error: 'User not found'
             });
         }
+        // Formatting project details
         const projects = user.projects.map(project => project);
         const projectStrings = projects.map(project => {
             const { title, description, visibility, collaboratorsCount, collaborators, mainTopic, subTopics, clubs, modules, events, thumbnailUrl } = project.project;

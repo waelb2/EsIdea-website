@@ -1,9 +1,10 @@
-import express, { Router } from "express";
-import { dashboard } from "./dashboardControllers";
-import {isLoggedIn,isAuthenticated} from "../auth/authMiddleware"; 
+import express, { Router } from "express"
+import { dashboard } from "./dashboardControllers"
+import { isLoggedIn } from "../auth/authMiddleware"
 
-const router: Router = express.Router();
+const router: Router = express.Router()
 
-router.get('/',isLoggedIn,dashboard);
+// Route to access the dashboard, requires user to be logged in
+router.get('/', isLoggedIn, dashboard)
 
-export = router;
+export = router

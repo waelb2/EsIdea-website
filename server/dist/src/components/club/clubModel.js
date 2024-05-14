@@ -25,18 +25,20 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Club = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
+// Define the schema for the club document
 const clubSchema = new mongoose_1.Schema({
     clubName: {
         type: String,
-        required: [true, 'Club name is required']
+        required: [true, 'Club name is required'], // Club name is a required field
     },
     description: {
         imageUrl: String,
         creationDate: String,
         field: String,
         numberOfEvents: Number,
-        majorEvents: [String]
+        majorEvents: [String],
     }
 });
+// Create a model for the club document
 const Club = mongoose_1.default.model('Club', clubSchema);
 exports.Club = Club;

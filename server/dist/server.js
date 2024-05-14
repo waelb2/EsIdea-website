@@ -22,44 +22,57 @@ const body_parser_1 = __importDefault(require("body-parser"));
 const cors_1 = __importDefault(require("cors"));
 const http_1 = __importDefault(require("http"));
 const socket_io_1 = require("socket.io");
+// Load environment variables from .env file
 dotenv_1.default.config();
-// Configuring the host
+// Configuring the host, port, and database URI
 const HOST = process.env.HOST;
 const PORT = process.env.PORT || 3000;
 const DB_URI = process.env.DATABASE_URI;
+// Create an Express application instance
 const app = (0, express_1.default)();
+// Create an HTTP server instance
 const server = http_1.default.createServer(app);
+// Create a Socket.IO server instance
 const io = new socket_io_1.Server(server, {
     cors: {
         origin: process.env.CLIENT_URL || 'http://localhost:5174',
         methods: ['GET', 'POST']
     }
 });
-// app config
+// Configure middleware
+// Configure session middleware
 app.use((0, express_session_1.default)({
     secret: 'secret_key',
     resave: false,
     cookie: { secure: false, maxAge: 30 * 24 * 60 * 60 * 1000 },
     saveUninitialized: false
 }));
+// Initialize Passport and session middleware
 app.use(passport_1.default.initialize());
 app.use(passport_1.default.session());
+// Configure CORS middleware
 app.use((0, cors_1.default)({
     origin: process.env.CLIENT_URL || 'http://localhost:5174',
     methods: 'GET,POST,PUT,DELETE,PATCH',
     credentials: true
 }));
+// Parse request bodies as JSON
 app.use(body_parser_1.default.json());
 app.use(body_parser_1.default.urlencoded({ extended: true }));
-// routes
+// Import routes
 const routes_1 = __importDefault(require("./routes"));
 const socketManager_1 = __importDefault(require("./src/utils/socketManager"));
+// Mount routes
 app.use(routes_1.default);
+// Initialize Socket.IO
 (0, socketManager_1.default)(io);
+// Start the server
 const start = () => __awaiter(void 0, void 0, void 0, function* () {
     try {
+        // Connect to the database
         yield (0, db_1.connectDB)(String(process.env.DATABASE_URI));
         console.log('DATABASE CONNECTED');
+        // Start listening on the specified port
         server.listen(3000, () => {
             console.log(`Server starting at ${HOST}:${PORT}`);
         });

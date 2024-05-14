@@ -30,45 +30,51 @@ exports.addFavouriteProjectValidationSchema = exports.userIdValidationSchema = e
 const mongoose_1 = __importStar(require("mongoose"));
 const validator_1 = __importDefault(require("validator"));
 const crypto_1 = __importDefault(require("crypto"));
+/**
+ * Enum representing user roles.
+ */
 var UserRole;
 (function (UserRole) {
     UserRole["ADMIN"] = "admin";
-    UserRole["USER"] = "user";
+    UserRole["USER"] = "user"; // User role.
 })(UserRole || (exports.UserRole = UserRole = {}));
+/**
+ * Schema definition for User documents.
+ */
 const userSchema = new mongoose_1.Schema({
     firstName: {
         type: String,
-        required: [true, 'First name is required']
+        required: [true, 'First name is required'] // Validation for required first name.
     },
     lastName: {
         type: String,
-        required: [true, 'Last name is required']
+        required: [true, 'Last name is required'] // Validation for required last name.
     },
     email: {
         type: String,
-        required: [true, 'Email is required'],
+        required: [true, 'Email is required'], // Validation for required email.
         unique: true,
         lowercase: true,
         validate: {
-            validator: (value) => validator_1.default.isEmail(value),
+            validator: (value) => validator_1.default.isEmail(value), // Validation for email format.
             message: 'Invalid email format.'
         }
     },
     password: {
         type: String,
-        minlength: [6, 'Password must be at least 6 characters long.']
+        minlength: [6, 'Password must be at least 6 characters long.'] // Validation for minimum password length.
     },
     profilePicUrl: {
-        type: String
+        type: String // Profile picture URL.
     },
     role: {
         type: String,
-        enum: Object.values(UserRole),
-        default: UserRole.USER
+        enum: Object.values(UserRole), // Enum validation for user role.
+        default: UserRole.USER // Default role is USER.
     },
     joinDate: {
         type: Date,
-        required: [true, 'User joining date is required']
+        required: [true, 'User joining date is required'] // Validation for required join date.
     },
     projects: [
         {
@@ -79,11 +85,11 @@ const userSchema = new mongoose_1.Schema({
             joinedAt: Date,
             isTrashed: {
                 type: Boolean,
-                default: false
+                default: false // Default value for isTrashed.
             },
             isFav: {
                 type: Boolean,
-                default: false
+                default: false // Default value for isFav.
             }
         }
     ],
@@ -96,44 +102,56 @@ const userSchema = new mongoose_1.Schema({
     ban: {
         isBan: {
             type: mongoose_1.Schema.Types.Boolean,
-            default: false
+            default: false // Default value for isBan.
         },
-        banEnd: Date
+        banEnd: Date // Date when ban ends.
     },
     passwordResetToken: [
         {
-            type: String
+            type: String // Password reset token.
         }
     ],
     passwordResetTokenExpires: [
         {
-            type: Date
+            type: Date // Date when password reset token expires.
         }
     ]
 });
+/**
+ * Method to generate a reset password token for the user.
+ */
 userSchema.methods.createResetPasswordToken = function () {
-    const resetToken = crypto_1.default.randomBytes(32).toString('hex');
+    const resetToken = crypto_1.default.randomBytes(32).toString('hex'); // Generate random token.
     this.passwordResetToken = crypto_1.default
         .createHash('sha256')
         .update(resetToken)
-        .digest('hex');
-    this.passwordResetTokenExpires = Date.now() + 10 * 60 * 1000;
-    return resetToken;
+        .digest('hex'); // Hash the token.
+    this.passwordResetTokenExpires = Date.now() + 10 * 60 * 1000; // Set token expiration.
+    return resetToken; // Return the token.
 };
+/**
+ * Model for User documents.
+ */
 const User = mongoose_1.default.model('User', userSchema);
 exports.User = User;
+/**
+ * Validation schema for user ID.
+ */
 const userIdValidationSchema = {
     id: {
         notEmpty: {
-            errorMessage: 'Must provide the id of the user'
+            errorMessage: 'Must provide the id of the user' // Error message for missing user ID.
         }
     }
 };
 exports.userIdValidationSchema = userIdValidationSchema;
+/**
+ * Validation schema for adding a favorite project.
+ */
 const addFavouriteProjectValidationSchema = {
     projectId: {
         notEmpty: {
-            errorMessage: "Must provide the id of the project"
+            errorMessage: "Must provide the id of the project" // Error message for missing project ID.
         }
     }
 };

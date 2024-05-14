@@ -10,15 +10,15 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.getClubs = void 0;
-const clubModel_1 = require("./clubModel");
+const clubModel_1 = require("./clubModel"); // Importing Club model
 const getClubs = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     try {
-        const clubs = yield clubModel_1.Club.find({});
-        return res.status(200).json(clubs);
+        const clubs = yield clubModel_1.Club.find({}); // Finding all clubs
+        return res.status(200).json(clubs); // Sending clubs as JSON response
     }
     catch (error) {
-        console.log(error);
-        return res.sendStatus(500);
+        console.log(error); // Logging any errors
+        return res.sendStatus(500); // Sending a 500 status code for internal server error
     }
 });
 exports.getClubs = getClubs;

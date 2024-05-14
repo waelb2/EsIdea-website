@@ -25,11 +25,15 @@ var __importStar = (this && this.__importStar) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.Topic = void 0;
 const mongoose_1 = __importStar(require("mongoose"));
+// Defining the schema for the Topic document
 const topicSchema = new mongoose_1.Schema({
+    /** The name of the topic. */
     topicName: {
         type: String,
         required: [true, 'Topic name is required']
     },
+    /** Reference to the parent topic, if any. */
     parentTopic: { type: mongoose_1.default.Types.ObjectId, ref: 'Topic' }
 });
+// Creating the Topic model from the schema
 exports.Topic = mongoose_1.default.model('Topic', topicSchema);

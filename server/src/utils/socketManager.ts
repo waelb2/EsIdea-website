@@ -1,10 +1,17 @@
 import { Server, Socket } from 'socket.io'
 
+/**
+ * Interface representing the structure of connected users.
+ */
 interface ConnectedUsers {
   [key: string]: { profilePicUrl: string; email: string; lastName: string }
 }
 
-export default function initializeSocket (io: Server) {
+/**
+ * Initializes socket connections.
+ * @param io The Socket.IO server instance.
+ */
+export default function initializeSocket(io: Server) {
   const connectedUsers: ConnectedUsers = {}
 
   io.on('connection', (socket: Socket) => {
@@ -15,6 +22,7 @@ export default function initializeSocket (io: Server) {
       socket.join(projectId)
     })
 
+    // Handle receiving user data
     socket.on('userData', userData => {
       connectedUsers[socket.id] = userData
       // Broadcast updated user list to all clients
@@ -33,21 +41,24 @@ export default function initializeSocket (io: Server) {
       )
     })
 
+    // Handle deleting an idea
     socket.on('deleteIdea', data => {
       const { ideaId, projectId } = data
       io.to(projectId).emit('deleteId', ideaId)
     })
 
+    // Handle deleting multiple ideas
     socket.on('deleteManyIdeas', data => {
       const { newIdeas, projectId } = data
       socket.broadcast.to(projectId).emit('deleteManyIdeas', newIdeas)
     })
 
-    // handle firing counter
+    // Handle firing counter
     socket.on('fireCounter', counterFired => {
       socket.broadcast.emit('counterFired', counterFired)
     })
 
+    // Handle firing counter between users
     socket.on('fireCounterBw', data => {
       const { concernedUser, counterFired } = data
       const socketId = Object.keys(connectedUsers).find(
