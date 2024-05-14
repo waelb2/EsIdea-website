@@ -110,7 +110,7 @@ const addPassword = async (req: Request, res: Response) => {
 
     return res
       .status(200)
-      .json({ message: 'Password Added Successfully', user, userToken: token })
+      .json({ message: 'Password Added Successfully', formattedUser, userToken: token })
   } catch (e) {
     const errors = handleError(e)
     return res.status(500).json({ errors })

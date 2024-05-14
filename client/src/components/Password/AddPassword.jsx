@@ -48,10 +48,10 @@ const AddPassword = () => {
                 'Content-type': 'application/json; charset=UTF-8',
             },
             })
-            .then((data) => {
-                localStorage.setItem('userToken', data.userToken);
-                localStorage.setItem('user', JSON.stringify(data.user));
-                setUser(data.user);
+            .then((response) => {
+                localStorage.setItem('userToken',response.data.userToken);
+                localStorage.setItem('user', JSON.stringify(response.data.formattedUser));
+                setUser(response.data.formattedUser);
 
                 navigate("../Home/Projects");
             })
