@@ -25,6 +25,7 @@ const Logs = () => {
       }
   }
   useEffect(()=>{
+    document.title = "Logs";
     getLogs();
   },[])
   const columns=[

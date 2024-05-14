@@ -39,6 +39,7 @@ const PublicProjectRequests = () => {
     }
     useEffect(()=>{
         getPublicProjectRequests();
+        document.title = "Public projects Requests";
     },[])
     return (
         <>

@@ -31,6 +31,7 @@ const FeedBacks = () => {
   }
   }
   useEffect(()=>{
+    document.title = "FeedBacks"
     getFeedbacks();
   },[])
   return (

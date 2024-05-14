@@ -49,9 +49,11 @@ const Form = () => {
               setUser(user)
               
               navigate(user.role === 'admin' ? "/Admin" : "/Home");
+
             })
             .catch((error) => {
-                toast.error(error.message, {
+    
+                toast.error(error.response.data.message, {
                     position: "top-center",
                     autoClose: 5000,
                     hideProgressBar: false,

@@ -20,7 +20,7 @@ const ForgotPassword = () => {
             navigate("/login", { state: { fromForgotPassword: true } });
           })
           .catch((error) => {
-            toast.error(error.message, {
+            toast.error(error.response.data.message, {
               position: "top-center",
               autoClose: 5000,
               hideProgressBar: false,

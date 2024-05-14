@@ -14,6 +14,9 @@ const Tags = () => {
   const [data,setData] = useState([]);
   const [searchInput,setSearchInput] = useState("");
   const [type,setType] = useState("module");
+  useEffect(()=>{
+    document.title = "Tags";
+  },[]);
   const getTags = async () => {
     setLoading(true);
     try {

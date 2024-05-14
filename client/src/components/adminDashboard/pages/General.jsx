@@ -47,6 +47,7 @@ const General = () => {
       }
   }
   useEffect(()=>{
+    document.title = "Statistics";
     getStats();
   },[])
   return (

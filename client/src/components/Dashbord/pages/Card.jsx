@@ -68,6 +68,7 @@ const addToPublic = async(projectId)=>{
       throw new Error("Authentication has failed");
     }
   } catch (error) {
+
     if(error.response.status === 400){
       displayMessageToUser("error",error.response.data.error);
     }
@@ -166,7 +167,7 @@ const addToPublic = async(projectId)=>{
             </p>
         </div>
         <div onClick={(e)=>{e.stopPropagation()}}>
-          <img onClick={()=>{index !== openedMore ? setOpenedMore(index):setOpenedMore(-1)}} className='absolute bottom-2 right-2 w-6 h-6 duration-500 transition-all rounded-full p-1 hover:bg-slate-300 hidden group-hover:inline cursor-pointer' src={More} alt='More'/>
+          <img onClick={()=>{index !== openedMore ? setOpenedMore(index):setOpenedMore(-1)}} className='absolute bottom-2 right-2 w-6 h-6 duration-500 transition-all rounded-full p-1 hover:bg-slate-300 hidden group-hover:inline cursor-pointer' title='More' src={More} alt='More'/>
           <div className={`${index !== openedMore ?"hidden":"bg-realWhite min-w-[10.625rem] absolute shadow-2xl bottom-8 right-4 border p-3 rounded-lg border-black slideTop"} overflow-hidden`}>
               <ul>
                   {projectDetails.map(pd=><li key={pd.title}>

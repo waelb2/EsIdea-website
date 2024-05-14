@@ -49,6 +49,7 @@ const Users = () => {
 ]
 useEffect(()=>{
   getUsers();
+  document.title = "Users";
 },[]);
 const deleteUser = async (id) => {
   try {
