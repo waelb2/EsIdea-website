@@ -2,6 +2,9 @@
 
 ESIDEA is a full-stack web application developed as part of a multidisciplinary project at ESI. The platform is designed to facilitate **idea collection and development** for pedagogical projects using collaborative ideation methods like **brainstorming** and **brainwriting**.
 
+
+![ESIDEA Banner](docs/banner.png)
+
 ## 🌐 Live Access (if deployed)
 To run locally, see [Installation](#installation).
 
