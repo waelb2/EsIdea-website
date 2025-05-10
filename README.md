@@ -1,28 +1,110 @@
-#EsIdea Project
+# ESIDEA - Collaborative Ideation Platform for ESI
 
-## Getting Started
+ESIDEA is a full-stack web application developed as part of a multidisciplinary project at ESI. The platform is designed to facilitate **idea collection and development** for pedagogical projects using collaborative ideation methods like **brainstorming** and **brainwriting**.
 
-### 1-Generate a Personal Access Token (PAT):
-- In your GitHub Account, navigate to the settings.
-* Look for the "Developer settings" and then "Personal access tokens" section.
-+ Generate new token and copy it.
+## 🌐 Live Access (if deployed)
+To run locally, see [Installation](#installation).
 
-### 2-Set Up Git Remote with Token:
-- Open Git CLI and navigate to the directory where you want to clone the repo.
-- Use the `git init` to intialise the repo.
-- Use the `git remote` add command to add the remote URL with the token.
-```bash 
-git remote add origin https://github.com/<your_username>/EsIdea-website.git 
+---
+
+## 📌 Features
+
+- ✍️ Project creation using ideation methods (Brainstorming & Brainwriting)
+- 🧠 Real-time collaborative ideation
+- 🧑‍🤝‍🧑 Invite collaborators by email
+- 🗃️ Organize projects with modules, clubs, or events
+- 💬 AI-powered chatbot for idea support
+- 📊 Admin dashboard for stats and user management
+- 🔐 Google OAuth & email/password authentication
+- 🧾 Export final ideation in PNG format
+- ⚙️ Profile customization & feedback system
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend:
+- React.js
+- TailwindCSS
+- TypeScript
+- Axios
+- Socket.io
+
+### Backend:
+- Node.js
+- Express.js
+- TypeScript
+- MongoDB + Mongoose
+- Google OAuth
+- JWT
+
+### Tools:
+- Docker
+- Postman
+- Figma (UI/UX Design)
+- ClickUp, Lucidchart, Google Suite (Documentation & PM)
+
+---
+
+
+## ⚙️ Installation and running
+
+> Prerequisites:
+- Docker Desktop (with WSL2)
+- Virtualization enabled
+- 4 GB RAM or more
+
+### 🐳 Quick Start (Windows):
+1. Clone the repo and navigate to `docker/`:
+```bash
+cd docker/
 ```
-- And then : 
-```bash 
-git remote set-url origin https://<your_token>@github.com/<your_username>/EsIdea-website
+2. Run 
+```bash
+Load&runEsidea.bat  # First time setup
+# or
+runEsidea.bat        # For subsequent runs
 ```
 
-### 3-Clone the repo:
-- Use the `git clone` command to clone the repo to your local environement.
-```bash 
-git clone git@github.com:<username>/EsIdea-website.git
-```
+3. Open your browser and go to : http://localhost:5174
 
-W salam.
+
+## 📖 Usage
+
+- Create or log in using your `@esi.dz` email
+- Create and manage projects
+- Collaborate in real-time on ideation sessions
+- Admins can manage users, moderate content, and view insights
+
+For detailed usage instructions, refer to:
+
+- [📙 Guide d'utilisation (NoticeUtilisation.pdf)](docs/NoticeUtilisation.pdf)
+
+---
+
+## 👥 Contributors
+
+| Name                                  | Role                |
+|---------------------------------------|---------------------|
+| **MOSTEFAI Mounir Sofiane**           | Team Leader         |
+| **KHALEF Badis**                      | Backend & Design    |
+| **BOUGUESSA Wail**                    | Backend & Frontend  |
+| **CHABBI Ahcen**                      | Frontend            |
+| **GUEROUMI Mohamed Lamine Bahaa Eddine** | Frontend         |
+| **TALEB Mohamed Adnane**             | Infrastructure       |
+
+---
+
+## 📄 License
+
+This project is intended for educational purposes at ESI.  
+Please contact the contributors for any reuse or reproduction requests.
+
+---
+
+## 📚 Documentation
+
+- [📘 Rapport du Projet (Rapport.pdf)](docs/ESIDEA_Rapport.pdf)
+- [⚙️ Guide d'installation (NoticeInstallation.pdf)](docs/ESIDEA_NoticeInstallation.pdf)
+- [📙 Guide d'utilisation (NoticeUtilisation.pdf)](docs/ESIDEA_NoticeUtilisation.pdf)
+
