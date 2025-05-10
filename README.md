@@ -5,7 +5,7 @@ ESIDEA is a full-stack web application developed as part of a multidisciplinary 
 
 ![ESIDEA Banner](docs/banner.png)
 
-## 🌐 Live Access (if deployed)
+## 🌐 Live Access : Not yet
 To run locally, see [Installation](#installation).
 
 ---
